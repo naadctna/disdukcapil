@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+class Penduduk extends Model
+{
+    // Method untuk get rekapitulasi - optimized version
+    public static function getRekapitulasi()
+    {
+        $datang2024 = DB::table('datang2024')->count();
+        $datang2025 = DB::table('datang2025')->count();
+        $pindah2024 = DB::table('pindah2024')->count();
+        $pindah2025 = DB::table('pindah2025')->count();
+        
+        $total_datang = $datang2024 + $datang2025;
+        $total_pindah = $pindah2024 + $pindah2025;
+        $hasil_akhir = $total_datang - $total_pindah;
+
+        return (object)[
+            'datang2024' => $datang2024,
+            'datang2025' => $datang2025,
+            'pindah2024' => $pindah2024,
+            'pindah2025' => $pindah2025,
+            'total_datang' => $total_datang,
+            'total_pindah' => $total_pindah,
+            'hasil_akhir' => $hasil_akhir
+        ];
+    }
+
+    // Method untuk get data per tabel dengan limit untuk performance
+    public static function getDataByTable($table)
+    {
+        return DB::table($table)
+                 ->orderBy('created_at', 'desc')
+                 ->limit(100) // Limit untuk mencegah load data terlalu banyak
+                 ->get();
+    }
+
+    // Method untuk insert data
+    public static function insertData($table, $data)
+    {
+        return DB::table($table)->insert($data);
+    }
+}
