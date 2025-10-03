@@ -79,6 +79,12 @@
                         </svg>
                         <span>Data Penduduk</span>
                     </a>
+                    <a href="{{ url('/upload-excel') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
+                        </svg>
+                        <span>Upload Excel</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -87,9 +93,9 @@
     <!-- Hero Section -->
     <div class="relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-indigo-600/10"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 relative">
             <div class="text-center">
-                <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
                     <span class="bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">
                         Dashboard Kependudukan
                     </span>
@@ -100,9 +106,9 @@
     </div>
 
     <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12">
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
             <!-- Total Datang Card -->
             <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
                 <div class="flex items-center justify-between">
@@ -177,7 +183,7 @@
         </div>
 
         <!-- Charts Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
             <!-- Bar Chart -->
             <div class="glass rounded-2xl p-8 shadow-xl">
                 <div class="flex items-center justify-between mb-6">
@@ -220,7 +226,7 @@
                 </svg>
                 Quick Actions
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <a href="{{ url('/penduduk') }}" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white p-4 rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-3">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>

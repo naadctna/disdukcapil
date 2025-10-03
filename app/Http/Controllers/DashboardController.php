@@ -19,14 +19,25 @@ class DashboardController extends Controller
         return view('rekapitulasi', compact('rekapitulasi'));
     }
 
-    public function penduduk()
+    public function penduduk(Request $request)
     {
-        $datang2024 = Penduduk::getDataByTable('datang2024');
-        $datang2025 = Penduduk::getDataByTable('datang2025');
-        $pindah2024 = Penduduk::getDataByTable('pindah2024');
-        $pindah2025 = Penduduk::getDataByTable('pindah2025');
+        $search = $request->get('search');
         
-        return view('penduduk', compact('datang2024', 'datang2025', 'pindah2024', 'pindah2025'));
+        if ($search) {
+            // Jika ada pencarian, filter berdasarkan nama
+            $datang2024 = Penduduk::searchByName('datang2024', $search);
+            $datang2025 = Penduduk::searchByName('datang2025', $search);
+            $pindah2024 = Penduduk::searchByName('pindah2024', $search);
+            $pindah2025 = Penduduk::searchByName('pindah2025', $search);
+        } else {
+            // Jika tidak ada pencarian, ambil data seperti biasa
+            $datang2024 = Penduduk::getDataByTable('datang2024');
+            $datang2025 = Penduduk::getDataByTable('datang2025');
+            $pindah2024 = Penduduk::getDataByTable('pindah2024');
+            $pindah2025 = Penduduk::getDataByTable('pindah2025');
+        }
+        
+        return view('penduduk', compact('datang2024', 'datang2025', 'pindah2024', 'pindah2025', 'search'));
     }
 
     public function tambahDatang(Request $request)

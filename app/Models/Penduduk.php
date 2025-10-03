@@ -49,6 +49,22 @@ class Penduduk extends Model
         }
     }
 
+    // Method untuk search berdasarkan nama
+    public static function searchByName($table, $search)
+    {
+        $query = DB::table($table)
+                   ->where('NAMA_LENGKAP', 'LIKE', '%' . $search . '%');
+        
+        // Order berdasarkan jenis tabel
+        if ($table == 'datang2024' || $table == 'datang2025') {
+            $query->orderBy('TGL_DATANG', 'desc');
+        } else {
+            $query->orderBy('TGL_PINDAH', 'desc');
+        }
+        
+        return $query->limit(100)->get();
+    }
+
     // Method untuk insert data
     public static function insertData($table, $data)
     {
