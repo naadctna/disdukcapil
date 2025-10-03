@@ -39,12 +39,12 @@ class DashboardController extends Controller
         ]);
 
         $table = 'datang' . $request->tahun;
+        
+        // Sesuaikan dengan struktur tabel database test
         Penduduk::insertData($table, [
-            'nama' => $request->nama,
-            'alamat' => $request->alamat,
-            'tanggal_datang' => $request->tanggal_datang,
-            'created_at' => now(),
-            'updated_at' => now()
+            'NAMA_LENGKAP' => $request->nama,
+            'ALAMAT_TUJUAN' => $request->alamat,
+            'TGL_DATANG' => $request->tanggal_datang,
         ]);
 
         return back()->with('success', 'Data penduduk datang berhasil ditambahkan!');
@@ -61,13 +61,13 @@ class DashboardController extends Controller
         ]);
 
         $table = 'pindah' . $request->tahun;
+        
+        // Sesuaikan dengan struktur tabel database test
         Penduduk::insertData($table, [
-            'nama' => $request->nama,
-            'alamat_asal' => $request->alamat_asal,
-            'alamat_tujuan' => $request->alamat_tujuan,
-            'tanggal_pindah' => $request->tanggal_pindah,
-            'created_at' => now(),
-            'updated_at' => now()
+            'NAMA_LENGKAP' => $request->nama,
+            'ALAMAT_ASAL' => $request->alamat_asal,
+            'ALAMAT_TUJUAN' => $request->alamat_tujuan,
+            'TGL_PINDAH' => $request->tanggal_pindah,
         ]);
 
         return back()->with('success', 'Data penduduk pindah berhasil ditambahkan!');

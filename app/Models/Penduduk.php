@@ -33,10 +33,20 @@ class Penduduk extends Model
     // Method untuk get data per tabel dengan limit untuk performance
     public static function getDataByTable($table)
     {
-        return DB::table($table)
-                 ->orderBy('created_at', 'desc')
-                 ->limit(100) // Limit untuk mencegah load data terlalu banyak
-                 ->get();
+        // Untuk database test, gunakan NIK atau kolom pertama sebagai order
+        if ($table == 'datang2024' || $table == 'datang2025') {
+            // Gunakan TGL_DATANG untuk sorting jika ada
+            return DB::table($table)
+                     ->orderBy('TGL_DATANG', 'desc')
+                     ->limit(100)
+                     ->get();
+        } else {
+            // Untuk tabel pindah, gunakan TGL_PINDAH
+            return DB::table($table)
+                     ->orderBy('TGL_PINDAH', 'desc') 
+                     ->limit(100)
+                     ->get();
+        }
     }
 
     // Method untuk insert data
