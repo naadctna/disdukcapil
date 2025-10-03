@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Penduduk - Sistem Kep                    <div class="bg-gradient-to-br from-primary-400 to-primary-500 p-3 rounded-xl">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                        </svg>
-                    </div>ukan</title>
+    <title>Data Penduduk - Sistem Kependudukan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
