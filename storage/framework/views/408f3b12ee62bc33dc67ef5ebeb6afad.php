@@ -75,25 +75,25 @@
                     </div>
                 </div>
                 <div class="flex space-x-2">
-                    <a href="{{ url('/') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13z"/>
                         </svg>
                         <span>Beranda</span>
                     </a>
-                    <a href="{{ url('/rekapitulasi') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/rekapitulasi')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
                         </svg>
                         <span>Rekapitulasi</span>
                     </a>
-                    <a href="{{ url('/penduduk') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/penduduk')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
                         <span>Data Penduduk</span>
                     </a>
-                    <a href="{{ url('/upload-excel') }}" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/upload-excel')); ?>" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
                             <polyline points="14,2 14,8 20,8"/>
@@ -136,7 +136,7 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         
         <!-- Alerts -->
-        @if(session('success'))
+        <?php if(session('success')): ?>
         <div class="mb-12 glass rounded-2xl p-6 border-l-4 border-green-500">
             <div class="flex items-center mb-4">
                 <div class="bg-green-100 p-2 rounded-full mr-3">
@@ -144,55 +144,55 @@
                         <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
-                <div class="text-green-800 font-semibold">{{ session('success') }}</div>
+                <div class="text-green-800 font-semibold"><?php echo e(session('success')); ?></div>
             </div>
             
-            @if(session('upload_results'))
-                @php $results = session('upload_results'); @endphp
+            <?php if(session('upload_results')): ?>
+                <?php $results = session('upload_results'); ?>
                 <div class="mt-4 p-4 bg-green-50 rounded-xl">
                     <h4 class="font-semibold text-green-800 mb-2">Ringkasan Upload:</h4>
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div class="text-sm">
                             <span class="font-medium">Data Berhasil:</span>
-                            <span class="text-green-600 font-bold">{{ $results['inserted'] }}</span>
+                            <span class="text-green-600 font-bold"><?php echo e($results['inserted']); ?></span>
                         </div>
                         <div class="text-sm">
                             <span class="font-medium">Error:</span>
-                            <span class="text-red-600 font-bold">{{ $results['errors'] }}</span>
+                            <span class="text-red-600 font-bold"><?php echo e($results['errors']); ?></span>
                         </div>
                     </div>
                     
-                    @if(!empty($results['preview']))
+                    <?php if(!empty($results['preview'])): ?>
                         <h5 class="font-medium text-green-800 mb-2">Preview Data:</h5>
                         <div class="overflow-x-auto">
                             <table class="min-w-full text-sm">
                                 <thead>
                                     <tr class="bg-green-100">
-                                        @if(!empty($results['preview'][0]))
-                                            @foreach(array_keys($results['preview'][0]) as $key)
-                                                <th class="px-3 py-2 text-left font-medium text-green-800">{{ $key }}</th>
-                                            @endforeach
-                                        @endif
+                                        <?php if(!empty($results['preview'][0])): ?>
+                                            <?php $__currentLoopData = array_keys($results['preview'][0]); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <th class="px-3 py-2 text-left font-medium text-green-800"><?php echo e($key); ?></th>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        <?php endif; ?>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($results['preview'] as $row)
+                                    <?php $__currentLoopData = $results['preview']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr class="border-b border-green-200">
-                                            @foreach($row as $value)
-                                                <td class="px-3 py-2 text-gray-700">{{ $value }}</td>
-                                            @endforeach
+                                            <?php $__currentLoopData = $row; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <td class="px-3 py-2 text-gray-700"><?php echo e($value); ?></td>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </tr>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </tbody>
                             </table>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
-        @endif
+        <?php endif; ?>
 
-        @if(session('error'))
+        <?php if(session('error')): ?>
         <div class="mb-12 glass rounded-2xl p-6 border-l-4 border-red-500">
             <div class="flex items-start">
                 <div class="bg-red-100 p-2 rounded-full mr-3 mt-1">
@@ -200,12 +200,12 @@
                         <path d="M18 6L6 18M6 6l12 12"/>
                     </svg>
                 </div>
-                <div class="text-red-800 font-medium flex-1">{!! session('error') !!}</div>
+                <div class="text-red-800 font-medium flex-1"><?php echo session('error'); ?></div>
             </div>
         </div>
-        @endif
+        <?php endif; ?>
 
-        @if($errors->any())
+        <?php if($errors->any()): ?>
         <div class="mb-12 glass rounded-2xl p-6 border-l-4 border-red-500">
             <div class="flex items-center mb-3">
                 <div class="bg-red-100 p-2 rounded-full mr-3">
@@ -216,12 +216,12 @@
                 <div class="text-red-800 font-medium">Validation Errors:</div>
             </div>
             <ul class="list-disc list-inside text-red-700 space-y-1">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
+                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <li><?php echo e($error); ?></li>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </ul>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- Upload Form -->
         <div class="glass rounded-2xl p-8 shadow-xl mb-12">
@@ -242,14 +242,14 @@
             <div class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
                 <h4 class="font-bold text-blue-800 mb-3">📥 Download Template CSV</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <a href="{{ url('/template_penduduk_datang.csv') }}" download class="flex items-center justify-center px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition-colors">
+                    <a href="<?php echo e(url('/template_penduduk_datang.csv')); ?>" download class="flex items-center justify-center px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
                             <path d="M14 2v6h6M9 15l3 3m0 0l3-3m-3 3V9"/>
                         </svg>
                         Template Penduduk Datang
                     </a>
-                    <a href="{{ url('/template_penduduk_pindah.csv') }}" download class="flex items-center justify-center px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors">
+                    <a href="<?php echo e(url('/template_penduduk_pindah.csv')); ?>" download class="flex items-center justify-center px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
                             <path d="M14 2v6h6M9 15l3 3m0 0l3-3m-3 3V9"/>
@@ -260,8 +260,8 @@
                 <p class="text-sm text-blue-600 mt-2">💡 Download template ini, isi dengan data Anda, dan upload kembali!</p>
             </div>
 
-            <form action="{{ url('/upload-excel/process') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
-                @csrf
+            <form action="<?php echo e(url('/upload-excel/process')); ?>" method="POST" enctype="multipart/form-data" class="space-y-8">
+                <?php echo csrf_field(); ?>
                 
                 <!-- File Upload -->
                 <div>
@@ -491,4 +491,4 @@
         });
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\disdukcapil\resources\views/upload-excel.blade.php ENDPATH**/ ?>

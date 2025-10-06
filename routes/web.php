@@ -8,11 +8,10 @@ Route::get('/', [DashboardController::class, 'index']);
 Route::get('/rekapitulasi', [DashboardController::class, 'rekapitulasi']);
 Route::get('/penduduk', [DashboardController::class, 'penduduk']);
 
-// Routes untuk tambah data manual (optional - bisa dihapus nanti)
-Route::post('/tambah-datang', [DashboardController::class, 'tambahDatang']);
-Route::post('/tambah-pindah', [DashboardController::class, 'tambahPindah']);
-
 // Routes untuk Excel Upload
 Route::get('/upload-excel', [ExcelUploadController::class, 'uploadForm']);
 Route::post('/upload-excel/process', [ExcelUploadController::class, 'processUpload']);
-Route::get('/upload-excel/template', [ExcelUploadController::class, 'downloadTemplate']);
+
+// Routes untuk Edit & Delete Data
+Route::put('/penduduk/update/{table}/{id}', [DashboardController::class, 'updateData']);
+Route::delete('/penduduk/delete/{table}/{id}', [DashboardController::class, 'deleteData']);

@@ -68,25 +68,25 @@
                     </div>
                 </div>
                 <div class="flex space-x-2">
-                    <a href="{{ url('/') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13z"/>
                         </svg>
                         <span>Beranda</span>
                     </a>
-                    <a href="{{ url('/rekapitulasi') }}" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/rekapitulasi')); ?>" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
                         </svg>
                         <span>Rekapitulasi</span>
                     </a>
-                    <a href="{{ url('/penduduk') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/penduduk')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
                         <span>Data Penduduk</span>
                     </a>
-                    <a href="{{ url('/upload-excel') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/upload-excel')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
                         </svg>
@@ -134,7 +134,7 @@
                     </div>
                     <div class="text-right">
                         <p class="text-sm font-medium text-gray-500">Datang 2024</p>
-                        <p class="text-2xl font-bold stat-number">{{ number_format($rekapitulasi->datang2024) }}</p>
+                        <p class="text-2xl font-bold stat-number"><?php echo e(number_format($rekapitulasi->datang2024)); ?></p>
                     </div>
                 </div>
                 <div class="bg-blue-50 rounded-lg p-3">
@@ -155,7 +155,7 @@
                     </div>
                     <div class="text-right">
                         <p class="text-sm font-medium text-gray-500">Datang 2025</p>
-                        <p class="text-2xl font-bold stat-number">{{ number_format($rekapitulasi->datang2025) }}</p>
+                        <p class="text-2xl font-bold stat-number"><?php echo e(number_format($rekapitulasi->datang2025)); ?></p>
                     </div>
                 </div>
                 <div class="bg-green-50 rounded-lg p-3">
@@ -176,7 +176,7 @@
                     </div>
                     <div class="text-right">
                         <p class="text-sm font-medium text-gray-500">Pindah 2024</p>
-                        <p class="text-2xl font-bold stat-number">{{ number_format($rekapitulasi->pindah2024) }}</p>
+                        <p class="text-2xl font-bold stat-number"><?php echo e(number_format($rekapitulasi->pindah2024)); ?></p>
                     </div>
                 </div>
                 <div class="bg-orange-50 rounded-lg p-3">
@@ -197,7 +197,7 @@
                     </div>
                     <div class="text-right">
                         <p class="text-sm font-medium text-gray-500">Pindah 2025</p>
-                        <p class="text-2xl font-bold stat-number">{{ number_format($rekapitulasi->pindah2025) }}</p>
+                        <p class="text-2xl font-bold stat-number"><?php echo e(number_format($rekapitulasi->pindah2025)); ?></p>
                     </div>
                 </div>
                 <div class="bg-red-50 rounded-lg p-3">
@@ -218,7 +218,7 @@
                         <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
                     </svg>
                 </div>
-                <h3 class="text-3xl font-bold text-gray-900 mb-2">{{ number_format($rekapitulasi->total_datang) }}</h3>
+                <h3 class="text-3xl font-bold text-gray-900 mb-2"><?php echo e(number_format($rekapitulasi->total_datang)); ?></h3>
                 <p class="text-primary-600 font-semibold mb-1">Total Penduduk Datang</p>
                 <p class="text-sm text-gray-500">Periode 2024 - 2025</p>
             </div>
@@ -230,29 +230,30 @@
                         <path d="M20 4l-8 8 8 8-1.41 1.41L11.17 14H20v-2h-8.83l7.42-7.42z"/>
                     </svg>
                 </div>
-                <h3 class="text-3xl font-bold text-gray-900 mb-2">{{ number_format($rekapitulasi->total_pindah) }}</h3>
+                <h3 class="text-3xl font-bold text-gray-900 mb-2"><?php echo e(number_format($rekapitulasi->total_pindah)); ?></h3>
                 <p class="text-red-600 font-semibold mb-1">Total Penduduk Pindah</p>
                 <p class="text-sm text-gray-500">Periode 2024 - 2025</p>
             </div>
 
             <!-- Net Migration -->
             <div class="glass rounded-2xl p-8 shadow-xl text-center">
-                <div class="bg-gradient-to-br from-{{ $rekapitulasi->hasil_akhir >= 0 ? 'green' : 'red' }}-400 to-{{ $rekapitulasi->hasil_akhir >= 0 ? 'green' : 'red' }}-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <div class="bg-gradient-to-br from-<?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'green' : 'red'); ?>-400 to-<?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'green' : 'red'); ?>-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                     <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        @if($rekapitulasi->hasil_akhir >= 0)
+                        <?php if($rekapitulasi->hasil_akhir >= 0): ?>
                         <path d="M7 14l5-5 5 5z"/>
-                        @else
+                        <?php else: ?>
                         <path d="M7 10l5 5 5-5z"/>
-                        @endif
+                        <?php endif; ?>
                     </svg>
                 </div>
-                <h3 class="text-3xl font-bold {{ $rekapitulasi->hasil_akhir >= 0 ? 'text-green-600' : 'text-red-600' }} mb-2">
-                    {{ $rekapitulasi->hasil_akhir >= 0 ? '+' : '' }}{{ number_format($rekapitulasi->hasil_akhir) }}
+                <h3 class="text-3xl font-bold <?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'text-green-600' : 'text-red-600'); ?> mb-2">
+                    <?php echo e($rekapitulasi->hasil_akhir >= 0 ? '+' : ''); ?><?php echo e(number_format($rekapitulasi->hasil_akhir)); ?>
+
                 </h3>
-                <p class="{{ $rekapitulasi->hasil_akhir >= 0 ? 'text-green-600' : 'text-red-600' }} font-semibold mb-1">
+                <p class="<?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'text-green-600' : 'text-red-600'); ?> font-semibold mb-1">
                     Net Migration
                 </p>
-                <p class="text-sm text-gray-500">{{ $rekapitulasi->hasil_akhir >= 0 ? 'Population Growth' : 'Population Decline' }}</p>
+                <p class="text-sm text-gray-500"><?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'Population Growth' : 'Population Decline'); ?></p>
             </div>
         </div>
 
@@ -321,14 +322,14 @@
                 labels: ['2024', '2025'],
                 datasets: [{
                     label: 'Datang',
-                    data: [{{ $rekapitulasi->datang2024 }}, {{ $rekapitulasi->datang2025 }}],
+                    data: [<?php echo e($rekapitulasi->datang2024); ?>, <?php echo e($rekapitulasi->datang2025); ?>],
                     backgroundColor: 'rgba(168, 85, 247, 0.8)',
                     borderColor: 'rgb(168, 85, 247)',
                     borderWidth: 2,
                     borderRadius: 8
                 }, {
                     label: 'Pindah',
-                    data: [{{ $rekapitulasi->pindah2024 }}, {{ $rekapitulasi->pindah2025 }}],
+                    data: [<?php echo e($rekapitulasi->pindah2024); ?>, <?php echo e($rekapitulasi->pindah2025); ?>],
                     backgroundColor: 'rgba(239, 68, 68, 0.8)',
                     borderColor: 'rgb(239, 68, 68)',
                     borderWidth: 2,
@@ -373,7 +374,7 @@
             data: {
                 labels: ['Total Datang', 'Total Pindah'],
                 datasets: [{
-                    data: [{{ $rekapitulasi->total_datang }}, {{ $rekapitulasi->total_pindah }}],
+                    data: [<?php echo e($rekapitulasi->total_datang); ?>, <?php echo e($rekapitulasi->total_pindah); ?>],
                     backgroundColor: [
                         'rgba(168, 85, 247, 0.8)',
                         'rgba(239, 68, 68, 0.8)'
@@ -411,7 +412,7 @@
                 labels: ['2024', '2025'],
                 datasets: [{
                     label: 'Penduduk Datang',
-                    data: [{{ $rekapitulasi->datang2024 }}, {{ $rekapitulasi->datang2025 }}],
+                    data: [<?php echo e($rekapitulasi->datang2024); ?>, <?php echo e($rekapitulasi->datang2025); ?>],
                     borderColor: 'rgb(168, 85, 247)',
                     backgroundColor: 'rgba(168, 85, 247, 0.1)',
                     borderWidth: 3,
@@ -419,7 +420,7 @@
                     tension: 0.4
                 }, {
                     label: 'Penduduk Pindah',
-                    data: [{{ $rekapitulasi->pindah2024 }}, {{ $rekapitulasi->pindah2025 }}],
+                    data: [<?php echo e($rekapitulasi->pindah2024); ?>, <?php echo e($rekapitulasi->pindah2025); ?>],
                     borderColor: 'rgb(239, 68, 68)',
                     backgroundColor: 'rgba(239, 68, 68, 0.1)',
                     borderWidth: 3,
@@ -428,8 +429,9 @@
                 }, {
                     label: 'Net Migration',
                     data: [
-                        {{ $rekapitulasi->datang2024 - $rekapitulasi->pindah2024 }}, 
-                        {{ $rekapitulasi->datang2025 - $rekapitulasi->pindah2025 }}
+                        <?php echo e($rekapitulasi->datang2024 - $rekapitulasi->pindah2024); ?>, 
+                        <?php echo e($rekapitulasi->datang2025 - $rekapitulasi->pindah2025); ?>
+
                     ],
                     borderColor: 'rgb(34, 197, 94)',
                     backgroundColor: 'rgba(34, 197, 94, 0.1)',
@@ -470,4 +472,4 @@
         });
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\disdukcapil\resources\views/rekapitulasi.blade.php ENDPATH**/ ?>

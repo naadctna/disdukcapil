@@ -35,15 +35,15 @@ class Penduduk extends Model
     {
         // Untuk database test, gunakan NIK atau kolom pertama sebagai order
         if ($table == 'datang2024' || $table == 'datang2025') {
-            // Gunakan TGL_DATANG untuk sorting jika ada
+            // Gunakan tanggal_datang untuk sorting jika ada
             return DB::table($table)
-                     ->orderBy('TGL_DATANG', 'desc')
+                     ->orderBy('tanggal_datang', 'desc')
                      ->limit(100)
                      ->get();
         } else {
-            // Untuk tabel pindah, gunakan TGL_PINDAH
+            // Untuk tabel pindah, gunakan tanggal_pindah
             return DB::table($table)
-                     ->orderBy('TGL_PINDAH', 'desc') 
+                     ->orderBy('tanggal_pindah', 'desc') 
                      ->limit(100)
                      ->get();
         }
@@ -53,13 +53,13 @@ class Penduduk extends Model
     public static function searchByName($table, $search)
     {
         $query = DB::table($table)
-                   ->where('NAMA_LENGKAP', 'LIKE', '%' . $search . '%');
+                   ->where('nama', 'LIKE', '%' . $search . '%');
         
         // Order berdasarkan jenis tabel
         if ($table == 'datang2024' || $table == 'datang2025') {
-            $query->orderBy('TGL_DATANG', 'desc');
+            $query->orderBy('tanggal_datang', 'desc');
         } else {
-            $query->orderBy('TGL_PINDAH', 'desc');
+            $query->orderBy('tanggal_pindah', 'desc');
         }
         
         return $query->limit(100)->get();

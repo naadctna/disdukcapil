@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <title>Data Penduduk - Sistem Kependudukan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -139,25 +139,25 @@
                     </div>
                 </div>
                 <div class="flex space-x-2">
-                    <a href="{{ url('/') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13z"/>
                         </svg>
                         <span>Beranda</span>
                     </a>
-                    <a href="{{ url('/rekapitulasi') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/rekapitulasi')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
                         </svg>
                         <span>Rekapitulasi</span>
                     </a>
-                    <a href="{{ url('/penduduk') }}" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/penduduk')); ?>" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
                         <span>Data Penduduk</span>
                     </a>
-                    <a href="{{ url('/upload-excel') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/upload-excel')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
                         </svg>
@@ -225,7 +225,7 @@
                         </div>
                         
                         <!-- Search Stats -->
-                        @if($search ?? false)
+                        <?php if($search ?? false): ?>
                         <div class="bg-gradient-to-r from-green-100 to-emerald-100 px-4 py-2 rounded-full border border-green-200">
                             <span class="text-sm font-semibold text-green-700 flex items-center">
                                 <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -234,11 +234,11 @@
                                 Mode Pencarian Aktif
                             </span>
                         </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                     
                     <!-- Search Form -->
-                    <form method="GET" action="{{ url('/penduduk') }}" class="space-y-4">
+                    <form method="GET" action="<?php echo e(url('/penduduk')); ?>" class="space-y-4">
                         <div class="flex flex-col lg:flex-row gap-4">
                             <!-- Search Input Container -->
                             <div class="flex-1 relative group">
@@ -251,14 +251,14 @@
                                     </div>
                                     <input type="text" 
                                            name="search" 
-                                           value="{{ $search ?? '' }}"
+                                           value="<?php echo e($search ?? ''); ?>"
                                            placeholder="Ketik nama penduduk yang ingin dicari..." 
                                            class="search-input relative w-full pl-12 pr-4 py-4 bg-white/90 backdrop-blur-sm rounded-2xl border border-white/30 focus:border-purple-300 focus:ring-2 focus:ring-purple-200 transition-all duration-300 text-gray-800 placeholder-gray-400 shadow-lg hover:shadow-xl font-medium"
                                            autocomplete="off"
                                            spellcheck="false">
                                     
                                     <!-- Clear button for input -->
-                                    @if($search ?? false)
+                                    <?php if($search ?? false): ?>
                                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                                         <button type="button" onclick="document.querySelector('input[name=search]').value=''" 
                                                 class="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors duration-200">
@@ -267,7 +267,7 @@
                                             </svg>
                                         </button>
                                     </div>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             
@@ -283,20 +283,20 @@
                                 </button>
                                 
                                 <!-- Reset Button -->
-                                @if($search ?? false)
-                                    <a href="{{ url('/penduduk') }}" 
+                                <?php if($search ?? false): ?>
+                                    <a href="<?php echo e(url('/penduduk')); ?>" 
                                        class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-6 py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center space-x-2 transform hover:scale-105 active:scale-95 group">
                                         <svg class="w-5 h-5 group-hover:rotate-180 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                                         </svg>
                                         <span>Reset</span>
                                     </a>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </div>
                         
                         <!-- Quick Search Suggestions -->
-                        @if(!($search ?? false))
+                        <?php if(!($search ?? false)): ?>
                         <div class="mt-4 pt-4 border-t border-white/20">
                             <p class="text-sm text-gray-600 mb-2 font-medium">Pencarian Cepat:</p>
                             <div class="flex flex-wrap gap-2">
@@ -318,10 +318,10 @@
                                 </button>
                             </div>
                         </div>
-                        @endif
+                        <?php endif; ?>
                     </form>
                 
-                @if($search ?? false)
+                <?php if($search ?? false): ?>
                     <!-- Enhanced Search Results Indicator -->
                     <div class="mt-6 relative search-result">
                         <div class="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-2xl blur opacity-50"></div>
@@ -345,7 +345,7 @@
                                         <p class="text-xs text-gray-600 mt-1">
                                             Menampilkan data untuk: 
                                             <span class="font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                                                "{{ $search }}"
+                                                "<?php echo e($search); ?>"
                                             </span>
                                         </p>
                                     </div>
@@ -353,7 +353,7 @@
                                 
                                 <!-- Quick Actions -->
                                 <div class="flex gap-2">
-                                    <a href="{{ url('/penduduk') }}" 
+                                    <a href="<?php echo e(url('/penduduk')); ?>" 
                                        class="bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 flex items-center space-x-1">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M6 18L18 6M6 6l12 12"/>
@@ -366,12 +366,12 @@
                     </div>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
         <!-- Success Alert -->
-        @if(session('success'))
+        <?php if(session('success')): ?>
         <div class="mb-8 glass rounded-2xl p-4 border-l-4 border-green-500">
             <div class="flex items-center">
                 <div class="bg-green-100 p-2 rounded-full mr-3">
@@ -379,10 +379,10 @@
                         <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
-                <div class="text-green-800 font-medium">{{ session('success') }}</div>
+                <div class="text-green-800 font-medium"><?php echo e(session('success')); ?></div>
             </div>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- Quick Stats -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 mt-12">
@@ -390,7 +390,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-600 font-medium mb-1">Total Datang 2024</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ count($datang2024) }}</p>
+                        <p class="text-2xl font-bold text-gray-900"><?php echo e(count($datang2024)); ?></p>
                         <p class="text-xs text-green-600 font-semibold">📈 Active Records</p>
                     </div>
                     <div class="bg-gradient-to-br from-green-400 to-green-500 p-3 rounded-xl">
@@ -405,7 +405,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-600 font-medium mb-1">Total Datang 2025</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ count($datang2025) }}</p>
+                        <p class="text-2xl font-bold text-gray-900"><?php echo e(count($datang2025)); ?></p>
                         <p class="text-xs text-green-600 font-semibold">📈 Current Year</p>
                     </div>
                     <div class="bg-gradient-to-br from-green-500 to-green-600 p-3 rounded-xl">
@@ -420,7 +420,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-600 font-medium mb-1">Total Pindah 2024</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ count($pindah2024) }}</p>
+                        <p class="text-2xl font-bold text-gray-900"><?php echo e(count($pindah2024)); ?></p>
                         <p class="text-xs text-red-600 font-semibold">📉 Archived</p>
                     </div>
                     <div class="bg-gradient-to-br from-red-400 to-red-500 p-3 rounded-xl">
@@ -435,7 +435,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-600 font-medium mb-1">Total Pindah 2025</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ count($pindah2025) }}</p>
+                        <p class="text-2xl font-bold text-gray-900"><?php echo e(count($pindah2025)); ?></p>
                         <p class="text-xs text-red-600 font-semibold">📉 Current Year</p>
                     </div>
                     <div class="bg-gradient-to-br from-red-500 to-red-600 p-3 rounded-xl">
@@ -476,12 +476,12 @@
                         <div>
                             <h3 class="text-xl font-bold text-gray-900">Data Penduduk Datang</h3>
                             <p class="text-sm text-gray-500">
-                                {{ count($datang2024) + count($datang2025) }} total records
-                                @if($search ?? false)
-                                    <span class="text-blue-600 font-medium">(hasil pencarian: "{{ $search }}")</span>
-                                @else
+                                <?php echo e(count($datang2024) + count($datang2025)); ?> total records
+                                <?php if($search ?? false): ?>
+                                    <span class="text-blue-600 font-medium">(hasil pencarian: "<?php echo e($search); ?>")</span>
+                                <?php else: ?>
                                     (showing recent 100 per table)
-                                @endif
+                                <?php endif; ?>
                             </p>
                         </div>
                     </div>
@@ -502,9 +502,9 @@
                                 </div>
                                 <h4 class="font-bold text-gray-900">Data Tahun 2024</h4>
                             </div>
-                            <span class="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm">{{ count($datang2024) }} records</span>
+                            <span class="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm"><?php echo e(count($datang2024)); ?> records</span>
                         </div>
-                        @if(count($datang2024) > 0)
+                        <?php if(count($datang2024) > 0): ?>
                             <div class="overflow-x-auto">
                                 <table class="min-w-full">
                                     <thead>
@@ -516,27 +516,27 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-blue-100">
-                                        @foreach($datang2024 as $data)
+                                        <?php $__currentLoopData = $datang2024; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr class="hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200">
-                                            <td class="px-6 py-4 text-sm font-semibold text-gray-900">{{ $data->nama ?? '-' }}</td>
-                                            <td class="px-6 py-4 text-sm text-gray-600">{{ Str::limit($data->alamat ?? '-', 35) }}</td>
-                                            <td class="px-6 py-4 text-sm text-gray-600 font-medium">{{ $data->tanggal_datang ?? '-' }}</td>
+                                            <td class="px-6 py-4 text-sm font-semibold text-gray-900"><?php echo e($data->nama ?? '-'); ?></td>
+                                            <td class="px-6 py-4 text-sm text-gray-600"><?php echo e(Str::limit($data->alamat ?? '-', 35)); ?></td>
+                                            <td class="px-6 py-4 text-sm text-gray-600 font-medium"><?php echo e($data->tanggal_datang ?? '-'); ?></td>
                                             <td class="px-6 py-4 text-center">
                                                 <div class="relative inline-block text-left">
-                                                    <button type="button" class="inline-flex items-center p-2 text-gray-400 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full transition-colors" onclick="toggleDropdown('dropdown-datang2024-{{ $data->id }}')">
+                                                    <button type="button" class="inline-flex items-center p-2 text-gray-400 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full transition-colors" onclick="toggleDropdown('dropdown-datang2024-<?php echo e($data->id); ?>')">
                                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                                             <path d="M12 6a2 2 0 110-4 2 2 0 010 4zM12 14a2 2 0 110-4 2 2 0 010 4zM12 22a2 2 0 110-4 2 2 0 010 4z"/>
                                                         </svg>
                                                     </button>
-                                                    <div id="dropdown-datang2024-{{ $data->id }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                                                    <div id="dropdown-datang2024-<?php echo e($data->id); ?>" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                                                         <div class="py-1">
-                                                            <button onclick="editData('datang2024', {{ $data->id }}, '{{ $data->nama }}', '{{ $data->alamat }}', '{{ $data->tanggal_datang }}')" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">
+                                                            <button onclick="editData('datang2024', <?php echo e($data->id); ?>, '<?php echo e($data->nama); ?>', '<?php echo e($data->alamat); ?>', '<?php echo e($data->tanggal_datang); ?>')" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">
                                                                 <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 24 24">
                                                                     <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
                                                                 </svg>
                                                                 Edit
                                                             </button>
-                                                            <button onclick="deleteData('datang2024', {{ $data->id }}, '{{ $data->nama }}')" class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
+                                                            <button onclick="deleteData('datang2024', <?php echo e($data->id); ?>, '<?php echo e($data->nama); ?>')" class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
                                                                 <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 24 24">
                                                                     <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                                                 </svg>
@@ -547,11 +547,11 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
-                        @else
+                        <?php else: ?>
                             <!-- Enhanced No Data State -->
                             <div class="text-center py-16 relative">
                                 <!-- Background decoration -->
@@ -569,21 +569,21 @@
                                         Data Tidak Ditemukan
                                     </h4>
                                     
-                                    @if($search ?? false)
+                                    <?php if($search ?? false): ?>
                                         <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 mx-auto max-w-md border border-blue-200/50">
                                             <p class="text-gray-700 font-medium">
                                                 Tidak ada data penduduk datang tahun 
                                                 <span class="font-bold text-blue-600">2024</span> 
                                                 dengan nama 
                                                 <span class="px-2 py-1 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg font-bold text-purple-700">
-                                                    "{{ $search }}"
+                                                    "<?php echo e($search); ?>"
                                                 </span>
                                             </p>
                                             <p class="text-sm text-gray-500 mt-2">
                                                 Coba gunakan kata kunci yang berbeda
                                             </p>
                                         </div>
-                                    @else
+                                    <?php else: ?>
                                         <p class="text-gray-600 font-medium">
                                             Belum ada data penduduk datang untuk tahun 
                                             <span class="font-bold text-blue-600">2024</span>
@@ -591,10 +591,10 @@
                                         <p class="text-sm text-gray-500 mt-2">
                                             Data akan muncul setelah ada input pertama
                                         </p>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
 
                     <!-- Datang 2025 -->
@@ -608,9 +608,9 @@
                                 </div>
                                 <h4 class="font-bold text-gray-900">Data Tahun 2025</h4>
                             </div>
-                            <span class="bg-gradient-to-r from-green-100 to-green-200 text-green-800 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm">{{ count($datang2025) }} records</span>
+                            <span class="bg-gradient-to-r from-green-100 to-green-200 text-green-800 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm"><?php echo e(count($datang2025)); ?> records</span>
                         </div>
-                        @if(count($datang2025) > 0)
+                        <?php if(count($datang2025) > 0): ?>
                             <div class="overflow-x-auto">
                                 <table class="min-w-full">
                                     <thead>
@@ -622,27 +622,27 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-green-100">
-                                        @foreach($datang2025 as $data)
+                                        <?php $__currentLoopData = $datang2025; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr class="hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all duration-200">
-                                            <td class="px-6 py-4 text-sm font-semibold text-gray-900">{{ $data->nama ?? '-' }}</td>
-                                            <td class="px-6 py-4 text-sm text-gray-600">{{ Str::limit($data->alamat ?? '-', 35) }}</td>
-                                            <td class="px-6 py-4 text-sm text-gray-600 font-medium">{{ $data->tanggal_datang ?? '-' }}</td>
+                                            <td class="px-6 py-4 text-sm font-semibold text-gray-900"><?php echo e($data->nama ?? '-'); ?></td>
+                                            <td class="px-6 py-4 text-sm text-gray-600"><?php echo e(Str::limit($data->alamat ?? '-', 35)); ?></td>
+                                            <td class="px-6 py-4 text-sm text-gray-600 font-medium"><?php echo e($data->tanggal_datang ?? '-'); ?></td>
                                             <td class="px-6 py-4 text-center">
                                                 <div class="relative inline-block text-left">
-                                                    <button type="button" class="inline-flex items-center p-2 text-gray-400 hover:text-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-full transition-colors" onclick="toggleDropdown('dropdown-datang2025-{{ $data->id }}')">
+                                                    <button type="button" class="inline-flex items-center p-2 text-gray-400 hover:text-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-full transition-colors" onclick="toggleDropdown('dropdown-datang2025-<?php echo e($data->id); ?>')">
                                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                                             <path d="M12 6a2 2 0 110-4 2 2 0 010 4zM12 14a2 2 0 110-4 2 2 0 010 4zM12 22a2 2 0 110-4 2 2 0 010 4z"/>
                                                         </svg>
                                                     </button>
-                                                    <div id="dropdown-datang2025-{{ $data->id }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                                                    <div id="dropdown-datang2025-<?php echo e($data->id); ?>" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                                                         <div class="py-1">
-                                                            <button onclick="editData('datang2025', {{ $data->id }}, '{{ $data->nama }}', '{{ $data->alamat }}', '{{ $data->tanggal_datang }}')" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors">
+                                                            <button onclick="editData('datang2025', <?php echo e($data->id); ?>, '<?php echo e($data->nama); ?>', '<?php echo e($data->alamat); ?>', '<?php echo e($data->tanggal_datang); ?>')" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors">
                                                                 <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 24 24">
                                                                     <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
                                                                 </svg>
                                                                 Edit
                                                             </button>
-                                                            <button onclick="deleteData('datang2025', {{ $data->id }}, '{{ $data->nama }}')" class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
+                                                            <button onclick="deleteData('datang2025', <?php echo e($data->id); ?>, '<?php echo e($data->nama); ?>')" class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
                                                                 <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 24 24">
                                                                     <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                                                 </svg>
@@ -653,11 +653,11 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
-                        @else
+                        <?php else: ?>
                             <!-- Enhanced No Data State -->
                             <div class="text-center py-16 relative">
                                 <!-- Background decoration -->
@@ -675,21 +675,21 @@
                                         Data Tidak Ditemukan
                                     </h4>
                                     
-                                    @if($search ?? false)
+                                    <?php if($search ?? false): ?>
                                         <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 mx-auto max-w-md border border-green-200/50">
                                             <p class="text-gray-700 font-medium">
                                                 Tidak ada data penduduk datang tahun 
                                                 <span class="font-bold text-green-600">2025</span> 
                                                 dengan nama 
                                                 <span class="px-2 py-1 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg font-bold text-green-700">
-                                                    "{{ $search }}"
+                                                    "<?php echo e($search); ?>"
                                                 </span>
                                             </p>
                                             <p class="text-sm text-gray-500 mt-2">
                                                 Coba gunakan kata kunci yang berbeda
                                             </p>
                                         </div>
-                                    @else
+                                    <?php else: ?>
                                         <p class="text-gray-600 font-medium">
                                             Belum ada data penduduk datang untuk tahun 
                                             <span class="font-bold text-green-600">2025</span>
@@ -697,10 +697,10 @@
                                         <p class="text-sm text-gray-500 mt-2">
                                             Data akan muncul setelah ada input pertama
                                         </p>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -717,12 +717,12 @@
                         <div>
                             <h3 class="text-xl font-bold text-gray-900">Data Penduduk Pindah</h3>
                             <p class="text-sm text-gray-500">
-                                {{ count($pindah2024) + count($pindah2025) }} total records
-                                @if($search ?? false)
-                                    <span class="text-blue-600 font-medium">(hasil pencarian: "{{ $search }}")</span>
-                                @else
+                                <?php echo e(count($pindah2024) + count($pindah2025)); ?> total records
+                                <?php if($search ?? false): ?>
+                                    <span class="text-blue-600 font-medium">(hasil pencarian: "<?php echo e($search); ?>")</span>
+                                <?php else: ?>
                                     (showing recent 100 per table)
-                                @endif
+                                <?php endif; ?>
                             </p>
                         </div>
                     </div>
@@ -743,9 +743,9 @@
                                 </div>
                                 <h4 class="font-bold text-gray-900">Data Tahun 2024</h4>
                             </div>
-                            <span class="bg-gradient-to-r from-orange-100 to-orange-200 text-orange-800 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm">{{ count($pindah2024) }} records</span>
+                            <span class="bg-gradient-to-r from-orange-100 to-orange-200 text-orange-800 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm"><?php echo e(count($pindah2024)); ?> records</span>
                         </div>
-                        @if(count($pindah2024) > 0)
+                        <?php if(count($pindah2024) > 0): ?>
                             <div class="overflow-x-auto">
                                 <table class="min-w-full">
                                     <thead>
@@ -758,28 +758,28 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-orange-100">
-                                        @foreach($pindah2024 as $data)
+                                        <?php $__currentLoopData = $pindah2024; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr class="hover:bg-gradient-to-r hover:from-orange-50 hover:to-red-50 transition-all duration-200">
-                                            <td class="px-4 py-3 text-sm font-semibold text-gray-900">{{ $data->nama ?? '-' }}</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">{{ Str::limit($data->alamat_asal ?? '-', 20) }}</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">{{ Str::limit($data->alamat_tujuan ?? '-', 20) }}</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600 font-medium">{{ $data->tanggal_pindah ?? '-' }}</td>
+                                            <td class="px-4 py-3 text-sm font-semibold text-gray-900"><?php echo e($data->nama ?? '-'); ?></td>
+                                            <td class="px-4 py-3 text-sm text-gray-600"><?php echo e(Str::limit($data->alamat_asal ?? '-', 20)); ?></td>
+                                            <td class="px-4 py-3 text-sm text-gray-600"><?php echo e(Str::limit($data->alamat_tujuan ?? '-', 20)); ?></td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 font-medium"><?php echo e($data->tanggal_pindah ?? '-'); ?></td>
                                             <td class="px-4 py-3 text-center">
                                                 <div class="relative inline-block text-left">
-                                                    <button type="button" class="inline-flex items-center p-2 text-gray-400 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 rounded-full transition-colors" onclick="toggleDropdown('dropdown-pindah2024-{{ $data->id }}')">
+                                                    <button type="button" class="inline-flex items-center p-2 text-gray-400 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 rounded-full transition-colors" onclick="toggleDropdown('dropdown-pindah2024-<?php echo e($data->id); ?>')">
                                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                                             <path d="M12 6a2 2 0 110-4 2 2 0 010 4zM12 14a2 2 0 110-4 2 2 0 010 4zM12 22a2 2 0 110-4 2 2 0 010 4z"/>
                                                         </svg>
                                                     </button>
-                                                    <div id="dropdown-pindah2024-{{ $data->id }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                                                    <div id="dropdown-pindah2024-<?php echo e($data->id); ?>" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                                                         <div class="py-1">
-                                                            <button onclick="editData('pindah2024', {{ $data->id }}, '{{ $data->nama }}', '{{ $data->alamat_asal }}', '{{ $data->alamat_tujuan }}', '{{ $data->tanggal_pindah }}')" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition-colors">
+                                                            <button onclick="editData('pindah2024', <?php echo e($data->id); ?>, '<?php echo e($data->nama); ?>', '<?php echo e($data->alamat_asal); ?>', '<?php echo e($data->alamat_tujuan); ?>', '<?php echo e($data->tanggal_pindah); ?>')" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition-colors">
                                                                 <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 24 24">
                                                                     <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
                                                                 </svg>
                                                                 Edit
                                                             </button>
-                                                            <button onclick="deleteData('pindah2024', {{ $data->id }}, '{{ $data->nama }}')" class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
+                                                            <button onclick="deleteData('pindah2024', <?php echo e($data->id); ?>, '<?php echo e($data->nama); ?>')" class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
                                                                 <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 24 24">
                                                                     <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                                                 </svg>
@@ -790,11 +790,11 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
-                        @else
+                        <?php else: ?>
                             <!-- Enhanced No Data State -->
                             <div class="text-center py-16 relative">
                                 <!-- Background decoration -->
@@ -812,21 +812,21 @@
                                         Data Tidak Ditemukan
                                     </h4>
                                     
-                                    @if($search ?? false)
+                                    <?php if($search ?? false): ?>
                                         <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 mx-auto max-w-md border border-orange-200/50">
                                             <p class="text-gray-700 font-medium">
                                                 Tidak ada data penduduk pindah tahun 
                                                 <span class="font-bold text-orange-600">2024</span> 
                                                 dengan nama 
                                                 <span class="px-2 py-1 bg-gradient-to-r from-orange-100 to-red-100 rounded-lg font-bold text-red-700">
-                                                    "{{ $search }}"
+                                                    "<?php echo e($search); ?>"
                                                 </span>
                                             </p>
                                             <p class="text-sm text-gray-500 mt-2">
                                                 Coba gunakan kata kunci yang berbeda
                                             </p>
                                         </div>
-                                    @else
+                                    <?php else: ?>
                                         <p class="text-gray-600 font-medium">
                                             Belum ada data penduduk pindah untuk tahun 
                                             <span class="font-bold text-orange-600">2024</span>
@@ -834,10 +834,10 @@
                                         <p class="text-sm text-gray-500 mt-2">
                                             Data akan muncul setelah ada input pertama
                                         </p>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
 
                     <!-- Pindah 2025 -->
@@ -851,9 +851,9 @@
                                 </div>
                                 <h4 class="font-bold text-gray-900">Data Tahun 2025</h4>
                             </div>
-                            <span class="bg-gradient-to-r from-red-100 to-red-200 text-red-800 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm">{{ count($pindah2025) }} records</span>
+                            <span class="bg-gradient-to-r from-red-100 to-red-200 text-red-800 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm"><?php echo e(count($pindah2025)); ?> records</span>
                         </div>
-                        @if(count($pindah2025) > 0)
+                        <?php if(count($pindah2025) > 0): ?>
                             <div class="overflow-x-auto">
                                 <table class="min-w-full">
                                     <thead>
@@ -866,28 +866,28 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-red-100">
-                                        @foreach($pindah2025 as $data)
+                                        <?php $__currentLoopData = $pindah2025; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr class="hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 transition-all duration-200">
-                                            <td class="px-4 py-3 text-sm font-semibold text-gray-900">{{ $data->nama ?? '-' }}</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">{{ Str::limit($data->alamat_asal ?? '-', 20) }}</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">{{ Str::limit($data->alamat_tujuan ?? '-', 20) }}</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600 font-medium">{{ $data->tanggal_pindah ?? '-' }}</td>
+                                            <td class="px-4 py-3 text-sm font-semibold text-gray-900"><?php echo e($data->nama ?? '-'); ?></td>
+                                            <td class="px-4 py-3 text-sm text-gray-600"><?php echo e(Str::limit($data->alamat_asal ?? '-', 20)); ?></td>
+                                            <td class="px-4 py-3 text-sm text-gray-600"><?php echo e(Str::limit($data->alamat_tujuan ?? '-', 20)); ?></td>
+                                            <td class="px-4 py-3 text-sm text-gray-600 font-medium"><?php echo e($data->tanggal_pindah ?? '-'); ?></td>
                                             <td class="px-4 py-3 text-center">
                                                 <div class="relative inline-block text-left">
-                                                    <button type="button" class="inline-flex items-center p-2 text-gray-400 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 rounded-full transition-colors" onclick="toggleDropdown('dropdown-pindah2025-{{ $data->id }}')">
+                                                    <button type="button" class="inline-flex items-center p-2 text-gray-400 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 rounded-full transition-colors" onclick="toggleDropdown('dropdown-pindah2025-<?php echo e($data->id); ?>')">
                                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                                             <path d="M12 6a2 2 0 110-4 2 2 0 010 4zM12 14a2 2 0 110-4 2 2 0 010 4zM12 22a2 2 0 110-4 2 2 0 010 4z"/>
                                                         </svg>
                                                     </button>
-                                                    <div id="dropdown-pindah2025-{{ $data->id }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                                                    <div id="dropdown-pindah2025-<?php echo e($data->id); ?>" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                                                         <div class="py-1">
-                                                            <button onclick="editData('pindah2025', {{ $data->id }}, '{{ $data->nama }}', '{{ $data->alamat_asal }}', '{{ $data->alamat_tujuan }}', '{{ $data->tanggal_pindah }}')" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors">
+                                                            <button onclick="editData('pindah2025', <?php echo e($data->id); ?>, '<?php echo e($data->nama); ?>', '<?php echo e($data->alamat_asal); ?>', '<?php echo e($data->alamat_tujuan); ?>', '<?php echo e($data->tanggal_pindah); ?>')" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors">
                                                                 <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 24 24">
                                                                     <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
                                                                 </svg>
                                                                 Edit
                                                             </button>
-                                                            <button onclick="deleteData('pindah2025', {{ $data->id }}, '{{ $data->nama }}')" class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
+                                                            <button onclick="deleteData('pindah2025', <?php echo e($data->id); ?>, '<?php echo e($data->nama); ?>')" class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
                                                                 <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 24 24">
                                                                     <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                                                 </svg>
@@ -898,11 +898,11 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
-                        @else
+                        <?php else: ?>
                             <!-- Enhanced No Data State -->
                             <div class="text-center py-16 relative">
                                 <!-- Background decoration -->
@@ -920,21 +920,21 @@
                                         Data Tidak Ditemukan
                                     </h4>
                                     
-                                    @if($search ?? false)
+                                    <?php if($search ?? false): ?>
                                         <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 mx-auto max-w-md border border-red-200/50">
                                             <p class="text-gray-700 font-medium">
                                                 Tidak ada data penduduk pindah tahun 
                                                 <span class="font-bold text-red-600">2025</span> 
                                                 dengan nama 
                                                 <span class="px-2 py-1 bg-gradient-to-r from-red-100 to-pink-100 rounded-lg font-bold text-pink-700">
-                                                    "{{ $search }}"
+                                                    "<?php echo e($search); ?>"
                                                 </span>
                                             </p>
                                             <p class="text-sm text-gray-500 mt-2">
                                                 Coba gunakan kata kunci yang berbeda
                                             </p>
                                         </div>
-                                    @else
+                                    <?php else: ?>
                                         <p class="text-gray-600 font-medium">
                                             Belum ada data penduduk pindah untuk tahun 
                                             <span class="font-bold text-red-600">2025</span>
@@ -942,10 +942,10 @@
                                         <p class="text-sm text-gray-500 mt-2">
                                             Data akan muncul setelah ada input pertama
                                         </p>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -1511,4 +1511,4 @@
     </script>
 
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\disdukcapil\resources\views/penduduk.blade.php ENDPATH**/ ?>
