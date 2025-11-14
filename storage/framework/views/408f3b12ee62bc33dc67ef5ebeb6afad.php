@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Data CSV - Sistem Kependudukan</title>
+    <title>Upload Excel - Sistem Kependudukan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -27,195 +27,58 @@
             }
         }
     </script>
-    <style>
-        .glass {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        
-        .form-input {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(168, 85, 247, 0.2);
-        }
-
-        .form-input:focus {
-            border-color: #9333ea;
-            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
-        }
-
-        .drag-drop-zone {
-            transition: all 0.3s ease;
-        }
-
-        .drag-drop-zone.dragover {
-            background: rgba(168, 85, 247, 0.1);
-            border-color: #9333ea;
-        }
-    </style>
 </head>
-<body class="bg-gradient-to-br from-primary-50 via-purple-50 to-indigo-100 min-h-screen">
-    <!-- Navbar -->
-    <nav class="glass shadow-xl sticky top-0 z-50">
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-3">
-                    <div class="bg-gradient-to-r from-primary-500 to-primary-600 p-2.5 rounded-xl shadow-lg">
-                        <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
-                            <circle cx="12" cy="9" r="2.5"/>
+                    <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
-                            Sistem Informasi Kependudukan
-                        </h1>
-                        <p class="text-xs text-primary-500 font-medium">CSV Upload</p>
+                        <h1 class="text-xl font-semibold text-gray-900">Upload Data Excel</h1>
+                        <p class="text-xs text-gray-500">Sistem Informasi Kependudukan</p>
                     </div>
                 </div>
-                <div class="flex space-x-2">
-                    <a href="<?php echo e(url('/')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13z"/>
-                        </svg>
-                        <span>Beranda</span>
-                    </a>
-                    <a href="<?php echo e(url('/rekapitulasi')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
-                        </svg>
-                        <span>Rekapitulasi</span>
-                    </a>
-                    <a href="<?php echo e(url('/penduduk')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
-                        <span>Data Penduduk</span>
-                    </a>
-                    <a href="<?php echo e(url('/upload-excel')); ?>" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                            <polyline points="14,2 14,8 20,8"/>
-                            <line x1="16" y1="13" x2="8" y2="13"/>
-                            <line x1="16" y1="17" x2="8" y2="17"/>
-                            <polyline points="10,9 9,9 8,9"/>
-                        </svg>
-                        <span>Upload Excel</span>
-                    </a>
-                </div>
+                <nav class="flex space-x-2">
+                    <a href="<?php echo e(url('/')); ?>" class="text-gray-600 hover:text-primary-600 hover:bg-primary-50 px-3 py-2 text-sm rounded-md transition-colors">Beranda</a>
+                    <a href="<?php echo e(url('/penduduk')); ?>" class="text-gray-600 hover:text-primary-600 hover:bg-primary-50 px-3 py-2 text-sm rounded-md transition-colors">Data Penduduk</a>
+                    <a href="<?php echo e(url('/rekapitulasi')); ?>" class="text-gray-600 hover:text-primary-600 hover:bg-primary-50 px-3 py-2 text-sm rounded-md transition-colors">Rekapitulasi</a>
+                    <a href="<?php echo e(url('/upload-excel')); ?>" class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-2 text-sm rounded-md transition-colors">Upload Excel</a>
+                </nav>
             </div>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <div class="relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-purple-500/10 to-indigo-600/10"></div>
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-white/10"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-6 relative">
-            <div class="text-center">
-                <div class="inline-flex items-center px-4 py-2 bg-primary-100 text-primary-800 rounded-full text-sm font-semibold mb-4">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                    </svg>
-                    Import Data
-                </div>
-                <h1 class="text-4xl font-bold text-gray-900 mb-2">
-                    <span class="bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">
-                        Upload Data Excel
-                    </span>
-                </h1>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Upload file Excel untuk import data penduduk datang dan pindah secara bulk
-                </p>
-            </div>
-        </div>
-    </div>
+    </header>
 
     <!-- Main Content -->
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        
+    <main class="max-w-4xl mx-auto px-4 py-6">
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Upload File Excel</h2>
+            <p class="text-gray-600">Upload file Excel (.xlsx, .xls) atau CSV untuk import data penduduk.</p>
+        </div>
+
         <!-- Alerts -->
         <?php if(session('success')): ?>
-        <div class="mb-12 glass rounded-2xl p-6 border-l-4 border-green-500">
-            <div class="flex items-center mb-4">
-                <div class="bg-green-100 p-2 rounded-full mr-3">
-                    <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <div class="text-green-800 font-semibold"><?php echo e(session('success')); ?></div>
-            </div>
-            
-            <?php if(session('upload_results')): ?>
-                <?php $results = session('upload_results'); ?>
-                <div class="mt-4 p-4 bg-green-50 rounded-xl">
-                    <h4 class="font-semibold text-green-800 mb-2">Ringkasan Upload:</h4>
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div class="text-sm">
-                            <span class="font-medium">Data Berhasil:</span>
-                            <span class="text-green-600 font-bold"><?php echo e($results['inserted']); ?></span>
-                        </div>
-                        <div class="text-sm">
-                            <span class="font-medium">Error:</span>
-                            <span class="text-red-600 font-bold"><?php echo e($results['errors']); ?></span>
-                        </div>
-                    </div>
-                    
-                    <?php if(!empty($results['preview'])): ?>
-                        <h5 class="font-medium text-green-800 mb-2">Preview Data:</h5>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full text-sm">
-                                <thead>
-                                    <tr class="bg-green-100">
-                                        <?php if(!empty($results['preview'][0])): ?>
-                                            <?php $__currentLoopData = array_keys($results['preview'][0]); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <th class="px-3 py-2 text-left font-medium text-green-800"><?php echo e($key); ?></th>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        <?php endif; ?>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $__currentLoopData = $results['preview']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <tr class="border-b border-green-200">
-                                            <?php $__currentLoopData = $row; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <td class="px-3 py-2 text-gray-700"><?php echo e($value); ?></td>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        </tr>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            <?php endif; ?>
+        <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+            <?php echo e(session('success')); ?>
+
         </div>
         <?php endif; ?>
 
         <?php if(session('error')): ?>
-        <div class="mb-12 glass rounded-2xl p-6 border-l-4 border-red-500">
-            <div class="flex items-start">
-                <div class="bg-red-100 p-2 rounded-full mr-3 mt-1">
-                    <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M18 6L6 18M6 6l12 12"/>
-                    </svg>
-                </div>
-                <div class="text-red-800 font-medium flex-1"><?php echo session('error'); ?></div>
-            </div>
+        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <?php echo e(session('error')); ?>
+
         </div>
         <?php endif; ?>
 
         <?php if($errors->any()): ?>
-        <div class="mb-12 glass rounded-2xl p-6 border-l-4 border-red-500">
-            <div class="flex items-center mb-3">
-                <div class="bg-red-100 p-2 rounded-full mr-3">
-                    <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M18 6L6 18M6 6l12 12"/>
-                    </svg>
-                </div>
-                <div class="text-red-800 font-medium">Validation Errors:</div>
-            </div>
-            <ul class="list-disc list-inside text-red-700 space-y-1">
+        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <ul class="list-disc list-inside">
                 <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <li><?php echo e($error); ?></li>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -224,271 +87,154 @@
         <?php endif; ?>
 
         <!-- Upload Form -->
-        <div class="glass rounded-2xl p-8 shadow-xl mb-12">
-            <div class="flex items-center mb-6">
-                <div class="bg-gradient-to-br from-blue-400 to-blue-600 p-3 rounded-xl shadow-lg mr-4">
-                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                        <polyline points="14,2 14,8 20,8"/>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-gray-900">Upload File Excel</h3>
-                    <p class="text-sm text-gray-500">Pilih file Excel (.csv, .xlsx, .xls) untuk import data</p>
+                    <h3 class="text-lg font-semibold text-gray-900">Upload File</h3>
+                    <p class="text-sm text-gray-500">Pilih file dan atur konfigurasi upload</p>
                 </div>
             </div>
 
-            <!-- Download Template -->
-            <div class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
-                <h4 class="font-bold text-blue-800 mb-3">📥 Download Template CSV</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <a href="<?php echo e(url('/template_penduduk_datang.csv')); ?>" download class="flex items-center justify-center px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition-colors">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                            <path d="M14 2v6h6M9 15l3 3m0 0l3-3m-3 3V9"/>
-                        </svg>
-                        Template Penduduk Datang
-                    </a>
-                    <a href="<?php echo e(url('/template_penduduk_pindah.csv')); ?>" download class="flex items-center justify-center px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                            <path d="M14 2v6h6M9 15l3 3m0 0l3-3m-3 3V9"/>
-                        </svg>
-                        Template Penduduk Pindah
-                    </a>
-                </div>
-                <p class="text-sm text-blue-600 mt-2">💡 Download template ini, isi dengan data Anda, dan upload kembali!</p>
-            </div>
-
-            <form action="<?php echo e(url('/upload-excel/process')); ?>" method="POST" enctype="multipart/form-data" class="space-y-8">
+            <form action="<?php echo e(url('/upload-excel/process')); ?>" method="POST" enctype="multipart/form-data">
                 <?php echo csrf_field(); ?>
                 
                 <!-- File Upload -->
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-3">
-                        <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                        </svg>
-                        File Excel
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Pilih File Excel atau CSV
                     </label>
-                    <div class="drag-drop-zone border-2 border-dashed border-primary-300 rounded-xl p-8 text-center">
-                        <input type="file" name="excel_file" id="excel_file" accept=".csv,.xlsx,.xls" required class="hidden">
-                        <div id="drop-area">
-                            <svg class="w-12 h-12 mx-auto text-primary-400 mb-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                                <polyline points="14,2 14,8 20,8"/>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary-400 transition-colors bg-gray-50">
+                        <div class="w-12 h-12 mx-auto mb-4 bg-primary-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
-                            <p class="text-gray-600 mb-2">Drag & drop file Excel di sini atau</p>
-                            <button type="button" onclick="document.getElementById('excel_file').click()" class="text-primary-600 hover:text-primary-700 font-semibold">
-                                Klik untuk pilih file
-                            </button>
-                            <p class="text-xs text-gray-500 mt-2">Format: CSV, XLSX, XLS (Max: 10MB)</p>
                         </div>
-                        <div id="file-info" class="hidden">
-                            <p class="text-green-600 font-medium">File dipilih:</p>
-                            <p id="file-name" class="text-sm text-gray-600"></p>
+                        <input type="file" name="excel_file" accept=".csv,.xlsx,.xls" required 
+                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 cursor-pointer">
+                        <p class="mt-2 text-sm text-gray-500">Drag and drop file di sini atau klik untuk memilih</p>
+                    </div>
+                    <p class="mt-3 text-xs text-gray-500">Format yang didukung: .csv, .xlsx, .xls (Maksimal 10MB)</p>
+                </div>
+
+                <!-- Configuration -->
+                <div class="border-t pt-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Konfigurasi Upload
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Jenis Data</label>
+                            <select name="data_type" required class="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                                <option value="">Pilih jenis data</option>
+                                <option value="datang">Data Penduduk Datang</option>
+                                <option value="pindah">Data Penduduk Pindah</option>
+                            </select>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Tahun</label>
+                            <select name="year" required class="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                                <option value="">Pilih tahun</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Bulan (Opsional)</label>
+                            <select name="month" class="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                                <option value="">Semua Bulan</option>
+                                <option value="01">Januari</option>
+                                <option value="02">Februari</option>
+                                <option value="03">Maret</option>
+                                <option value="04">April</option>
+                                <option value="05">Mei</option>
+                                <option value="06">Juni</option>
+                                <option value="07">Juli</option>
+                                <option value="08">Agustus</option>
+                                <option value="09">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
                         </div>
                     </div>
                 </div>
 
-                <!-- Data Type & Year -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            Jenis Data
-                        </label>
-                        <select name="data_type" required class="form-input w-full px-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-primary-500">
-                            <option value="">Pilih jenis data</option>
-                            <option value="datang">Data Penduduk Datang</option>
-                            <option value="pindah">Data Penduduk Pindah</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8 7V3a1 1 0 012 0v4h4V3a1 1 0 012 0v4h2a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h2z"/>
-                            </svg>
-                            Tahun
-                        </label>
-                        <select name="year" required class="form-input w-full px-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-primary-500">
-                            <option value="">Pilih tahun</option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                        </select>
-                    </div>
+                <div class="border-t pt-6">
+                    <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3.5 px-6 rounded-md font-medium transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                        <span>Upload & Proses Data</span>
+                    </button>
                 </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white py-4 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-shadow duration-200 flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
-                    </svg>
-                    <span>Upload & Proses Data</span>
-                </button>
             </form>
         </div>
 
-        <!-- Format Excel Guidelines -->
-        <div class="glass rounded-2xl p-6 shadow-xl">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">📋 Format File Excel</h3>
-            <p class="text-sm text-gray-600 mb-6">Pastikan file Excel Anda menggunakan format kolom yang benar:</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Format Penduduk Datang -->
-                <div class="bg-green-50 border border-green-200 rounded-xl p-5">
-                    <div class="flex items-center mb-4">
-                        <svg class="w-6 h-6 text-green-600 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+        <!-- Template Downloads -->
+        <div class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Download Template</h3>
+                    <p class="text-sm text-gray-500">Download template Excel untuk upload data</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="p-5 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-8 h-8 bg-green-50 rounded flex items-center justify-center">
+                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-gray-900">Penduduk Datang</h4>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4">Template untuk data penduduk yang datang/pindah masuk</p>
+                    <a href="<?php echo e(url('/template_penduduk_datang.csv')); ?>" download 
+                       class="inline-flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-md text-sm font-medium transition-all shadow-sm hover:shadow">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
-                        <h4 class="font-bold text-green-800">Data Penduduk Datang</h4>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="bg-white p-3 rounded-lg border-l-4 border-green-500">
-                            <p class="font-semibold text-gray-700">Kolom A: Nama</p>
-                            <p class="text-sm text-gray-600">Contoh: "John Doe"</p>
-                        </div>
-                        <div class="bg-white p-3 rounded-lg border-l-4 border-green-500">
-                            <p class="font-semibold text-gray-700">Kolom B: Alamat</p>
-                            <p class="text-sm text-gray-600">Contoh: "Jl. Merdeka No. 123"</p>
-                        </div>
-                        <div class="bg-white p-3 rounded-lg border-l-4 border-green-500">
-                            <p class="font-semibold text-gray-700">Kolom C: Tanggal Datang</p>
-                            <p class="text-sm text-gray-600">Format: YYYY-MM-DD<br>Contoh: "2025-01-15"</p>
-                        </div>
-                    </div>
+                        <span>Download Template</span>
+                    </a>
                 </div>
-                
-                <!-- Format Penduduk Pindah -->
-                <div class="bg-red-50 border border-red-200 rounded-xl p-5">
-                    <div class="flex items-center mb-4">
-                        <svg class="w-6 h-6 text-red-600 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20 4l-8 8 8 8-1.41 1.41L11.17 14H20v-2h-8.83l7.42-7.42z"/>
+                <div class="p-5 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-8 h-8 bg-red-50 rounded flex items-center justify-center">
+                            <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-gray-900">Penduduk Pindah</h4>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4">Template untuk data penduduk yang pindah/keluar</p>
+                    <a href="<?php echo e(url('/template_penduduk_pindah.csv')); ?>" download 
+                       class="inline-flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-md text-sm font-medium transition-all shadow-sm hover:shadow">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
-                        <h4 class="font-bold text-red-800">Data Penduduk Pindah</h4>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="bg-white p-3 rounded-lg border-l-4 border-red-500">
-                            <p class="font-semibold text-gray-700">Kolom A: Nama</p>
-                            <p class="text-sm text-gray-600">Contoh: "Jane Smith"</p>
-                        </div>
-                        <div class="bg-white p-3 rounded-lg border-l-4 border-red-500">
-                            <p class="font-semibold text-gray-700">Kolom B: Alamat Asal</p>
-                            <p class="text-sm text-gray-600">Contoh: "Jl. Sudirman No. 456"</p>
-                        </div>
-                        <div class="bg-white p-3 rounded-lg border-l-4 border-red-500">
-                            <p class="font-semibold text-gray-700">Kolom C: Alamat Tujuan</p>
-                            <p class="text-sm text-gray-600">Contoh: "Jl. Thamrin No. 789"</p>
-                        </div>
-                        <div class="bg-white p-3 rounded-lg border-l-4 border-red-500">
-                            <p class="font-semibold text-gray-700">Kolom D: Tanggal Pindah</p>
-                            <p class="text-sm text-gray-600">Format: YYYY-MM-DD<br>Contoh: "2025-01-20"</p>
-                        </div>
-                    </div>
+                        <span>Download Template</span>
+                    </a>
                 </div>
-            </div>
-            
-            <!-- Format Flexibility -->
-            <div class="mt-6 bg-purple-50 border border-purple-200 rounded-xl p-4">
-                <h5 class="font-bold text-purple-800 mb-2">✨ Format Kolom Fleksibel:</h5>
-                <div class="text-sm text-purple-700 space-y-2">
-                    <p><strong>Nama kolom bisa menggunakan:</strong></p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
-                        <div>
-                            <p class="font-semibold">✅ Spasi:</p>
-                            <p class="text-xs">"tanggal datang", "alamat asal", "alamat tujuan"</p>
-                        </div>
-                        <div>
-                            <p class="font-semibold">✅ Underscore:</p>
-                            <p class="text-xs">"tanggal_datang", "alamat_asal", "alamat_tujuan"</p>
-                        </div>
-                        <div>
-                            <p class="font-semibold">✅ Huruf besar:</p>
-                            <p class="text-xs">"NAMA", "ALAMAT", "TANGGAL_DATANG"</p>
-                        </div>
-                        <div>
-                            <p class="font-semibold">✅ Huruf kecil:</p>
-                            <p class="text-xs">"nama", "alamat", "tanggal_datang"</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Important Notes -->
-            <!-- Cara Convert Excel ke CSV -->
-            <div class="mt-4 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                <h5 class="font-bold text-yellow-800 mb-2">📝 Cara Convert Excel ke CSV:</h5>
-                <ol class="text-sm text-yellow-700 space-y-1 list-decimal list-inside">
-                    <li>Buka file Excel Anda</li>
-                    <li>Klik <strong>File</strong> → <strong>Save As</strong></li>
-                    <li>Pada "Save as type", pilih <strong>CSV (Comma delimited) (*.csv)</strong></li>
-                    <li>Klik <strong>Save</strong></li>
-                    <li>Upload file .csv yang sudah diconvert</li>
-                </ol>
-            </div>
-            
-            <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4">
-                <h5 class="font-bold text-blue-800 mb-2">⚠️ Catatan Penting:</h5>
-                <ul class="text-sm text-blue-700 space-y-1">
-                    <li>• Pastikan kolom pertama (baris 1) berisi header/judul kolom</li>
-                    <li>• Data mulai dari baris kedua</li>
-                    <li>• Format tanggal: YYYY-MM-DD (contoh: 2025-01-15)</li>
-                    <li>• <strong>File harus berformat .csv saja</strong></li>
-                    <li>• Maksimal ukuran file 10MB</li>
-                </ul>
             </div>
         </div>
-    </div>
-
-    <script>
-        // File upload handling
-        const fileInput = document.getElementById('excel_file');
-        const dropArea = document.getElementById('drop-area');
-        const fileInfo = document.getElementById('file-info');
-        const fileName = document.getElementById('file-name');
-        const dragDropZone = document.querySelector('.drag-drop-zone');
-
-        fileInput.addEventListener('change', handleFileSelect);
-
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (file) {
-                dropArea.classList.add('hidden');
-                fileInfo.classList.remove('hidden');
-                fileName.textContent = file.name + ' (' + formatFileSize(file.size) + ')';
-            }
-        }
-
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        // Drag and drop functionality
-        dragDropZone.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            dragDropZone.classList.add('dragover');
-        });
-
-        dragDropZone.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            dragDropZone.classList.remove('dragover');
-        });
-
-        dragDropZone.addEventListener('drop', function(e) {
-            e.preventDefault();
-            dragDropZone.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                fileInput.files = files;
-                handleFileSelect({target: {files: files}});
-            }
-        });
-    </script>
+    </main>
 </body>
 </html><?php /**PATH C:\xampp\htdocs\disdukcapil\resources\views/upload-excel.blade.php ENDPATH**/ ?>

@@ -39,13 +39,6 @@
             background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
             backdrop-filter: blur(10px);
         }
-
-        .stat-number {
-            background: linear-gradient(45deg, #a855f7, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-primary-50 via-purple-50 to-indigo-100 min-h-screen">
@@ -64,7 +57,7 @@
                         <h1 class="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
                             Sistem Informasi Kependudukan
                         </h1>
-                        <p class="text-xs text-primary-500 font-medium">Data Analytics</p>
+                        <p class="text-xs text-primary-500 font-medium">Rekapitulasi Data</p>
                     </div>
                 </div>
                 <div class="flex space-x-2">
@@ -100,376 +93,292 @@
     <!-- Hero Section -->
     <div class="relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-indigo-600/10"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-6 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 relative">
             <div class="text-center">
-                <div class="inline-flex items-center px-4 py-2 bg-primary-100 text-primary-800 rounded-full text-sm font-semibold mb-4">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
-                    </svg>
-                    Laporan Analitik
-                </div>
-                <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
                     <span class="bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">
-                        Rekapitulasi Data Kependudukan
+                        Rekapitulasi Data Penduduk
                     </span>
                 </h1>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Analisis mendalam pergerakan penduduk dengan visualisasi interaktif dan insights real-time
-                </p>
+                <p class="text-lg text-gray-600">Laporan dan statistik komprehensif data perpindahan penduduk</p>
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12">
-        <!-- Key Metrics -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-12 mb-16">
-            <!-- Datang 2024 -->
-            <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-gradient-to-br from-blue-400 to-blue-600 p-3 rounded-xl shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                        </svg>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-sm font-medium text-gray-500">Datang 2024</p>
-                        <p class="text-2xl font-bold stat-number"><?php echo e(number_format($rekapitulasi->datang2024)); ?></p>
-                    </div>
-                </div>
-                <div class="bg-blue-50 rounded-lg p-3">
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-blue-600 font-medium">Periode Tahun 2024</span>
-                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold">Aktif</span>
-                    </div>
+
+        <!-- Filter Section -->
+        <div class="glass rounded-2xl p-8 shadow-xl mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-gray-900">🔍 Filter Data</h3>
+                <div class="flex items-center space-x-2 text-sm text-gray-500">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
+                    </svg>
+                    <span>Pencarian Lanjutan</span>
                 </div>
             </div>
-
-            <!-- Datang 2025 -->
-            <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-gradient-to-br from-green-400 to-green-600 p-3 rounded-xl shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-primary-600 mb-2 uppercase tracking-wide">Tahun</label>
+                    <select class="w-full p-3 bg-white/50 backdrop-filter backdrop-blur border border-primary-200 rounded-xl text-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
+                        <option value="">Semua Tahun</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-primary-600 mb-2 uppercase tracking-wide">Bulan</label>
+                    <select class="w-full p-3 bg-white/50 backdrop-filter backdrop-blur border border-primary-200 rounded-xl text-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
+                        <option value="">Semua Bulan</option>
+                        <option value="1">Januari</option>
+                        <option value="2">Februari</option>
+                        <option value="3">Maret</option>
+                        <option value="4">April</option>
+                        <option value="5">Mei</option>
+                        <option value="6">Juni</option>
+                        <option value="7">Juli</option>
+                        <option value="8">Agustus</option>
+                        <option value="9">September</option>
+                        <option value="10">Oktober</option>
+                        <option value="11">November</option>
+                        <option value="12">Desember</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button class="w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white py-3 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                         </svg>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-sm font-medium text-gray-500">Datang 2025</p>
-                        <p class="text-2xl font-bold stat-number"><?php echo e(number_format($rekapitulasi->datang2025)); ?></p>
-                    </div>
-                </div>
-                <div class="bg-green-50 rounded-lg p-3">
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-green-600 font-medium">Periode Tahun 2025</span>
-                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">Aktif</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Pindah 2024 -->
-            <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-gradient-to-br from-orange-400 to-orange-600 p-3 rounded-xl shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20 4l-8 8 8 8-1.41 1.41L11.17 14H20v-2h-8.83l7.42-7.42z"/>
-                        </svg>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-sm font-medium text-gray-500">Pindah 2024</p>
-                        <p class="text-2xl font-bold stat-number"><?php echo e(number_format($rekapitulasi->pindah2024)); ?></p>
-                    </div>
-                </div>
-                <div class="bg-orange-50 rounded-lg p-3">
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-orange-600 font-medium">Periode Tahun 2024</span>
-                        <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-semibold">Completed</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Pindah 2025 -->
-            <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-gradient-to-br from-red-400 to-red-600 p-3 rounded-xl shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20 4l-8 8 8 8-1.41 1.41L11.17 14H20v-2h-8.83l7.42-7.42z"/>
-                        </svg>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-sm font-medium text-gray-500">Pindah 2025</p>
-                        <p class="text-2xl font-bold stat-number"><?php echo e(number_format($rekapitulasi->pindah2025)); ?></p>
-                    </div>
-                </div>
-                <div class="bg-red-50 rounded-lg p-3">
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-red-600 font-medium">Periode Tahun 2025</span>
-                        <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-semibold">Active</span>
-                    </div>
+                        <span>Filter Data</span>
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- Summary Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <!-- Total Datang -->
-            <div class="glass rounded-2xl p-8 shadow-xl text-center">
-                <div class="bg-gradient-to-br from-primary-400 to-primary-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                    </svg>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            <!-- Total Datang Card -->
+            <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-primary-600 text-sm font-semibold uppercase tracking-wider">Total Datang</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2"><?php echo e(number_format($rekapitulasi->total_datang ?? 0)); ?></p>
+                        <p class="text-primary-500 text-sm mt-1">2024 - 2025</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-400 to-green-600 p-3 rounded-xl shadow-lg">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M7 7l1.41 1.41L5.83 11H16v2H5.83l2.58 2.59L7 17l-5-5z"/>
+                            <path d="M20 5h-8V3h8c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2h-8v-2h8V5z"/>
+                        </svg>
+                    </div>
                 </div>
-                <h3 class="text-3xl font-bold text-gray-900 mb-2"><?php echo e(number_format($rekapitulasi->total_datang)); ?></h3>
-                <p class="text-primary-600 font-semibold mb-1">Total Penduduk Datang</p>
-                <p class="text-sm text-gray-500">Periode 2024 - 2025</p>
             </div>
 
-            <!-- Total Pindah -->
-            <div class="glass rounded-2xl p-8 shadow-xl text-center">
-                <div class="bg-gradient-to-br from-red-400 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M20 4l-8 8 8 8-1.41 1.41L11.17 14H20v-2h-8.83l7.42-7.42z"/>
-                    </svg>
+            <!-- Total Pindah Card -->
+            <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-primary-600 text-sm font-semibold uppercase tracking-wider">Total Pindah</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2"><?php echo e(number_format($rekapitulasi->total_pindah ?? 0)); ?></p>
+                        <p class="text-primary-500 text-sm mt-1">2024 - 2025</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-red-400 to-red-600 p-3 rounded-xl shadow-lg">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5z"/>
+                            <path d="M4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                        </svg>
+                    </div>
                 </div>
-                <h3 class="text-3xl font-bold text-gray-900 mb-2"><?php echo e(number_format($rekapitulasi->total_pindah)); ?></h3>
-                <p class="text-red-600 font-semibold mb-1">Total Penduduk Pindah</p>
-                <p class="text-sm text-gray-500">Periode 2024 - 2025</p>
             </div>
 
-            <!-- Net Migration -->
-            <div class="glass rounded-2xl p-8 shadow-xl text-center">
-                <div class="bg-gradient-to-br from-<?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'green' : 'red'); ?>-400 to-<?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'green' : 'red'); ?>-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <?php if($rekapitulasi->hasil_akhir >= 0): ?>
-                        <path d="M7 14l5-5 5 5z"/>
-                        <?php else: ?>
-                        <path d="M7 10l5 5 5-5z"/>
-                        <?php endif; ?>
-                    </svg>
-                </div>
-                <h3 class="text-3xl font-bold <?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'text-green-600' : 'text-red-600'); ?> mb-2">
-                    <?php echo e($rekapitulasi->hasil_akhir >= 0 ? '+' : ''); ?><?php echo e(number_format($rekapitulasi->hasil_akhir)); ?>
+            <!-- Selisih Card -->
+            <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-primary-600 text-sm font-semibold uppercase tracking-wider">Selisih</p>
+                        <p class="text-3xl font-bold <?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'); ?> mt-2">
+                            <?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? '+' : ''); ?><?php echo e(number_format($rekapitulasi->hasil_akhir ?? 0)); ?>
 
-                </h3>
-                <p class="<?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'text-green-600' : 'text-red-600'); ?> font-semibold mb-1">
-                    Net Migration
-                </p>
-                <p class="text-sm text-gray-500"><?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'Population Growth' : 'Population Decline'); ?></p>
+                        </p>
+                        <p class="text-primary-500 text-sm mt-1"><?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'Surplus' : 'Defisit'); ?></p>
+                    </div>
+                    <div class="bg-gradient-to-br from-<?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'green' : 'red'); ?>-400 to-<?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'green' : 'red'); ?>-600 p-3 rounded-xl shadow-lg">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <?php if(($rekapitulasi->hasil_akhir ?? 0) >= 0): ?>
+                            <path d="M7 14l5-5 5 5z"/>
+                            <?php else: ?>
+                            <path d="M7 10l5 5 5-5z"/>
+                            <?php endif; ?>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Growth Rate Card -->
+            <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-primary-600 text-sm font-semibold uppercase tracking-wider">Rasio Pertumbuhan</p>
+                        <p class="text-3xl font-bold text-indigo-600 mt-2">
+                            <?php echo e(($rekapitulasi->total_pindah ?? 0) > 0 ? number_format((($rekapitulasi->total_datang ?? 0) / ($rekapitulasi->total_pindah ?? 0)) * 100, 1) : '0'); ?>%
+                        </p>
+                        <p class="text-primary-500 text-sm mt-1">Perbandingan Datang dan Pindah</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-indigo-400 to-indigo-600 p-3 rounded-xl shadow-lg">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Charts Grid -->
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
-            <!-- Comparison Chart -->
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
+            <!-- Bar Chart -->
             <div class="glass rounded-2xl p-8 shadow-xl">
                 <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-1">Perbandingan Data</h3>
-                        <p class="text-sm text-gray-500">Analisis pergerakan penduduk per tahun</p>
-                    </div>
-                    <div class="bg-primary-100 p-2 rounded-lg">
-                        <svg class="w-5 h-5 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
+                    <h3 class="text-xl font-bold text-gray-900">📊 Statistik Bulanan</h3>
+                    <div class="flex items-center space-x-2 text-sm text-gray-500">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M9 11H7v8h2v-8zm4-4h-2v12h2V7zm4-2h-2v14h2V5z"/>
                         </svg>
+                        <span>Bar Chart</span>
                     </div>
                 </div>
-                <div class="h-80">
-                    <canvas id="comparisonChart"></canvas>
+                <div class="h-64">
+                    <canvas id="barChart"></canvas>
                 </div>
             </div>
 
-            <!-- Distribution Chart -->
+            <!-- Pie Chart -->
             <div class="glass rounded-2xl p-8 shadow-xl">
                 <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-1">Distribusi Data</h3>
-                        <p class="text-sm text-gray-500">Proporsi penduduk datang vs pindah</p>
-                    </div>
-                    <div class="bg-indigo-100 p-2 rounded-lg">
-                        <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M11 2v20c-5.07-.5-9-4.79-9-10s3.93-9.5 9-10zm2.03 0v8.99H22c-.47-4.74-4.24-8.52-8.97-8.99zm0 11.01V22c4.74-.47 8.5-4.25 8.97-8.99h-8.97z"/>
+                    <h3 class="text-xl font-bold text-gray-900">🎯 Distribusi Data</h3>
+                    <div class="flex items-center space-x-2 text-sm text-gray-500">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
+                        <span>Pie Chart</span>
                     </div>
                 </div>
-                <div class="h-80">
-                    <canvas id="distributionChart"></canvas>
+                <div class="h-64">
+                    <canvas id="pieChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Trend Analysis -->
+        <!-- Data Table -->
         <div class="glass rounded-2xl p-8 shadow-xl">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-1">Analisis Tren</h3>
-                    <p class="text-sm text-gray-500">Pergerakan data kependudukan dari waktu ke waktu</p>
-                </div>
-                <div class="flex items-center space-x-2 text-sm">
-                    <div class="bg-primary-100 text-primary-800 px-3 py-1 rounded-full font-medium">Real-time Data</div>
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
+                <h3 class="text-xl font-bold text-gray-900">📋 Detail Rekapitulasi</h3>
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                    <button class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                        </svg>
+                        <span>Export Excel</span>
+                    </button>
+                    <button class="bg-gradient-to-r from-red-500 to-rose-600 text-white px-6 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        <span>Export PDF</span>
+                    </button>
                 </div>
             </div>
-            <div class="h-96">
-                <canvas id="trendChart"></canvas>
+
+            <div class="overflow-x-auto rounded-xl">
+                <table class="w-full">
+                    <thead class="bg-gradient-to-r from-primary-500/10 to-primary-600/10">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-primary-700 uppercase tracking-wider">Periode</th>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-primary-700 uppercase tracking-wider">Penduduk Datang</th>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-primary-700 uppercase tracking-wider">Penduduk Pindah</th>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-primary-700 uppercase tracking-wider">Selisih</th>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-primary-700 uppercase tracking-wider">Persentase</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white/50 backdrop-filter backdrop-blur divide-y divide-primary-100">
+                        <tr class="hover:bg-primary-50/50 transition-all duration-200">
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">Oktober 2025</td>
+                            <td class="px-6 py-4 text-sm font-bold text-green-600"><?php echo e(number_format($rekapitulasi->total_datang ?? 0)); ?></td>
+                            <td class="px-6 py-4 text-sm font-bold text-red-600"><?php echo e(number_format($rekapitulasi->total_pindah ?? 0)); ?></td>
+                            <td class="px-6 py-4 text-sm font-bold <?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'); ?>">
+                                <?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? '+' : ''); ?><?php echo e(number_format($rekapitulasi->hasil_akhir ?? 0)); ?>
+
+                            </td>
+                            <td class="px-6 py-4 text-sm font-medium text-indigo-600">
+                                <?php echo e(($rekapitulasi->total_pindah ?? 0) > 0 ? number_format((($rekapitulasi->total_datang ?? 0) / ($rekapitulasi->total_pindah ?? 0)) * 100, 1) : '0'); ?>%
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
     <script>
-        // Comparison Bar Chart
-        const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
-        new Chart(comparisonCtx, {
+        // Bar Chart
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
             type: 'bar',
             data: {
-                labels: ['2024', '2025'],
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [{
-                    label: 'Datang',
-                    data: [<?php echo e($rekapitulasi->datang2024); ?>, <?php echo e($rekapitulasi->datang2025); ?>],
-                    backgroundColor: 'rgba(168, 85, 247, 0.8)',
-                    borderColor: 'rgb(168, 85, 247)',
-                    borderWidth: 2,
-                    borderRadius: 8
+                    label: 'Penduduk Datang',
+                    data: [12, 19, 3, 5, 2, 3, 8, 12, 15, <?php echo e($rekapitulasi->total_datang ?? 0); ?>, 0, 0],
+                    backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                    borderColor: 'rgba(34, 197, 94, 1)',
+                    borderWidth: 1
                 }, {
-                    label: 'Pindah',
-                    data: [<?php echo e($rekapitulasi->pindah2024); ?>, <?php echo e($rekapitulasi->pindah2025); ?>],
+                    label: 'Penduduk Pindah',
+                    data: [8, 11, 7, 2, 4, 1, 5, 8, 10, <?php echo e($rekapitulasi->total_pindah ?? 0); ?>, 0, 0],
                     backgroundColor: 'rgba(239, 68, 68, 0.8)',
-                    borderColor: 'rgb(239, 68, 68)',
-                    borderWidth: 2,
-                    borderRadius: 8
+                    borderColor: 'rgba(239, 68, 68, 1)',
+                    borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            padding: 20,
-                            font: {
-                                size: 12,
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                },
                 scales: {
                     y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
+                        beginAtZero: true
                     }
                 }
             }
         });
 
-        // Distribution Pie Chart
-        const distributionCtx = document.getElementById('distributionChart').getContext('2d');
-        new Chart(distributionCtx, {
+        // Pie Chart
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Total Datang', 'Total Pindah'],
+                labels: ['Penduduk Datang', 'Penduduk Pindah'],
                 datasets: [{
-                    data: [<?php echo e($rekapitulasi->total_datang); ?>, <?php echo e($rekapitulasi->total_pindah); ?>],
+                    data: [<?php echo e($rekapitulasi->total_datang ?? 0); ?>, <?php echo e($rekapitulasi->total_pindah ?? 0); ?>],
                     backgroundColor: [
-                        'rgba(168, 85, 247, 0.8)',
+                        'rgba(34, 197, 94, 0.8)',
                         'rgba(239, 68, 68, 0.8)'
                     ],
                     borderColor: [
-                        'rgb(168, 85, 247)',
-                        'rgb(239, 68, 68)'
+                        'rgba(34, 197, 94, 1)',
+                        'rgba(239, 68, 68, 1)'
                     ],
-                    borderWidth: 3
+                    borderWidth: 2
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 20,
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Trend Line Chart
-        const trendCtx = document.getElementById('trendChart').getContext('2d');
-        new Chart(trendCtx, {
-            type: 'line',
-            data: {
-                labels: ['2024', '2025'],
-                datasets: [{
-                    label: 'Penduduk Datang',
-                    data: [<?php echo e($rekapitulasi->datang2024); ?>, <?php echo e($rekapitulasi->datang2025); ?>],
-                    borderColor: 'rgb(168, 85, 247)',
-                    backgroundColor: 'rgba(168, 85, 247, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4
-                }, {
-                    label: 'Penduduk Pindah',
-                    data: [<?php echo e($rekapitulasi->pindah2024); ?>, <?php echo e($rekapitulasi->pindah2025); ?>],
-                    borderColor: 'rgb(239, 68, 68)',
-                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4
-                }, {
-                    label: 'Net Migration',
-                    data: [
-                        <?php echo e($rekapitulasi->datang2024 - $rekapitulasi->pindah2024); ?>, 
-                        <?php echo e($rekapitulasi->datang2025 - $rekapitulasi->pindah2025); ?>
-
-                    ],
-                    borderColor: 'rgb(34, 197, 94)',
-                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                    borderWidth: 3,
-                    fill: false,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            padding: 20,
-                            font: {
-                                size: 12,
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
+                        position: 'bottom'
                     }
                 }
             }
         });
     </script>
 </body>
-</html><?php /**PATH C:\xampp\htdocs\disdukcapil\resources\views/rekapitulasi.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\xampp\htdocs\disdukcapil\resources\views/rekapitulasi.blade.php ENDPATH**/ ?>

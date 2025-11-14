@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExcelUploadController;
 
 Route::get('/', [DashboardController::class, 'index']);
+Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::get('/rekapitulasi', [DashboardController::class, 'rekapitulasi']);
 Route::get('/penduduk', [DashboardController::class, 'penduduk']);
 

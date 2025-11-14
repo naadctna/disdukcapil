@@ -10,8 +10,72 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $rekapitulasi = Penduduk::getRekapitulasi();
-        return view('dashboard', compact('rekapitulasi'));
+        try {
+            // Test koneksi database dulu
+            DB::connection()->getPdo();
+            
+            // Query untuk data per tabel tahun
+            $datang2024 = 0;
+            $datang2025 = 0; 
+            $pindah2024 = 0;
+            $pindah2025 = 0;
+            
+            // Cek apakah tabel exists sebelum query
+            try {
+                $datang2024 = DB::table('datang2024')->count();
+            } catch (\Exception $e) {
+                $datang2024 = 0;
+            }
+            
+            try {
+                $datang2025 = DB::table('datang2025')->count();
+            } catch (\Exception $e) {
+                $datang2025 = 0;
+            }
+            
+            try {
+                $pindah2024 = DB::table('pindah2024')->count();
+            } catch (\Exception $e) {
+                $pindah2024 = 0;
+            }
+            
+            try {
+                $pindah2025 = DB::table('pindah2025')->count();
+            } catch (\Exception $e) {
+                $pindah2025 = 0;
+            }
+            
+            $total_datang = $datang2024 + $datang2025;
+            $total_pindah = $pindah2024 + $pindah2025;
+            
+            $rekapitulasi = (object)[
+                'total_datang' => $total_datang,
+                'total_pindah' => $total_pindah,
+                'hasil_akhir' => $total_datang - $total_pindah,
+                'datang2024' => $datang2024,
+                'datang2025' => $datang2025,
+                'pindah2024' => $pindah2024,
+                'pindah2025' => $pindah2025
+            ];
+            
+            return view('dashboard', compact('rekapitulasi'));
+            
+        } catch (\Exception $e) {
+            // Log error untuk debugging
+            \Log::error('Dashboard error: ' . $e->getMessage());
+            
+            // Fallback jika ada error
+            $rekapitulasi = (object)[
+                'total_datang' => 0,
+                'total_pindah' => 0,
+                'hasil_akhir' => 0,
+                'datang2024' => 0,
+                'datang2025' => 0,
+                'pindah2024' => 0,
+                'pindah2025' => 0
+            ];
+            return view('dashboard', compact('rekapitulasi'));
+        }
     }
 
     public function rekapitulasi()
