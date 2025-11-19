@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Upload Excel - Sistem Kependudukan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -151,11 +152,26 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
                         </div>
-                        <input type="file" name="excel_file" accept=".csv,.xlsx,.xls" required 
-                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 cursor-pointer">
+                        <div class="flex justify-center">
+                            <input type="file" name="excel_file" accept=".csv,.xlsx,.xls,.txt" required 
+                                   class="text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-500 file:text-white hover:file:bg-primary-600 file:cursor-pointer cursor-pointer file:shadow-lg hover:file:shadow-xl file:transition-all file:duration-200">
+                        </div>
                         <p class="mt-2 text-sm text-gray-500">Drag and drop file di sini atau klik untuk memilih</p>
                     </div>
-                    <p class="mt-3 text-xs text-gray-500">Format yang didukung: .csv, .xlsx, .xls (Maksimal 10MB)</p>
+                    <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <div class="flex items-start space-x-2">
+                            <svg class="w-4 h-4 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <div class="text-sm">
+                                <p class="font-medium text-blue-800">Format yang didukung:</p>
+                                <p class="text-blue-700">• Ekstensi: .csv, .xlsx, .xls, .txt</p>
+                                <p class="text-blue-700">• Ukuran maksimal: 40MB</p>
+                                <p class="text-blue-600 text-xs mt-1">Sistem akan otomatis mendeteksi format dan struktur data Anda</p>
+                                <p class="text-red-600 text-xs mt-1"><strong>⚠️ Penting:</strong> Jangan refresh halaman saat upload sedang berjalan!</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Configuration -->
@@ -182,9 +198,14 @@
                             <label class="block text-sm font-medium text-gray-700">Tahun</label>
                             <select name="year" required class="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
                                 <option value="">Pilih tahun</option>
-                                <option value="2023">2023</option>
-                                <option value="2024">2024</option>
-                                <option value="2025">2025</option>
+                                @php
+                                    $currentYear = date('Y');
+                                    $startYear = 2020;
+                                    $endYear = $currentYear + 5; // 5 tahun ke depan
+                                @endphp
+                                @for($year = $endYear; $year >= $startYear; $year--)
+                                    <option value="{{ $year }}" {{ $year == $currentYear ? 'selected' : '' }}>{{ $year }}</option>
+                                @endfor
                             </select>
                         </div>
                         
@@ -220,58 +241,53 @@
             </form>
         </div>
 
-        <!-- Template Downloads -->
-        <div class="glass rounded-2xl shadow-2xl p-8">
-            <div class="flex items-center space-x-4 mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold text-gray-800">Download Template</h3>
-                    <p class="text-gray-600">Download template Excel untuk upload data</p>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div class="gradient-card p-6 rounded-xl hover:shadow-lg transition-all duration-200 border border-white/20">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
-                            </svg>
-                        </div>
-                        <h4 class="font-bold text-gray-800">Penduduk Datang</h4>
-                    </div>
-                    <p class="text-gray-600 mb-5">Template untuk data penduduk yang datang/pindah masuk</p>
-                    <a href="{{ url('/template_penduduk_datang.csv') }}" download 
-                       class="inline-flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-5 py-3 rounded-lg text-sm font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
-                        <span>Download Template</span>
-                    </a>
-                </div>
-                <div class="gradient-card p-6 rounded-xl hover:shadow-lg transition-all duration-200 border border-white/20">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center shadow-md">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                            </svg>
-                        </div>
-                        <h4 class="font-bold text-gray-800">Penduduk Pindah</h4>
-                    </div>
-                    <p class="text-gray-600 mb-5">Template untuk data penduduk yang pindah/keluar</p>
-                    <a href="{{ url('/template_penduduk_pindah.csv') }}" download 
-                       class="inline-flex items-center space-x-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-5 py-3 rounded-lg text-sm font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
-                        <span>Download Template</span>
-                    </a>
-                </div>
-            </div>
-        </div>
+
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const fileInput = document.querySelector('input[type="file"]');
+            
+            // Handle form submission
+            form.addEventListener('submit', function(e) {
+                // Check if file is selected
+                if (!fileInput.files.length) {
+                    e.preventDefault();
+                    alert('Silakan pilih file terlebih dahulu!');
+                    return false;
+                }
+                
+                // Check file size (40MB = 40 * 1024 * 1024 bytes)
+                if (fileInput.files[0].size > 40 * 1024 * 1024) {
+                    e.preventDefault();
+                    alert('File terlalu besar! Maksimal 40MB.');
+                    return false;
+                }
+                
+                // Show loading state
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengupload... Mohon tunggu';
+                    submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                }
+                
+                // Prevent double submit
+                setTimeout(() => {
+                    form.style.pointerEvents = 'none';
+                }, 100);
+            });
+            
+            // Show file info when selected
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    const file = this.files[0];
+                    const fileSize = (file.size / (1024 * 1024)).toFixed(2);
+                    console.log(`File selected: ${file.name} (${fileSize}MB)`);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

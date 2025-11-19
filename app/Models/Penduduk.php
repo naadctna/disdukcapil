@@ -62,40 +62,33 @@ class Penduduk extends Model
     // Method untuk get data per tabel dengan limit untuk performance
     public static function getDataByTable($table)
     {
-        // Untuk database test, gunakan NIK atau kolom pertama sebagai order
+        // Untuk database test, gunakan kolom yang benar
         try {
-            if ($table == 'datang2024' || $table == 'datang2025') {
-                // Gunakan tanggal_datang untuk sorting jika ada
-                return DB::table($table)
-                         ->orderBy('tanggal_datang', 'desc')
-                         ->limit(100)
-                         ->get();
-            } else {
-                // Untuk tabel pindah, gunakan tanggal_pindah
-                return DB::table($table)
-                         ->orderBy('tanggal_pindah', 'desc') 
-                         ->limit(100)
-                         ->get();
-            }
-    } catch (\Exception $e) {
+            // Semua tabel menggunakan tgl_datang untuk sorting
+            return DB::table($table)
+                     ->orderBy('tgl_datang', 'desc')
+                     ->limit(100)
+                     ->get();
+        } catch (\Exception $e) {
             // Jika tabel tidak ada atau query gagal, kembalikan collection kosong agar UI tidak crash
+            \Log::error("Error in getDataByTable for table $table: " . $e->getMessage());
             return collect([]);
         }
     }
 
-    // Method untuk search berdasarkan nama
+    // Method untuk search berdasarkan nama (updated untuk kolom baru)
     public static function searchByName($table, $search)
     {
         try {
             $query = DB::table($table)
-                       ->where('nama', 'LIKE', '%' . $search . '%');
+                       ->where(function($q) use ($search) {
+                           $q->where('nama_lengkap', 'LIKE', '%' . $search . '%')
+                             ->orWhere('nama', 'LIKE', '%' . $search . '%')  // Fallback ke kolom lama
+                             ->orWhere('nik', 'LIKE', '%' . $search . '%');
+                       });
 
-            // Order berdasarkan jenis tabel
-            if ($table == 'datang2024' || $table == 'datang2025') {
-                $query->orderBy('tanggal_datang', 'desc');
-            } else {
-                $query->orderBy('tanggal_pindah', 'desc');
-            }
+            // Order berdasarkan tgl_datang (semua tabel menggunakan kolom yang sama)
+            $query->orderBy('tgl_datang', 'desc');
 
             return $query->limit(100)->get();
     } catch (\Exception $e) {
@@ -107,5 +100,17 @@ class Penduduk extends Model
     public static function insertData($table, $data)
     {
         return DB::table($table)->insert($data);
+    }
+    
+    /**
+     * Get detailed record with all columns (A sampai AC dari Excel)
+     */
+    public static function getDetailRecord($table, $id)
+    {
+        try {
+            return DB::table($table)->where('id', $id)->first();
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }

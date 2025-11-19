@@ -202,36 +202,69 @@
                 </svg>
                 Pencarian & Filter
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Pencarian</label>
-                    <input type="text" placeholder="Cari nama, NIK..." class="w-full p-3 border border-gray-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-200 bg-white/50 backdrop-blur-sm transition-all duration-200">
+            <form method="GET" action="<?php echo e(route('penduduk')); ?>" id="filterForm">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Pencarian</label>
+                        <input type="text" name="search" value="<?php echo e($search); ?>" placeholder="Cari nama, NIK..." class="w-full p-3 border border-gray-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-200 bg-white/50 backdrop-blur-sm transition-all duration-200">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+                        <select name="status" class="w-full p-3 border border-gray-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-200 bg-white/50 backdrop-blur-sm transition-all duration-200">
+                            <option value="">Semua Status</option>
+                            <option value="datang" <?php echo e(($status ?? '') === 'datang' ? 'selected' : ''); ?>>Datang</option>
+                            <option value="pindah" <?php echo e(($status ?? '') === 'pindah' ? 'selected' : ''); ?>>Pindah</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Tahun</label>
+                        <select name="tahun" class="w-full p-3 border border-gray-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-200 bg-white/50 backdrop-blur-sm transition-all duration-200">
+                            <option value="">Semua Tahun</option>
+                            <?php
+                                $currentYear = date('Y');
+                                $startYear = 2020;
+                                $endYear = $currentYear + 5;
+                                $selectedTahun = $tahun ?? '';
+                            ?>
+                            <?php for($year = $endYear; $year >= $startYear; $year--): ?>
+                                <option value="<?php echo e($year); ?>" <?php echo e($selectedTahun == $year ? 'selected' : ''); ?>><?php echo e($year); ?></option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Bulan</label>
+                        <select name="bulan" class="w-full p-3 border border-gray-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-200 bg-white/50 backdrop-blur-sm transition-all duration-200">
+                            <option value="">Semua Bulan</option>
+                            <?php
+                                $months = [
+                                    '01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April',
+                                    '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus',
+                                    '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
+                                ];
+                                $selectedBulan = $bulan ?? '';
+                            ?>
+                            <?php $__currentLoopData = $months; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($value); ?>" <?php echo e($selectedBulan == $value ? 'selected' : ''); ?>><?php echo e($label); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                    </div>
+                    <div class="flex items-end space-x-2">
+                        <button type="submit" class="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                            </svg>
+                            <span>Filter</span>
+                        </button>
+                        <?php if($search || $status || $tahun || ($bulan ?? '')): ?>
+                        <button type="button" onclick="clearFilters()" class="bg-gray-500 hover:bg-gray-600 text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                            </svg>
+                        </button>
+                        <?php endif; ?>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
-                    <select class="w-full p-3 border border-gray-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-200 bg-white/50 backdrop-blur-sm transition-all duration-200">
-                        <option value="">Semua Status</option>
-                        <option value="datang">Datang</option>
-                        <option value="pindah">Pindah</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tahun</label>
-                    <select class="w-full p-3 border border-gray-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-200 bg-white/50 backdrop-blur-sm transition-all duration-200">
-                        <option value="">Semua Tahun</option>
-                        <option value="2024">2024</option>
-                        <option value="2025">2025</option>
-                    </select>
-                </div>
-                <div class="flex items-end">
-                    <button class="w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                        </svg>
-                        <span>Filter</span>
-                    </button>
-                </div>
-            </div>
+            </form>
         </div>
 
         <!-- Data Table -->
@@ -269,13 +302,10 @@
                     <thead class="bg-gradient-to-r from-primary-50 to-purple-50">
                         <tr>
                             <th class="px-6 py-4 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">No</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">NIK</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">Nama Lengkap</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">Jenis Kelamin</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">Tempat Lahir</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">Tanggal Lahir</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">Nama</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">Alamat</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">Tanggal</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">Jenis Data</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
@@ -283,24 +313,27 @@
                         <?php $__empty_1 = true; $__currentLoopData = $penduduk ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr class="hover:bg-primary-50/50 transition-colors duration-200">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo e($index + 1); ?></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono"><?php echo e($p->nik ?? '-'); ?></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium"><?php echo e($p->nama_lengkap ?? '-'); ?></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo e($p->jenis_kelamin ?? '-'); ?></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo e($p->tempat_lahir ?? '-'); ?></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo e($p->tanggal_lahir ?? '-'); ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium"><?php echo e($p->nama ?? '-'); ?></td>
+                            <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate"><?php echo e($p->alamat ?? '-'); ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <?php echo e($p->tanggal && $p->tanggal !== '-' ? \Carbon\Carbon::parse($p->tanggal)->format('d/m/Y') : '-'); ?>
+
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo e(($p->status ?? '') === 'datang' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'); ?>">
-                                    <?php echo e(ucfirst($p->status ?? '-')); ?>
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo e(str_contains($p->jenis_data, 'Datang') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'); ?>">
+                                    <?php echo e($p->jenis_data ?? '-'); ?>
 
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate"><?php echo e($p->alamat ?? '-'); ?></td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-1">
-                                    <button class="text-primary-600 hover:text-primary-900 p-2 rounded-lg hover:bg-primary-50 transition-all duration-200" title="Edit">
+                                    <button onclick="viewDetail('<?php echo e($p->table_source ?? (str_contains($p->jenis_data, 'Datang') ? (str_contains($p->jenis_data, '2024') ? 'datang2024' : 'datang2025') : (str_contains($p->jenis_data, '2024') ? 'pindah2024' : 'pindah2025'))); ?>', <?php echo e($p->id); ?>)" class="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-all duration-200" title="Lihat Detail">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button onclick="editData('<?php echo e($p->table_source ?? (str_contains($p->jenis_data, 'Datang') ? (str_contains($p->jenis_data, '2024') ? 'datang2024' : 'datang2025') : (str_contains($p->jenis_data, '2024') ? 'pindah2024' : 'pindah2025'))); ?>', <?php echo e($p->id); ?>)" class="text-primary-600 hover:text-primary-900 p-2 rounded-lg hover:bg-primary-50 transition-all duration-200" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition-all duration-200" title="Hapus">
+                                    <button onclick="confirmDelete('<?php echo e($p->table_source ?? (str_contains($p->jenis_data, 'Datang') ? (str_contains($p->jenis_data, '2024') ? 'datang2024' : 'datang2025') : (str_contains($p->jenis_data, '2024') ? 'pindah2024' : 'pindah2025'))); ?>', <?php echo e($p->id); ?>, '<?php echo e($p->nama); ?>')" class="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition-all duration-200" title="Hapus">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -308,7 +341,7 @@
                         </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
-                            <td colspan="9" class="px-6 py-12 text-center">
+                            <td colspan="6" class="px-6 py-12 text-center">
                                 <div class="text-gray-500">
                                     <div class="bg-gradient-to-r from-primary-100 to-purple-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
                                         <i class="fas fa-users text-4xl text-primary-400"></i>
@@ -321,6 +354,440 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Data -->
+    <div id="detailModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                <div class="bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-white">Detail Data Penduduk</h3>
+                        <button onclick="closeDetailModal()" class="text-white hover:text-gray-200 transition-colors">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+                    <div id="detailContent" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Content akan diisi via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-submit form saat filter berubah
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusSelect = document.querySelector('select[name="status"]');
+            const tahunSelect = document.querySelector('select[name="tahun"]');
+            const searchInput = document.querySelector('input[name="search"]');
+            const form = document.getElementById('filterForm');
+            
+            // Auto submit saat dropdown berubah
+            statusSelect?.addEventListener('change', function() {
+                form.submit();
+            });
+            
+            tahunSelect?.addEventListener('change', function() {
+                form.submit();
+            });
+            
+            // Submit saat enter di search
+            searchInput?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    form.submit();
+                }
+            });
+            
+            // Clear button functionality
+            window.clearFilters = function() {
+                window.location.href = '<?php echo e(route("penduduk")); ?>';
+            };
+        });
+        
+        // View Detail Functions
+        function viewDetail(table, id) {
+            const modal = document.getElementById('detailModal');
+            const content = document.getElementById('detailContent');
+            
+            // Show loading
+            content.innerHTML = '<div class="col-span-2 text-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-primary-500"></i><p class="mt-2 text-gray-600">Memuat data...</p></div>';
+            modal.classList.remove('hidden');
+            
+            // Fetch detail data
+            fetch(`/penduduk/detail/${table}/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayDetailData(data.data, table, data.fieldLabels);
+                    } else {
+                        content.innerHTML = '<div class="col-span-2 text-center py-8 text-red-600"><i class="fas fa-exclamation-triangle text-2xl"></i><p class="mt-2">Data tidak ditemukan</p></div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    content.innerHTML = '<div class="col-span-2 text-center py-8 text-red-600"><i class="fas fa-exclamation-triangle text-2xl"></i><p class="mt-2">Terjadi kesalahan saat memuat data</p></div>';
+                });
+        }
+        
+        function displayDetailData(data, table, fieldLabels = {}) {
+            const content = document.getElementById('detailContent');
+            let html = '';
+            
+            // Define field groups untuk tampilan yang lebih terorganisir
+            const fieldGroups = {
+                'Data Utama': ['id', 'nik', 'no_kk', 'nama_lengkap', 'no_datang', 'tgl_datang', 'tanggal_datang', 'klasifikasi_pindah'],
+                'Alamat Asal': ['no_prop_asal', 'nama_prop_asal', 'no_kab_asal', 'nama_kab_asal', 'no_kec_asal', 'nama_kec_asal', 'no_kel_asal', 'nama_kel_asal', 'alamat_asal', 'no_rt_asal', 'no_rw_asal'],
+                'Alamat Tujuan': ['no_prop_tujuan', 'nama_prop_tujuan', 'no_kab_tujuan', 'nama_kab_tujuan', 'no_kec_tujuan', 'nama_kec_tujuan', 'no_kel_tujuan', 'nama_kel_tujuan', 'alamat_tujuan', 'no_rt_tujuan', 'no_rw_tujuan'],
+                'Informasi Sistem': ['kode', 'nama', 'alamat', 'created_at', 'updated_at']
+            };
+            
+            // Use field labels from API response or fallback to default labels
+            const defaultFieldLabels = {
+                'id': 'ID',
+                'nik': 'NIK',
+                'no_kk': 'No. KK',
+                'nama_lengkap': 'Nama Lengkap',
+                'no_datang': 'No. Datang',
+                'tgl_datang': 'Tanggal Datang',
+                'tanggal_datang': 'Tanggal Datang',
+                'klasifikasi_pindah': 'Klasifikasi Pindah',
+                'no_prop_asal': 'No. Provinsi Asal',
+                'nama_prop_asal': 'Nama Provinsi Asal',
+                'no_kab_asal': 'No. Kabupaten Asal',
+                'nama_kab_asal': 'Nama Kabupaten Asal',
+                'no_kec_asal': 'No. Kecamatan Asal',
+                'nama_kec_asal': 'Nama Kecamatan Asal',
+                'no_kel_asal': 'No. Kelurahan Asal',
+                'nama_kel_asal': 'Nama Kelurahan Asal',
+                'alamat_asal': 'Alamat Asal',
+                'no_rt_asal': 'No. RT Asal',
+                'no_rw_asal': 'No. RW Asal',
+                'no_prop_tujuan': 'No. Provinsi Tujuan',
+                'nama_prop_tujuan': 'Nama Provinsi Tujuan',
+                'no_kab_tujuan': 'No. Kabupaten Tujuan',
+                'nama_kab_tujuan': 'Nama Kabupaten Tujuan',
+                'no_kec_tujuan': 'No. Kecamatan Tujuan',
+                'nama_kec_tujuan': 'Nama Kecamatan Tujuan',
+                'no_kel_tujuan': 'No. Kelurahan Tujuan',
+                'nama_kel_tujuan': 'Nama Kelurahan Tujuan',
+                'alamat_tujuan': 'Alamat Tujuan',
+                'no_rt_tujuan': 'No. RT Tujuan',
+                'no_rw_tujuan': 'No. RW Tujuan',
+                'kode': 'Kode',
+                'nama': 'Nama (Legacy)',
+                'alamat': 'Alamat (Legacy)',
+                'created_at': 'Dibuat',
+                'updated_at': 'Diperbarui'
+            };
+            
+            // Merge provided fieldLabels with defaults
+            const labels = {...defaultFieldLabels, ...fieldLabels};
+            
+            // Sort fields untuk display yang lebih teratur (29 kolom Excel)
+            const sortedFields = Object.keys(data).sort((a, b) => {
+                const order = [
+                    'id', 'nik', 'no_kk', 'nama_lengkap', 'no_datang', 'tgl_datang', 'tanggal_datang', 'klasifikasi_pindah',
+                    'no_prop_asal', 'nama_prop_asal', 'no_kab_asal', 'nama_kab_asal', 'no_kec_asal', 'nama_kec_asal',
+                    'no_kel_asal', 'nama_kel_asal', 'alamat_asal', 'no_rt_asal', 'no_rw_asal',
+                    'no_prop_tujuan', 'nama_prop_tujuan', 'no_kab_tujuan', 'nama_kab_tujuan', 'no_kec_tujuan', 'nama_kec_tujuan',
+                    'no_kel_tujuan', 'nama_kel_tujuan', 'alamat_tujuan', 'no_rt_tujuan', 'no_rw_tujuan', 'kode'
+                ];
+                const aIndex = order.indexOf(a);
+                const bIndex = order.indexOf(b);
+                if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+                if (aIndex !== -1) return -1;
+                if (bIndex !== -1) return 1;
+                return a.localeCompare(b);
+            });
+            
+            // Display fields by groups untuk tampilan yang lebih rapi
+            Object.keys(fieldGroups).forEach(groupName => {
+                const fieldsInGroup = fieldGroups[groupName].filter(field => 
+                    data.hasOwnProperty(field) && data[field] !== null && data[field] !== undefined && data[field] !== ''
+                );
+                
+                if (fieldsInGroup.length > 0) {
+                    html += `
+                        <div class="col-span-2 mb-4">
+                            <h4 class="text-lg font-bold text-primary-600 border-b-2 border-primary-200 pb-2 mb-3">${groupName}</h4>
+                        </div>
+                    `;
+                    
+                    fieldsInGroup.forEach(field => {
+                        const label = labels[field] || field.charAt(0).toUpperCase() + field.slice(1).replace(/_/g, ' ');
+                        const value = data[field] || '-';
+                        
+                        html += `
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">${label}</label>
+                                <div class="text-gray-900 bg-white rounded px-3 py-2 border">${value}</div>
+                            </div>
+                        `;
+                    });
+                }
+            });
+            
+            content.innerHTML = html;
+        }
+        
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+        }
+
+        // Edit Data Function
+        function editData(table, id) {
+            // Fetch data untuk edit
+            fetch(`/penduduk/view/${table}/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    populateEditModal(data.data, table, id);
+                    document.getElementById('editModal').classList.remove('hidden');
+                } else {
+                    alert('Gagal mengambil data: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengambil data.');
+            });
+        }
+
+        // Populate Edit Modal
+        function populateEditModal(data, table, id) {
+            document.getElementById('editTable').value = table;
+            document.getElementById('editId').value = id;
+            document.getElementById('editNama').value = data.nama_lengkap || data.nama || '';
+            document.getElementById('editAlamat').value = data.alamat || '';
+            
+            // Set tanggal berdasarkan jenis tabel
+            if (table.includes('datang')) {
+                document.getElementById('editTanggalLabel').textContent = 'Tanggal Datang';
+                document.getElementById('editTanggal').value = data.tgl_datang || data.tanggal_datang || '';
+            } else {
+                document.getElementById('editTanggalLabel').textContent = 'Tanggal Pindah';
+                document.getElementById('editTanggal').value = data.tanggal_pindah || '';
+            }
+        }
+
+        // Close Edit Modal
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        // Save Edit Data
+        function saveEditData() {
+            const formData = new FormData();
+            formData.append('nama', document.getElementById('editNama').value);
+            formData.append('alamat', document.getElementById('editAlamat').value);
+            formData.append('tanggal', document.getElementById('editTanggal').value);
+            
+            const table = document.getElementById('editTable').value;
+            const id = document.getElementById('editId').value;
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            // Show loading
+            const saveBtn = document.getElementById('saveEditBtn');
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Menyimpan...';
+            saveBtn.disabled = true;
+
+            fetch(`/penduduk/update/${table}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': token
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Data berhasil diupdate!');
+                    closeEditModal();
+                    window.location.reload();
+                } else {
+                    alert('Gagal update data: ' + (data.message || 'Terjadi kesalahan'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat menyimpan data.');
+            })
+            .finally(() => {
+                saveBtn.textContent = originalText;
+                saveBtn.disabled = false;
+            });
+        }
+
+        // Confirm Delete Function
+        function confirmDelete(table, id, nama) {
+            // Set data untuk modal delete
+            document.getElementById('deleteModalName').textContent = nama;
+            document.getElementById('confirmDeleteBtn').onclick = function() {
+                closeDeleteModal();
+                deleteData(table, id);
+            };
+            
+            // Show modal
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        // Close Delete Modal
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+
+        // Delete Data Function
+        function deleteData(table, id) {
+            // Show loading
+            const loadingHTML = '<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div class="bg-white p-6 rounded-lg"><i class="fas fa-spinner fa-spin text-2xl text-primary-500"></i><p class="mt-2">Menghapus data...</p></div></div>';
+            document.body.insertAdjacentHTML('beforeend', loadingHTML);
+
+            // CSRF Token
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch(`/penduduk/delete/${table}/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Remove loading
+                document.querySelector('.fixed.inset-0.bg-black').remove();
+                
+                if (data.success) {
+                    alert('Data berhasil dihapus!');
+                    // Reload halaman untuk update data
+                    window.location.reload();
+                } else {
+                    alert('Gagal menghapus data: ' + (data.message || 'Terjadi kesalahan'));
+                }
+            })
+            .catch(error => {
+                // Remove loading
+                const loadingEl = document.querySelector('.fixed.inset-0.bg-black');
+                if (loadingEl) loadingEl.remove();
+                
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat menghapus data. Silakan coba lagi.');
+            });
+        }
+    </script>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300">
+            <div class="p-6">
+                <!-- Header -->
+                <div class="flex items-center space-x-4 mb-6">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Konfirmasi Hapus</h3>
+                        <p class="text-gray-600">Tindakan ini tidak dapat dibatalkan</p>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="mb-6">
+                    <p class="text-gray-700 leading-relaxed">
+                        Apakah Anda yakin ingin menghapus data <span class="font-semibold text-gray-900" id="deleteModalName"></span>?
+                    </p>
+                    <div class="mt-3 p-3 bg-red-50 border-l-4 border-red-400 rounded">
+                        <p class="text-red-700 text-sm">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            Data yang dihapus akan hilang permanen dari database dan tidak dapat dikembalikan.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex space-x-3">
+                    <button onclick="closeDeleteModal()" 
+                            class="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-xl font-medium hover:bg-gray-300 transition-colors">
+                        <i class="fas fa-times mr-2"></i>Batal
+                    </button>
+                    <button id="confirmDeleteBtn"
+                            class="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-colors">
+                        <i class="fas fa-trash mr-2"></i>Hapus Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 transform transition-all duration-300">
+            <div class="p-6">
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">Edit Data</h3>
+                            <p class="text-gray-600">Ubah informasi penduduk</p>
+                        </div>
+                    </div>
+                    <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Form -->
+                <form onsubmit="event.preventDefault(); saveEditData();">
+                    <input type="hidden" id="editTable">
+                    <input type="hidden" id="editId">
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                            <input type="text" id="editNama" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Alamat</label>
+                            <textarea id="editAlamat" required rows="3"
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label id="editTanggalLabel" class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
+                            <input type="date" id="editTanggal" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="flex space-x-3 mt-6">
+                        <button type="button" onclick="closeEditModal()" 
+                                class="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-xl font-medium hover:bg-gray-300 transition-colors">
+                            <i class="fas fa-times mr-2"></i>Batal
+                        </button>
+                        <button type="submit" id="saveEditBtn"
+                                class="flex-1 px-4 py-3 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-save mr-2"></i>Simpan
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

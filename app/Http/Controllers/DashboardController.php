@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Penduduk;
+use App\Services\DynamicTableService;
 
 class DashboardController extends Controller
 {
@@ -14,49 +15,43 @@ class DashboardController extends Controller
             // Test koneksi database dulu
             DB::connection()->getPdo();
             
-            // Query untuk data per tabel tahun
-            $datang2024 = 0;
-            $datang2025 = 0; 
-            $pindah2024 = 0;
-            $pindah2025 = 0;
+            $dynamicTableService = new DynamicTableService();
+            $availableYears = $dynamicTableService->getAvailableYears();
             
-            // Cek apakah tabel exists sebelum query
-            try {
-                $datang2024 = DB::table('datang2024')->count();
-            } catch (\Exception $e) {
-                $datang2024 = 0;
+            // Default ke tahun sekarang jika tidak ada data
+            if (empty($availableYears)) {
+                $availableYears = [date('Y')];
             }
             
-            try {
-                $datang2025 = DB::table('datang2025')->count();
-            } catch (\Exception $e) {
-                $datang2025 = 0;
+            $yearlyData = [];
+            $total_datang = 0;
+            $total_pindah = 0;
+            
+            // Get data untuk setiap tahun yang ada (dengan cache untuk performa)
+            $total_datang = 0;
+            $total_pindah = 0;
+            $yearlyData = [];
+            
+            // Limit max 5 tahun untuk performa
+            $limitedYears = array_slice($availableYears, -5, 5);
+            
+            foreach ($limitedYears as $year) {
+                $datangCount = $dynamicTableService->getDataCountByYear('datang', $year);
+                $pindahCount = $dynamicTableService->getDataCountByYear('pindah', $year);
+                
+                $yearlyData["datang{$year}"] = $datangCount;
+                $yearlyData["pindah{$year}"] = $pindahCount;
+                
+                $total_datang += $datangCount;
+                $total_pindah += $pindahCount;
             }
             
-            try {
-                $pindah2024 = DB::table('pindah2024')->count();
-            } catch (\Exception $e) {
-                $pindah2024 = 0;
-            }
-            
-            try {
-                $pindah2025 = DB::table('pindah2025')->count();
-            } catch (\Exception $e) {
-                $pindah2025 = 0;
-            }
-            
-            $total_datang = $datang2024 + $datang2025;
-            $total_pindah = $pindah2024 + $pindah2025;
-            
-            $rekapitulasi = (object)[
+            $rekapitulasi = (object)array_merge([
                 'total_datang' => $total_datang,
                 'total_pindah' => $total_pindah,
                 'hasil_akhir' => $total_datang - $total_pindah,
-                'datang2024' => $datang2024,
-                'datang2025' => $datang2025,
-                'pindah2024' => $pindah2024,
-                'pindah2025' => $pindah2025
-            ];
+                'available_years' => $availableYears
+            ], $yearlyData);
             
             return view('dashboard', compact('rekapitulasi'));
             
@@ -86,21 +81,82 @@ class DashboardController extends Controller
 
     public function penduduk(Request $request)
     {
-        $search = $request->get('search');
+        $search = $request->get('search', '');
+        $status = $request->get('status', ''); // datang/pindah
+        $tahun = $request->get('tahun', '');   // tahun dinamis
+        $bulan = $request->get('bulan', '');   // filter bulan
         
-        if ($search) {
-            // Jika ada pencarian, filter berdasarkan nama
-            $datang2024 = Penduduk::searchByName('datang2024', $search);
-            $datang2025 = Penduduk::searchByName('datang2025', $search);
-            $pindah2024 = Penduduk::searchByName('pindah2024', $search);
-            $pindah2025 = Penduduk::searchByName('pindah2025', $search);
-        } else {
-            // Jika tidak ada pencarian, ambil data seperti biasa
-            $datang2024 = Penduduk::getDataByTable('datang2024');
-            $datang2025 = Penduduk::getDataByTable('datang2025');
-            $pindah2024 = Penduduk::getDataByTable('pindah2024');
-            $pindah2025 = Penduduk::getDataByTable('pindah2025');
+        $dynamicTableService = new DynamicTableService();
+        $availableYears = $dynamicTableService->getAvailableYears();
+        
+        // Init arrays
+        $allData = [];
+        
+        // Tentukan tahun yang akan diproses
+        $yearsToProcess = $tahun ? [$tahun] : $availableYears;
+        
+        // Tentukan status yang akan diproses
+        $statusesToProcess = $status ? [$status] : ['datang', 'pindah'];
+        
+        foreach ($yearsToProcess as $year) {
+            foreach ($statusesToProcess as $dataType) {
+                $tableName = $dataType . $year;
+                
+                if ($dynamicTableService->tableExists($dataType, $year)) {
+                    $query = DB::table($tableName);
+                    
+                    // Apply search filter
+                    if ($search) {
+                        $query->where(function($q) use ($search) {
+                            $q->where('nama_lengkap', 'LIKE', "%{$search}%")
+                              ->orWhere('nama', 'LIKE', "%{$search}%")
+                              ->orWhere('nik', 'LIKE', "%{$search}%");
+                        });
+                    }
+                    
+                    // Apply month filter
+                    if ($bulan) {
+                        if ($dataType === 'datang') {
+                            $query->where(function($q) use ($bulan) {
+                                $q->whereRaw('MONTH(tgl_datang) = ?', [$bulan])
+                                  ->orWhereRaw('MONTH(tanggal_datang) = ?', [$bulan]);
+                            });
+                        } else {
+                            $query->whereRaw('MONTH(tanggal_pindah) = ?', [$bulan]);
+                        }
+                    }
+                    
+                    // Tambah limit dan order untuk performa
+                    $data = $query->orderBy('created_at', 'desc')
+                                 ->limit(500)
+                                 ->get();
+                    
+                    // Add table source for proper routing
+                    foreach ($data as &$record) {
+                        $record->table_source = $tableName;
+                        $record->data_type = $dataType;
+                        $record->year = $year;
+                    }
+                    
+                    $allData[$tableName] = $data;
+                } else {
+                    $allData[$tableName] = [];
+                }
+            }
         }
+        
+        // Maintain backward compatibility with old variable names
+        $datang2024 = $allData['datang2024'] ?? [];
+        $datang2025 = $allData['datang2025'] ?? [];
+        $pindah2024 = $allData['pindah2024'] ?? [];
+        $pindah2025 = $allData['pindah2025'] ?? [];
+        
+        // Calculate summary stats  
+        $rekapitulasi = (object)[
+            'total_datang' => count($datang2024) + count($datang2025),
+            'total_pindah' => count($pindah2024) + count($pindah2025),
+            'hasil_akhir' => (count($datang2024) + count($datang2025)) - (count($pindah2024) + count($pindah2025))
+        ];
         
         // Debug logging
         \Log::info('Penduduk Controller Debug:', [
@@ -108,10 +164,206 @@ class DashboardController extends Controller
             'datang2025_count' => count($datang2025),
             'pindah2024_count' => count($pindah2024),
             'pindah2025_count' => count($pindah2025),
-            'search' => $search
+            'search' => $search,
+            'status' => $status,
+            'tahun' => $tahun,
+            'bulan' => $bulan
         ]);
         
-        return view('penduduk', compact('datang2024', 'datang2025', 'pindah2024', 'pindah2025', 'search'));
+        // Merge all data into a single collection for the view
+        $penduduk = collect([]);
+        
+        // Add datang records with type indicator (updated untuk kolom baru)
+        foreach($datang2024 as $record) {
+            $record->jenis_data = 'Datang 2024';
+            $record->tanggal = $record->tgl_datang ?? $record->tanggal_datang ?? '-';
+            $record->table_source = 'datang2024';
+            // Mapping kolom baru ke tampilan
+            $record->nama = $record->nama_lengkap ?? $record->nama ?? 'Nama tidak tersedia';
+            
+            // FIXED: Smart alamat mapping untuk menangani data tertukar dari upload Excel
+            $alamat_display = '';
+            
+            // Deteksi jika data tertukar/kacau (alamat_asal berisi kode angka)
+            if (is_numeric(trim($record->alamat_asal ?? '')) || strlen(trim($record->alamat_asal ?? '')) <= 3) {
+                // Data tertukar! Cari alamat sebenarnya dari kolom yang tepat
+                $alamat_parts = [];
+                
+                // nama_kec_asal sering berisi alamat sebenarnya dalam data kacau
+                if (!empty($record->nama_kec_asal) && !is_numeric($record->nama_kec_asal) && 
+                    (strpos(strtoupper($record->nama_kec_asal), 'DUSUN') !== false || 
+                     strpos(strtoupper($record->nama_kec_asal), 'JL.') !== false ||
+                     strpos(strtoupper($record->nama_kec_asal), 'KP ') !== false ||
+                     strpos(strtoupper($record->nama_kec_asal), 'LINGKUNGAN') !== false ||
+                     strpos(strtoupper($record->nama_kec_asal), 'CILETENG') !== false ||
+                     strpos(strtoupper($record->nama_kec_asal), 'CUKANG') !== false)) {
+                    $alamat_parts[] = trim($record->nama_kec_asal);
+                }
+                
+                // no_kec_asal sering berisi nama kecamatan/kelurahan dalam data kacau
+                if (!empty($record->no_kec_asal) && !is_numeric($record->no_kec_asal)) {
+                    $alamat_parts[] = trim($record->no_kec_asal);
+                }
+                
+                // Jika tidak ada alamat ditemukan, gunakan nama_kel_asal
+                if (empty($alamat_parts) && !empty($record->nama_kel_asal) && !is_numeric($record->nama_kel_asal)) {
+                    $alamat_parts[] = trim($record->nama_kel_asal);
+                    // Tambah context dari no_prop_asal yang berisi nama tempat
+                    if (!empty($record->no_prop_asal) && !is_numeric($record->no_prop_asal)) {
+                        $alamat_parts[] = trim($record->no_prop_asal);
+                    }
+                }
+                
+                $alamat_display = !empty($alamat_parts) ? 
+                    implode(', ', array_slice($alamat_parts, 0, 2)) : 
+                    'Data alamat bermasalah';
+            }
+            // Data normal: alamat_asal berisi alamat sebenarnya
+            else {
+                $alamat_display = trim($record->alamat_asal);
+                
+                // Tambahkan info wilayah jika tersedia
+                if (!empty($record->nama_kec_asal) && !is_numeric($record->nama_kec_asal)) {
+                    $alamat_display .= ', ' . trim($record->nama_kec_asal);
+                } else if (!empty($record->nama_kab_asal) && !is_numeric($record->nama_kab_asal)) {
+                    $alamat_display .= ', ' . trim($record->nama_kab_asal);
+                }
+            }
+            
+            $record->alamat = $alamat_display;
+            
+            $penduduk->push($record);
+        }
+        
+        foreach($datang2025 as $record) {
+            $record->jenis_data = 'Datang 2025';
+            $record->tanggal = $record->tgl_datang ?? $record->tanggal_datang ?? '-';
+            $record->table_source = 'datang2025';
+            // Mapping kolom baru ke tampilan
+            $record->nama = $record->nama_lengkap ?? $record->nama ?? 'Nama tidak tersedia';
+            
+            // FIXED: Smart alamat mapping untuk menangani data tertukar dari upload Excel
+            $alamat_display = '';
+            
+            // Deteksi jika data tertukar/kacau (alamat_asal berisi kode angka)
+            if (is_numeric(trim($record->alamat_asal ?? '')) || strlen(trim($record->alamat_asal ?? '')) <= 3) {
+                // Data tertukar! Cari alamat sebenarnya dari kolom yang tepat
+                $alamat_parts = [];
+                
+                // nama_kec_asal sering berisi alamat sebenarnya dalam data kacau
+                if (!empty($record->nama_kec_asal) && !is_numeric($record->nama_kec_asal) && 
+                    (strpos(strtoupper($record->nama_kec_asal), 'DUSUN') !== false || 
+                     strpos(strtoupper($record->nama_kec_asal), 'JL.') !== false ||
+                     strpos(strtoupper($record->nama_kec_asal), 'KP ') !== false ||
+                     strpos(strtoupper($record->nama_kec_asal), 'LINGKUNGAN') !== false ||
+                     strpos(strtoupper($record->nama_kec_asal), 'CILETENG') !== false ||
+                     strpos(strtoupper($record->nama_kec_asal), 'CUKANG') !== false)) {
+                    $alamat_parts[] = trim($record->nama_kec_asal);
+                }
+                
+                // no_kec_asal sering berisi nama kecamatan/kelurahan dalam data kacau
+                if (!empty($record->no_kec_asal) && !is_numeric($record->no_kec_asal)) {
+                    $alamat_parts[] = trim($record->no_kec_asal);
+                }
+                
+                // Jika tidak ada alamat ditemukan, gunakan nama_kel_asal
+                if (empty($alamat_parts) && !empty($record->nama_kel_asal) && !is_numeric($record->nama_kel_asal)) {
+                    $alamat_parts[] = trim($record->nama_kel_asal);
+                    // Tambah context dari no_prop_asal yang berisi nama tempat
+                    if (!empty($record->no_prop_asal) && !is_numeric($record->no_prop_asal)) {
+                        $alamat_parts[] = trim($record->no_prop_asal);
+                    }
+                }
+                
+                $alamat_display = !empty($alamat_parts) ? 
+                    implode(', ', array_slice($alamat_parts, 0, 2)) : 
+                    'Data alamat bermasalah';
+            }
+            // Data normal: alamat_asal berisi alamat sebenarnya
+            else {
+                $alamat_display = trim($record->alamat_asal);
+                
+                // Tambahkan info wilayah jika tersedia
+                if (!empty($record->nama_kec_asal) && !is_numeric($record->nama_kec_asal)) {
+                    $alamat_display .= ', ' . trim($record->nama_kec_asal);
+                } else if (!empty($record->nama_kab_asal) && !is_numeric($record->nama_kab_asal)) {
+                    $alamat_display .= ', ' . trim($record->nama_kab_asal);
+                }
+            }
+            
+            $record->alamat = $alamat_display;
+            
+            $penduduk->push($record);
+        }
+        
+        // Add pindah records with type indicator (updated untuk kolom baru)
+        foreach($pindah2024 as $record) {
+            $record->jenis_data = 'Pindah 2024';
+            $record->tanggal = $record->tgl_datang ?? $record->tanggal_pindah ?? '-';
+            $record->table_source = 'pindah2024';
+            // Mapping kolom baru ke tampilan
+            $record->nama = $record->nama_lengkap ?? $record->nama ?? 'Nama tidak tersedia';
+            
+            // Enhanced alamat display untuk pindah
+            $alamat_asal_display = '';
+            if (!empty($record->alamat_asal) && !is_numeric($record->alamat_asal) && strlen(trim($record->alamat_asal)) > 2) {
+                $alamat_asal_display = trim($record->alamat_asal);
+            } else if (!empty($record->nama_kec_asal)) {
+                $alamat_asal_display = trim($record->nama_kec_asal);
+            } else {
+                $alamat_asal_display = '-';
+            }
+            
+            $alamat_tujuan_display = '';
+            if (!empty($record->alamat_tujuan) && !is_numeric($record->alamat_tujuan) && strlen(trim($record->alamat_tujuan)) > 2) {
+                $alamat_tujuan_display = trim($record->alamat_tujuan);
+            } else if (!empty($record->nama_kec_tujuan)) {
+                $alamat_tujuan_display = trim($record->nama_kec_tujuan);
+            } else {
+                $alamat_tujuan_display = '-';
+            }
+            
+            $record->alamat = $alamat_asal_display . ' → ' . $alamat_tujuan_display;
+            $penduduk->push($record);
+        }
+        
+        foreach($pindah2025 as $record) {
+            $record->jenis_data = 'Pindah 2025';
+            $record->tanggal = $record->tgl_datang ?? $record->tanggal_pindah ?? '-';
+            $record->table_source = 'pindah2025';
+            // Mapping kolom baru ke tampilan
+            $record->nama = $record->nama_lengkap ?? $record->nama ?? 'Nama tidak tersedia';
+            
+            // Enhanced alamat display untuk pindah
+            $alamat_asal_display = '';
+            if (!empty($record->alamat_asal) && !is_numeric($record->alamat_asal) && strlen(trim($record->alamat_asal)) > 2) {
+                $alamat_asal_display = trim($record->alamat_asal);
+            } else if (!empty($record->nama_kec_asal)) {
+                $alamat_asal_display = trim($record->nama_kec_asal);
+            } else {
+                $alamat_asal_display = '-';
+            }
+            
+            $alamat_tujuan_display = '';
+            if (!empty($record->alamat_tujuan) && !is_numeric($record->alamat_tujuan) && strlen(trim($record->alamat_tujuan)) > 2) {
+                $alamat_tujuan_display = trim($record->alamat_tujuan);
+            } else if (!empty($record->nama_kec_tujuan)) {
+                $alamat_tujuan_display = trim($record->nama_kec_tujuan);
+            } else {
+                $alamat_tujuan_display = '-';
+            }
+            
+            $record->alamat = $alamat_asal_display . ' → ' . $alamat_tujuan_display;
+            $penduduk->push($record);
+        }
+        
+        // Sort by date (most recent first)
+        $penduduk = $penduduk->sortByDesc('tanggal');
+        
+        return view('penduduk', compact(
+            'datang2024', 'datang2025', 'pindah2024', 'pindah2025', 
+            'rekapitulasi', 'search', 'status', 'tahun', 'bulan'
+        ));
     }
 
     public function updateData(Request $request, $table, $id)
@@ -289,5 +541,67 @@ class DashboardController extends Controller
                 'message' => 'Terjadi kesalahan saat menghapus data'
             ], 500);
         }
+    }
+    
+    /**
+     * Show detailed view of a record (all columns from Excel A-AC)
+     */
+    public function viewDetail($table, $id)
+    {
+        $record = Penduduk::getDetailRecord($table, $id);
+        
+        if (!$record) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+        
+        // Convert object to array for easier handling
+        $data = (array) $record;
+        
+        // Define user-friendly field labels for all 29 columns from Excel
+        $fieldLabels = [
+            'id' => 'ID',
+            'nik' => 'NIK',
+            'no_kk' => 'No. KK',
+            'nama_lengkap' => 'Nama Lengkap',
+            'no_datang' => 'No. Datang',
+            'tgl_datang' => 'Tanggal Datang',
+            'tanggal_datang' => 'Tanggal Datang',
+            'klasifikasi_pindah' => 'Klasifikasi Pindah',
+            'no_prop_asal' => 'No. Provinsi Asal',
+            'nama_prop_asal' => 'Nama Provinsi Asal',
+            'no_kab_asal' => 'No. Kabupaten Asal',
+            'nama_kab_asal' => 'Nama Kabupaten Asal',
+            'no_kec_asal' => 'No. Kecamatan Asal',
+            'nama_kec_asal' => 'Nama Kecamatan Asal',
+            'no_kel_asal' => 'No. Kelurahan Asal',
+            'nama_kel_asal' => 'Nama Kelurahan Asal',
+            'alamat_asal' => 'Alamat Asal',
+            'no_rt_asal' => 'No. RT Asal',
+            'no_rw_asal' => 'No. RW Asal',
+            'no_prop_tujuan' => 'No. Provinsi Tujuan',
+            'nama_prop_tujuan' => 'Nama Provinsi Tujuan',
+            'no_kab_tujuan' => 'No. Kabupaten Tujuan',
+            'nama_kab_tujuan' => 'Nama Kabupaten Tujuan',
+            'no_kec_tujuan' => 'No. Kecamatan Tujuan',
+            'nama_kec_tujuan' => 'Nama Kecamatan Tujuan',
+            'no_kel_tujuan' => 'No. Kelurahan Tujuan',
+            'nama_kel_tujuan' => 'Nama Kelurahan Tujuan',
+            'alamat_tujuan' => 'Alamat Tujuan',
+            'no_rt_tujuan' => 'No. RT Tujuan',
+            'no_rw_tujuan' => 'No. RW Tujuan',
+            'kode' => 'Kode',
+            'nama' => 'Nama (Legacy)',
+            'alamat' => 'Alamat (Legacy)',
+            'created_at' => 'Dibuat',
+            'updated_at' => 'Diperbarui'
+        ];
+        
+        // Return JSON for modal display with field labels
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+            'fieldLabels' => $fieldLabels,
+            'table' => $table
+        ]);
     }
 }

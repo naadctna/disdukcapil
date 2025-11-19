@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test View Detail API</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Test Enhanced View Detail API</h1>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-lg font-semibold mb-4">API Test</h2>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Table:</label>
+                <select id="tableSelect" class="border border-gray-300 rounded px-3 py-2 w-full">
+                    <option value="datang2024">datang2024</option>
+                    <option value="datang2025">datang2025</option>
+                    <option value="pindah2024">pindah2024</option>
+                    <option value="pindah2025">pindah2025</option>
+                </select>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Record ID:</label>
+                <input type="number" id="recordId" class="border border-gray-300 rounded px-3 py-2 w-full" value="1" placeholder="Enter record ID">
+            </div>
+            
+            <button onclick="testAPI()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Test API
+            </button>
+        </div>
+        
+        <div id="results" class="bg-white rounded-lg shadow-lg p-6 hidden">
+            <h2 class="text-lg font-semibold mb-4">API Response</h2>
+            <div id="responseContent" class="space-y-4"></div>
+        </div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const table = document.getElementById('tableSelect').value;
+            const id = document.getElementById('recordId').value;
+            const resultsDiv = document.getElementById('results');
+            const contentDiv = document.getElementById('responseContent');
+            
+            if (!id) {
+                alert('Please enter a record ID');
+                return;
+            }
+            
+            try {
+                console.log(`Testing API: /penduduk/detail/${table}/${id}`);
+                
+                const response = await fetch(`/disdukcapil/public/penduduk/detail/${table}/${id}`);
+                const data = await response.json();
+                
+                resultsDiv.classList.remove('hidden');
+                
+                let html = `
+                    <div class="border-b pb-4 mb-4">
+                        <h3 class="font-semibold text-green-600">✅ API Response Successful</h3>
+                        <p class="text-sm text-gray-600">Status: ${response.status}</p>
+                        <p class="text-sm text-gray-600">URL: /penduduk/detail/${table}/${id}</p>
+                    </div>
+                `;
+                
+                // Check for enhanced features
+                if (data.fieldLabels) {
+                    html += `
+                        <div class="bg-green-50 border border-green-200 rounded p-4 mb-4">
+                            <h4 class="font-semibold text-green-800 mb-2">✅ Field Labels Enhancement: IMPLEMENTED</h4>
+                            <p class="text-sm text-green-700">fieldLabels count: ${Object.keys(data.fieldLabels).length}</p>
+                            
+                            <div class="mt-3">
+                                <h5 class="font-medium text-green-800 mb-2">Sample Field Labels:</h5>
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                `;
+                    
+                    // Show sample field labels
+                    const sampleFields = ['nama_lengkap', 'alamat_asal', 'no_prop_asal', 'nama_prop_asal', 'alamat_tujuan'];
+                    sampleFields.forEach(field => {
+                        if (data.fieldLabels[field]) {
+                            html += `<div><span class="font-mono text-xs text-gray-600">${field}</span> → <span class="font-medium">${data.fieldLabels[field]}</span></div>`;
+                        }
+                    });
+                    
+                    html += `
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="bg-red-50 border border-red-200 rounded p-4 mb-4">
+                            <h4 class="font-semibold text-red-800">❌ Field Labels Enhancement: NOT IMPLEMENTED</h4>
+                            <p class="text-sm text-red-700">The fieldLabels property is missing from the API response.</p>
+                        </div>
+                    `;
+                }
+                
+                // Show response structure
+                html += `
+                    <div class="bg-gray-50 border rounded p-4 mb-4">
+                        <h4 class="font-semibold text-gray-800 mb-2">Response Structure:</h4>
+                        <div class="text-sm space-y-1">
+                `;
+                
+                Object.keys(data).forEach(key => {
+                    const valueType = typeof data[key];
+                    const valuePreview = valueType === 'object' ? `{${Object.keys(data[key]).length} keys}` : 
+                                       (valueType === 'string' && data[key].length > 50) ? data[key].substring(0, 50) + '...' :
+                                       data[key];
+                    html += `<div><span class="font-mono text-xs bg-gray-200 px-1 rounded">${key}</span>: <span class="text-gray-600">${valuePreview}</span></div>`;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+                
+                // Show sample data with labels
+                if (data.data && data.fieldLabels) {
+                    html += `
+                        <div class="bg-blue-50 border border-blue-200 rounded p-4">
+                            <h4 class="font-semibold text-blue-800 mb-2">Sample Data Display (Enhanced Labels):</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                    `;
+                    
+                    const sampleDataFields = ['nama_lengkap', 'alamat_asal', 'nama_prop_asal', 'nama_kab_asal'];
+                    sampleDataFields.forEach(field => {
+                        if (data.data[field]) {
+                            const label = data.fieldLabels[field] || field;
+                            html += `
+                                <div class="bg-white rounded p-2 border">
+                                    <div class="font-medium text-blue-900">${label}</div>
+                                    <div class="text-gray-700">${data.data[field]}</div>
+                                </div>
+                            `;
+                        }
+                    });
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                contentDiv.innerHTML = html;
+                
+            } catch (error) {
+                resultsDiv.classList.remove('hidden');
+                contentDiv.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded p-4">
+                        <h4 class="font-semibold text-red-800">❌ API Test Failed</h4>
+                        <p class="text-sm text-red-700 mt-2">Error: ${error.message}</p>
+                    </div>
+                `;
+                console.error('API test error:', error);
+            }
+        }
+        
+        // Auto-test when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                testAPI();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
