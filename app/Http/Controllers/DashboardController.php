@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Penduduk;
 use App\Services\DynamicTableService;
+use App\Services\ColumnMappingService;
 
 class DashboardController extends Controller
 {
@@ -46,7 +47,15 @@ class DashboardController extends Controller
                 $total_pindah += $pindahCount;
             }
             
-            $rekapitulasi = (object)array_merge([
+            // Pastikan semua property yang diperlukan dashboard ada
+            $defaultData = [
+                'datang2024' => 0,
+                'datang2025' => 0, 
+                'pindah2024' => 0,
+                'pindah2025' => 0
+            ];
+            
+            $rekapitulasi = (object)array_merge($defaultData, [
                 'total_datang' => $total_datang,
                 'total_pindah' => $total_pindah,
                 'hasil_akhir' => $total_datang - $total_pindah,
@@ -361,7 +370,7 @@ class DashboardController extends Controller
         $penduduk = $penduduk->sortByDesc('tanggal');
         
         return view('penduduk', compact(
-            'datang2024', 'datang2025', 'pindah2024', 'pindah2025', 
+            'datang2024', 'datang2025', 'pindah2024', 'pindah2025', 'penduduk',
             'rekapitulasi', 'search', 'status', 'tahun', 'bulan'
         ));
     }
@@ -557,44 +566,11 @@ class DashboardController extends Controller
         // Convert object to array for easier handling
         $data = (array) $record;
         
-        // Define user-friendly field labels for all 29 columns from Excel
-        $fieldLabels = [
-            'id' => 'ID',
-            'nik' => 'NIK',
-            'no_kk' => 'No. KK',
-            'nama_lengkap' => 'Nama Lengkap',
-            'no_datang' => 'No. Datang',
-            'tgl_datang' => 'Tanggal Datang',
-            'tanggal_datang' => 'Tanggal Datang',
-            'klasifikasi_pindah' => 'Klasifikasi Pindah',
-            'no_prop_asal' => 'No. Provinsi Asal',
-            'nama_prop_asal' => 'Nama Provinsi Asal',
-            'no_kab_asal' => 'No. Kabupaten Asal',
-            'nama_kab_asal' => 'Nama Kabupaten Asal',
-            'no_kec_asal' => 'No. Kecamatan Asal',
-            'nama_kec_asal' => 'Nama Kecamatan Asal',
-            'no_kel_asal' => 'No. Kelurahan Asal',
-            'nama_kel_asal' => 'Nama Kelurahan Asal',
-            'alamat_asal' => 'Alamat Asal',
-            'no_rt_asal' => 'No. RT Asal',
-            'no_rw_asal' => 'No. RW Asal',
-            'no_prop_tujuan' => 'No. Provinsi Tujuan',
-            'nama_prop_tujuan' => 'Nama Provinsi Tujuan',
-            'no_kab_tujuan' => 'No. Kabupaten Tujuan',
-            'nama_kab_tujuan' => 'Nama Kabupaten Tujuan',
-            'no_kec_tujuan' => 'No. Kecamatan Tujuan',
-            'nama_kec_tujuan' => 'Nama Kecamatan Tujuan',
-            'no_kel_tujuan' => 'No. Kelurahan Tujuan',
-            'nama_kel_tujuan' => 'Nama Kelurahan Tujuan',
-            'alamat_tujuan' => 'Alamat Tujuan',
-            'no_rt_tujuan' => 'No. RT Tujuan',
-            'no_rw_tujuan' => 'No. RW Tujuan',
-            'kode' => 'Kode',
-            'nama' => 'Nama (Legacy)',
-            'alamat' => 'Alamat (Legacy)',
-            'created_at' => 'Dibuat',
-            'updated_at' => 'Diperbarui'
-        ];
+        // Determine data type from table name
+        $dataType = str_contains($table, 'datang') ? 'datang' : 'pindah';
+        
+        // Get standardized field labels from centralized service
+        $fieldLabels = ColumnMappingService::getFieldLabels($dataType);
         
         // Return JSON for modal display with field labels
         return response()->json([

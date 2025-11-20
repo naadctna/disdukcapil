@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use App\Services\DynamicTableService;
+use App\Services\ColumnMappingService;
 
 class ExcelUploadController extends Controller
 {
@@ -18,10 +20,11 @@ class ExcelUploadController extends Controller
 
     public function processUpload(Request $request)
     {
-        // Optimize for speed
-        set_time_limit(300); // 5 minutes
-        ini_set('memory_limit', '1024M'); // Increase memory
-        ini_set('max_execution_time', 300);
+        // AGGRESSIVE OPTIMIZATION for large files
+        set_time_limit(0); // No time limit
+        ini_set('memory_limit', '2048M'); // 2GB memory
+        ini_set('max_execution_time', 0); // No execution time limit
+        ignore_user_abort(true); // Continue even if user closes browser
         
         \Log::info('Upload started with data: ' . json_encode($request->all()));
         \Log::info('=== USING FIXED UPLOAD SYSTEM - NO MORE DEFAULT VALUES ===');
@@ -106,6 +109,10 @@ class ExcelUploadController extends Controller
 
     private function processExcelFile($file, $tableName, $dataType, $year)
     {
+        // PERFORMANCE OPTIMIZATION untuk file besar
+        set_time_limit(0); // Remove time limit
+        ini_set('memory_limit', '512M'); // Increase memory limit
+        
         $results = [
             'inserted' => 0,
             'errors' => 0,
@@ -140,8 +147,10 @@ class ExcelUploadController extends Controller
                         $worksheet = $spreadsheet->getActiveSheet();
                     }
                     
-                    // Convert to simple array format
-                    $data = $worksheet->toArray();
+                    // Convert to simple array format with NULL values preserved
+                    $data = $worksheet->toArray(null, true, true, false);
+                    
+                    \Log::info('Total rows in Excel: ' . count($data));
                     
                     // FAST HEADER DETECTION - CEK HANYA 10 BARIS PERTAMA
                     $headers = [];
@@ -172,11 +181,21 @@ class ExcelUploadController extends Controller
                         $headerRowIndex = 0;
                     }
                     
-                    // Process data setelah header
+                    // BATCH PROCESSING - Process data setelah header
+                    $batchSize = 100; // Process 100 rows at a time
+                    $totalRows = count($data);
+                    $processedBatches = 0;
+                    
                     foreach ($data as $rowIndex => $row) {
                         if ($rowIndex <= $headerRowIndex) continue; // Skip header dan baris sebelumnya
                         
                         if (empty(array_filter($row))) continue; // Skip empty rows
+                        
+                        // Log progress every batch (reduced logging frequency)
+                        if ($processedBatches % ($batchSize * 5) === 0) {
+                            \Log::info("Processing batch: row {$rowIndex}/{$totalRows} - " . round(($rowIndex/$totalRows)*100, 1) . "% complete");
+                        }
+                        $processedBatches++;
                         
                         // FAST MAPPING - LANGSUNG CARI INDEX SEKALI JALAN
                         static $mappingCache = null;
@@ -210,6 +229,15 @@ class ExcelUploadController extends Controller
                             'updated_at' => now()
                         ];
                         
+                        // Validate Excel headers against expected template (only for first row)
+                        if ($rowIndex === ($headerRowIndex + 1)) { // First data row (after header)
+                            $headerErrors = ColumnMappingService::validateExcelHeaders($headers, $dataType);
+                            if (!empty($headerErrors)) {
+                                \Log::warning("Excel header validation errors for {$dataType}: " . implode('; ', $headerErrors));
+                                // Continue processing but log the warnings
+                            }
+                        }
+                        
                         // Get column mapping based on data type and year
                         $excelColumns = $this->getColumnMapping($dataType, $year);
                         
@@ -241,23 +269,46 @@ class ExcelUploadController extends Controller
                         $rowData['nama'] = $rowData['nama_lengkap'];
                         $rowData['alamat'] = $rowData['alamat_asal'] ?: $rowData['alamat_tujuan'] ?: 'Alamat tidak ada';
                         
-                        // Filter dan insert
+                        // BATCH INSERT OPTIMIZATION
+                        static $batchInsertData = [];
+                        static $batchInsertSize = 50; // Insert 50 records at once
+                        
                         $filteredData = $this->filterValidColumns($rowData, $tableName);
                         
-                        // DEBUG: Log data yang akan diinsert
-
-                        
                         if (!empty($filteredData)) {
-                            DB::table($tableName)->insert($filteredData);
-                            $successCount++;
-                            \Log::info("DEBUG INSERT - SUCCESS for row {$rowIndex}");
+                            $batchInsertData[] = $filteredData;
+                            
+                            // Insert when batch is full
+                            if (count($batchInsertData) >= $batchInsertSize) {
+                                try {
+                                    DB::table($tableName)->insert($batchInsertData);
+                                    $successCount += count($batchInsertData);
+                                    \Log::info("BATCH INSERT - SUCCESS: " . count($batchInsertData) . " records");
+                                    $batchInsertData = []; // Clear batch
+                                } catch (\Exception $e) {
+                                    \Log::error("BATCH INSERT ERROR: " . $e->getMessage());
+                                    $results['errors'] += count($batchInsertData);
+                                    $batchInsertData = [];
+                                }
+                            }
                         } else {
-                            \Log::error("DEBUG INSERT - EMPTY FILTERED DATA for row {$rowIndex}");
                             $results['errors']++;
                         }
                         
                         if (count($results['preview']) < 5) {
                             $results['preview'][] = $rowData;
+                        }
+                    }
+                    
+                    // INSERT REMAINING BATCH DATA (jika ada sisa)
+                    if (!empty($batchInsertData)) {
+                        try {
+                            DB::table($tableName)->insert($batchInsertData);
+                            $successCount += count($batchInsertData);
+                            \Log::info("FINAL BATCH INSERT - SUCCESS: " . count($batchInsertData) . " records");
+                        } catch (\Exception $e) {
+                            \Log::error("FINAL BATCH INSERT ERROR: " . $e->getMessage());
+                            $results['errors'] += count($batchInsertData);
                         }
                     }
                     
@@ -1748,18 +1799,19 @@ class ExcelUploadController extends Controller
     private function clearDummyData()
     {
         try {
-            // Get all tables that start with datang or pindah
-            $tables = DB::select("SHOW TABLES");
-            $dbName = config('database.connections.mysql.database');
-            $tableColumn = "Tables_in_{$dbName}";
+            // OPTIMIZED - Only clear specific year tables instead of all
+            $years = [2024, 2025];
+            $dataTypes = ['datang', 'pindah'];
             
-            foreach ($tables as $table) {
-                $tableName = $table->$tableColumn;
-                
-                // Clear data from datang and pindah tables
-                if (preg_match('/^(datang|pindah)\d{4}$/', $tableName)) {
-                    DB::table($tableName)->truncate();
-                    \Log::info("Cleared dummy data from table: {$tableName}");
+            foreach ($years as $year) {
+                foreach ($dataTypes as $dataType) {
+                    $tableName = $dataType . $year;
+                    
+                    // Check if table exists before truncate
+                    if (Schema::hasTable($tableName)) {
+                        DB::table($tableName)->truncate();
+                        \Log::info("Cleared data from table: {$tableName}");
+                    }
                 }
             }
         } catch (\Exception $e) {
@@ -1768,140 +1820,12 @@ class ExcelUploadController extends Controller
     }
     
     /**
-     * Get column mapping based on data type and year
+     * Get column mapping based on data type and year using centralized service
      */
     private function getColumnMapping($dataType, $year)
     {
-        if ($dataType === 'datang') {
-            if ($year == 2024) {
-                // Format datang 2024 (22 kolom A-V) - sesuai format lama
-                return [
-                    0 => 'nik',                    // A → NIK
-                    1 => 'no_kk',                 // B → NO_KK
-                    2 => 'nama_lengkap',          // C → NAMA_LENGKAP
-                    3 => 'no_datang',             // D → NO_DATANG
-                    4 => 'tgl_datang',            // E → TGL_DATANG
-                    5 => 'klasifikasi_pindah',    // F → KLASIFIKASI_PINDAH
-                    6 => 'alasan_pindah',         // G → ALASAN_PINDAH
-                    7 => 'jenis_pindah',          // H → JENIS_PINDAH
-                    8 => 'nama_prop_asal',        // I → NAMA_PROP_ASAL
-                    9 => 'nama_kab_asal',         // J → NAMA_KAB_ASAL
-                    10 => 'nama_kel_asal',        // K → NAMA_KEL_ASAL
-                    11 => 'alamat_asal',          // L → ALAMAT_ASAL
-                    12 => 'no_rt_asal',           // M → NO_RT_ASAL
-                    13 => 'no_rw_asal',           // N → NO_RW_ASAL
-                    14 => 'nama_prop_tujuan',     // O → NAMA_PROP_TUJUAN
-                    15 => 'nama_kab_tujuan',      // P → NAMA_KAB_TUJUAN
-                    16 => 'nama_kec_tujuan',      // Q → NAMA_KEC_TUJUAN
-                    17 => 'nama_kel_tujuan',      // R → NAMA_KEL_TUJUAN
-                    18 => 'alamat_tujuan',        // S → ALAMAT_TUJUAN
-                    19 => 'no_rt_tujuan',         // T → NO_RT_TUJUAN
-                    20 => 'no_rw_tujuan',         // U → NO_RW_TUJUAN
-                    21 => 'kode'                  // V → KODE
-                ];
-            } else {
-                // Format datang 2025+ (32 kolom A-AF) - FIXED MAPPING SESUAI TEMPLATE
-                return [
-                    0 => 'nik',                    // A → NIK
-                    1 => 'no_kk',                 // B → NO_KK
-                    2 => 'nama_lengkap',          // C → NAMA_LENGKAP
-                    3 => 'no_datang',             // D → NO_DATANG
-                    4 => 'tgl_datang',            // E → TGL_DATANG
-                    5 => 'klasifikasi_pindah',    // F → KLASIFIKASI_PINDAH
-                    6 => 'klasifikasi_pindah_ket', // G → KLASIFIKASI_PINDAH_KET
-                    7 => 'alasan_pindah',         // H → ALASAN_PINDAH
-                    8 => 'jenis_pindah',          // I → JENIS_PINDAH
-                    9 => 'no_prop_asal',          // J → NO_PROP_ASAL (32 - KODE ANGKA)
-                    10 => 'nama_prop_asal',       // K → NAMA_PROP_ASAL (JAWA BARAT - NAMA)
-                    11 => 'no_kab_asal',          // L → NO_KAB_ASAL (3201 - KODE ANGKA)
-                    12 => 'nama_kab_asal',        // M → NAMA_KAB_ASAL (BOGOR - NAMA)
-                    13 => 'no_kec_asal',          // N → NO_KEC_ASAL (320101 - KODE ANGKA)
-                    14 => 'nama_kec_asal',        // O → NAMA_KEC_ASAL (BOGOR SELATAN - NAMA)
-                    15 => 'no_kel_asal',          // P → NO_KEL_ASAL (3201011001 - KODE ANGKA)
-                    16 => 'nama_kel_asal',        // Q → NAMA_KEL_ASAL (CIKONENG - NAMA)
-                    17 => 'alamat_asal',          // R → ALAMAT_ASAL (JL. RAYA CIKONENG NO. 123 - ALAMAT)
-                    18 => 'no_rt_asal',           // S → NO_RT_ASAL (001 - KODE)
-                    19 => 'no_rw_asal',           // T → NO_RW_ASAL (002 - KODE)
-                    20 => 'no_prop_tujuan',       // U → NO_PROP_TUJUAN (32 - KODE ANGKA)
-                    21 => 'nama_prop_tujuan',     // V → NAMA_PROP_TUJUAN (JAWA BARAT - NAMA)
-                    22 => 'no_kab_tujuan',        // W → NO_KAB_TUJUAN (3273 - KODE ANGKA)
-                    23 => 'nama_kab_tujuan',      // X → NAMA_KAB_TUJUAN (KOTA BOGOR - NAMA)
-                    24 => 'no_kec_tujuan',        // Y → NO_KEC_TUJUAN (327301 - KODE ANGKA)
-                    25 => 'nama_kec_tujuan',      // Z → NAMA_KEC_TUJUAN (BOGOR TENGAH - NAMA)
-                    26 => 'no_kel_tujuan',        // AA → NO_KEL_TUJUAN (3273011001 - KODE ANGKA)
-                    27 => 'nama_kel_tujuan',      // AB → NAMA_KEL_TUJUAN (GUDANG - NAMA)
-                    28 => 'alamat_tujuan',        // AC → ALAMAT_TUJUAN (JL. SUDIRMAN NO. 456 - ALAMAT)
-                    29 => 'no_rt_tujuan',         // AD → NO_RT_TUJUAN (003 - KODE)
-                    30 => 'no_rw_tujuan',         // AE → NO_RW_TUJUAN (004 - KODE)
-                    31 => 'kode'                  // AF → KODE (D001 - KODE)
-                ];
-            }
-        } 
-        elseif ($dataType === 'pindah') {
-            if ($year == 2024) {
-                // Format pindah 2024 (22 kolom A-V)
-                return [
-                    0 => 'nik',                        // A → NIK
-                    1 => 'no_kk',                     // B → NO_KK
-                    2 => 'nama_lengkap',              // C → NAMA_LENGKAP
-                    3 => 'no_pindah',                 // D → NO_PINDAH
-                    4 => 'tgl_pindah',                // E → TGL_PINDAH
-                    5 => 'klasifikasi_pindah',        // F → KLASIFIKASI_PINDAH
-                    6 => 'klasifikasi_pindah_ket',    // G → KLASIFIKASI_PINDAH_KET
-                    7 => 'alasan_pindah',             // H → ALASAN_PINDAH
-                    8 => 'jenis_pindah',              // I → JENIS_PINDAH
-                    9 => 'nama_prop_asal',            // J → NAMA_PROP_ASAL
-                    10 => 'nama_kab_asal',            // K → NAMA_KAB_ASAL
-                    11 => 'nama_kel_asal',            // L → NAMA_KEL_ASAL
-                    12 => 'alamat_asal',              // M → ALAMAT_ASAL
-                    13 => 'no_rt_asal',               // N → NO_RT_ASAL
-                    14 => 'no_rw_asal',               // O → NO_RW_ASAL
-                    15 => 'nama_prop_tujuan',         // P → NAMA_PROP_TUJUAN
-                    16 => 'nama_kab_tujuan',          // Q → NAMA_KAB_TUJUAN
-                    17 => 'nama_kec_tujuan',          // R → NAMA_KEC_TUJUAN
-                    18 => 'nama_kel_tujuan',          // S → NAMA_KEL_TUJUAN
-                    19 => 'alamat_tujuan',            // T → ALAMAT_TUJUAN
-                    20 => 'no_rt_tujuan',             // U → NO_RT_TUJUAN
-                    21 => 'no_rw_tujuan'              // V → NO_RW_TUJUAN
-                ];
-            } else {
-                // Format pindah 2025+ (32 kolom A-AF)
-                return [
-                    0 => 'nik',                       // A → NIK
-                    1 => 'no_kk',                    // B → NO_KK
-                    2 => 'nama_lengkap',             // C → NAMA_LENGKAP
-                    3 => 'no_pindah',                // D → NO_PINDAH
-                    4 => 'tgl_pindah',               // E → TGL_PINDAH
-                    5 => 'klasifikasi_pindah',       // F → KLASIFIKASI_PINDAH
-                    6 => 'klasifikasi_pindah_ket',   // G → KLASIFIKASI_PINDAH_KET
-                    7 => 'alasan_pindah',            // H → ALASAN_PINDAH
-                    8 => 'jenis_pindah',             // I → JENIS_PINDAH
-                    9 => 'no_prop_asal',             // J → NO_PROP_ASAL
-                    10 => 'nama_prop_asal',          // K → NAMA_PROP_ASAL
-                    11 => 'no_kab_asal',             // L → NO_KAB_ASAL
-                    12 => 'nama_kab_asal',           // M → NAMA_KAB_ASAL
-                    13 => 'no_kec_asal',             // N → NO_KEC_ASAL
-                    14 => 'nama_kec_asal',           // O → NAMA_KEC_ASAL
-                    15 => 'no_kel_asal',             // P → NO_KEL_ASAL
-                    16 => 'nama_kel_asal',           // Q → NAMA_KEL_ASAL
-                    17 => 'alamat_asal',             // R → ALAMAT_ASAL
-                    18 => 'no_rt_asal',              // S → NO_RT_ASAL
-                    19 => 'no_rw_asal',              // T → NO_RW_ASAL
-                    20 => 'no_prop_tujuan',          // U → NO_PROP_TUJUAN
-                    21 => 'nama_prop_tujuan',        // V → NAMA_PROP_TUJUAN
-                    22 => 'no_kab_tujuan',           // W → NO_KAB_TUJUAN
-                    23 => 'nama_kab_tujuan',         // X → NAMA_KAB_TUJUAN
-                    24 => 'no_kec_tujuan',           // Y → NO_KEC_TUJUAN
-                    25 => 'nama_kec_tujuan',         // Z → NAMA_KEC_TUJUAN
-                    26 => 'no_kel_tujuan',           // AA → NO_KEL_TUJUAN
-                    27 => 'nama_kel_tujuan',         // AB → NAMA_KEL_TUJUAN
-                    28 => 'alamat_tujuan',           // AC → ALAMAT_TUJUAN
-                    29 => 'no_rt_tujuan',            // AD → NO_RT_TUJUAN
-                    30 => 'no_rw_tujuan',            // AE → NO_RW_TUJUAN
-                    31 => 'kode'                     // AF → KODE
-                ];
-            }
-        }
+        // Use centralized service untuk semua data types - UNIFIED FORMAT
+        return ColumnMappingService::getDbColumnMapping($dataType);
         
         // Default fallback
         return [];
