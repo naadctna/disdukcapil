@@ -1800,7 +1800,7 @@ class ExcelUploadController extends Controller
                     21 => 'kode'                  // V → KODE
                 ];
             } else {
-                // Format datang 2025+ (32 kolom A-AF) - format lengkap
+                // Format datang 2025+ (32 kolom A-AF) - FIXED MAPPING SESUAI TEMPLATE
                 return [
                     0 => 'nik',                    // A → NIK
                     1 => 'no_kk',                 // B → NO_KK
@@ -1811,29 +1811,29 @@ class ExcelUploadController extends Controller
                     6 => 'klasifikasi_pindah_ket', // G → KLASIFIKASI_PINDAH_KET
                     7 => 'alasan_pindah',         // H → ALASAN_PINDAH
                     8 => 'jenis_pindah',          // I → JENIS_PINDAH
-                    9 => 'no_prop_asal',          // J → NO_PROP_ASAL
-                    10 => 'nama_prop_asal',       // K → NAMA_PROP_ASAL
-                    11 => 'no_kab_asal',          // L → NO_KAB_ASAL
-                    12 => 'nama_kab_asal',        // M → NAMA_KAB_ASAL
-                    13 => 'no_kec_asal',          // N → NO_KEC_ASAL
-                    14 => 'nama_kec_asal',        // O → NAMA_KEC_ASAL
-                    15 => 'no_kel_asal',          // P → NO_KEL_ASAL
-                    16 => 'nama_kel_asal',        // Q → NAMA_KEL_ASAL
-                    17 => 'alamat_asal',          // R → ALAMAT_ASAL
-                    18 => 'no_rt_asal',           // S → NO_RT_ASAL
-                    19 => 'no_rw_asal',           // T → NO_RW_ASAL
-                    20 => 'no_prop_tujuan',       // U → NO_PROP_TUJUAN
-                    21 => 'nama_prop_tujuan',     // V → NAMA_PROP_TUJUAN
-                    22 => 'no_kab_tujuan',        // W → NO_KAB_TUJUAN
-                    23 => 'nama_kab_tujuan',      // X → NAMA_KAB_TUJUAN
-                    24 => 'no_kec_tujuan',        // Y → NO_KEC_TUJUAN
-                    25 => 'nama_kec_tujuan',      // Z → NAMA_KEC_TUJUAN
-                    26 => 'no_kel_tujuan',        // AA → NO_KEL_TUJUAN
-                    27 => 'nama_kel_tujuan',      // AB → NAMA_KEL_TUJUAN
-                    28 => 'alamat_tujuan',        // AC → ALAMAT_TUJUAN
-                    29 => 'no_rt_tujuan',         // AD → NO_RT_TUJUAN
-                    30 => 'no_rw_tujuan',         // AE → NO_RW_TUJUAN
-                    31 => 'kode'                  // AF → KODE
+                    9 => 'no_prop_asal',          // J → NO_PROP_ASAL (32 - KODE ANGKA)
+                    10 => 'nama_prop_asal',       // K → NAMA_PROP_ASAL (JAWA BARAT - NAMA)
+                    11 => 'no_kab_asal',          // L → NO_KAB_ASAL (3201 - KODE ANGKA)
+                    12 => 'nama_kab_asal',        // M → NAMA_KAB_ASAL (BOGOR - NAMA)
+                    13 => 'no_kec_asal',          // N → NO_KEC_ASAL (320101 - KODE ANGKA)
+                    14 => 'nama_kec_asal',        // O → NAMA_KEC_ASAL (BOGOR SELATAN - NAMA)
+                    15 => 'no_kel_asal',          // P → NO_KEL_ASAL (3201011001 - KODE ANGKA)
+                    16 => 'nama_kel_asal',        // Q → NAMA_KEL_ASAL (CIKONENG - NAMA)
+                    17 => 'alamat_asal',          // R → ALAMAT_ASAL (JL. RAYA CIKONENG NO. 123 - ALAMAT)
+                    18 => 'no_rt_asal',           // S → NO_RT_ASAL (001 - KODE)
+                    19 => 'no_rw_asal',           // T → NO_RW_ASAL (002 - KODE)
+                    20 => 'no_prop_tujuan',       // U → NO_PROP_TUJUAN (32 - KODE ANGKA)
+                    21 => 'nama_prop_tujuan',     // V → NAMA_PROP_TUJUAN (JAWA BARAT - NAMA)
+                    22 => 'no_kab_tujuan',        // W → NO_KAB_TUJUAN (3273 - KODE ANGKA)
+                    23 => 'nama_kab_tujuan',      // X → NAMA_KAB_TUJUAN (KOTA BOGOR - NAMA)
+                    24 => 'no_kec_tujuan',        // Y → NO_KEC_TUJUAN (327301 - KODE ANGKA)
+                    25 => 'nama_kec_tujuan',      // Z → NAMA_KEC_TUJUAN (BOGOR TENGAH - NAMA)
+                    26 => 'no_kel_tujuan',        // AA → NO_KEL_TUJUAN (3273011001 - KODE ANGKA)
+                    27 => 'nama_kel_tujuan',      // AB → NAMA_KEL_TUJUAN (GUDANG - NAMA)
+                    28 => 'alamat_tujuan',        // AC → ALAMAT_TUJUAN (JL. SUDIRMAN NO. 456 - ALAMAT)
+                    29 => 'no_rt_tujuan',         // AD → NO_RT_TUJUAN (003 - KODE)
+                    30 => 'no_rw_tujuan',         // AE → NO_RW_TUJUAN (004 - KODE)
+                    31 => 'kode'                  // AF → KODE (D001 - KODE)
                 ];
             }
         } 
