@@ -580,4 +580,186 @@ class DashboardController extends Controller
             'table' => $table
         ]);
     }
+
+    /**
+     * Display kecamatan data page
+     */
+    public function kecamatan(Request $request)
+    {
+        $search = $request->get('search', '');
+        $jenis = $request->get('jenis', ''); // datang/pindah filter
+        
+        try {
+            $dynamicTableService = new DynamicTableService();
+            $availableYears = $dynamicTableService->getAvailableYears();
+            
+            // Ambil data kecamatan dari semua tabel
+            $kecamatanData = collect();
+            
+            foreach ($availableYears as $year) {
+                // Cek tabel datang (jika tidak filter atau filter = datang)
+                if (empty($jenis) || $jenis === 'datang') {
+                    try {
+                        $datangTable = "datang{$year}";
+                        $datangData = DB::table($datangTable)
+                            ->select(
+                                'nama_kec_asal as kecamatan', 
+                                DB::raw('COUNT(*) as jumlah'),
+                                DB::raw("'datang' as jenis_data"),
+                                DB::raw("{$year} as tahun")
+                            )
+                            ->whereNotNull('nama_kec_asal')
+                            ->where('nama_kec_asal', '!=', '')
+                            ->when($search, function($query) use ($search) {
+                                return $query->where('nama_kec_asal', 'like', "%{$search}%");
+                            })
+                            ->groupBy('nama_kec_asal')
+                            ->get();
+                        
+                        $kecamatanData = $kecamatanData->merge($datangData);
+                    } catch (\Exception $e) {
+                        // Table doesn't exist, skip
+                    }
+                }
+                
+                // Cek tabel pindah (jika tidak filter atau filter = pindah)
+                if (empty($jenis) || $jenis === 'pindah') {
+                    try {
+                        $pindahTable = "pindah{$year}";
+                        $pindahData = DB::table($pindahTable)
+                            ->select(
+                                'nama_kec_asal as kecamatan', 
+                                DB::raw('COUNT(*) as jumlah'),
+                                DB::raw("'pindah' as jenis_data"),
+                                DB::raw("{$year} as tahun")
+                            )
+                            ->whereNotNull('nama_kec_asal')
+                            ->where('nama_kec_asal', '!=', '')
+                            ->when($search, function($query) use ($search) {
+                                return $query->where('nama_kec_asal', 'like', "%{$search}%");
+                            })
+                            ->groupBy('nama_kec_asal')
+                            ->get();
+                        
+                        $kecamatanData = $kecamatanData->merge($pindahData);
+                    } catch (\Exception $e) {
+                        // Table doesn't exist, skip
+                    }
+                }
+            }
+            
+            // Gabungkan dan hitung total per kecamatan
+            $kecamatan = $kecamatanData->groupBy('kecamatan')->map(function($items) {
+                return [
+                    'kecamatan' => $items->first()->kecamatan,
+                    'jumlah' => $items->sum('jumlah'),
+                    'datang' => $items->where('jenis_data', 'datang')->sum('jumlah'),
+                    'pindah' => $items->where('jenis_data', 'pindah')->sum('jumlah')
+                ];
+            })->values()->sortByDesc('jumlah');
+            
+            return view('kecamatan', compact('kecamatan', 'search', 'jenis'));
+            
+        } catch (\Exception $e) {
+            \Log::error('Kecamatan error: ' . $e->getMessage());
+            return view('kecamatan', ['kecamatan' => collect(), 'search' => $search, 'jenis' => $jenis]);
+        }
+    }
+
+    /**
+     * Display kelurahan data page
+     */
+    public function kelurahan(Request $request)
+    {
+        $search = $request->get('search', '');
+        $jenis = $request->get('jenis', ''); // datang/pindah filter
+        $kecamatan = $request->get('kecamatan', ''); // filter by kecamatan
+        
+        try {
+            $dynamicTableService = new DynamicTableService();
+            $availableYears = $dynamicTableService->getAvailableYears();
+            
+            // Ambil data kelurahan dari semua tabel
+            $kelurahanData = collect();
+            
+            foreach ($availableYears as $year) {
+                // Cek tabel datang (jika tidak filter atau filter = datang)
+                if (empty($jenis) || $jenis === 'datang') {
+                    try {
+                        $datangTable = "datang{$year}";
+                        $datangData = DB::table($datangTable)
+                            ->select(
+                                'no_kel_asal as kelurahan', 
+                                'nama_kec_asal as kecamatan', 
+                                DB::raw('COUNT(*) as jumlah'),
+                                DB::raw("'datang' as jenis_data"),
+                                DB::raw("{$year} as tahun")
+                            )
+                            ->whereNotNull('no_kel_asal')
+                            ->where('no_kel_asal', '!=', '')
+                            ->when($search, function($query) use ($search) {
+                                return $query->where('no_kel_asal', 'like', "%{$search}%")
+                                            ->orWhere('nama_kec_asal', 'like', "%{$search}%");
+                            })
+                            ->when($kecamatan, function($query) use ($kecamatan) {
+                                return $query->where('nama_kec_asal', 'like', "%{$kecamatan}%");
+                            })
+                            ->groupBy('no_kel_asal', 'nama_kec_asal')
+                            ->get();
+                        
+                        $kelurahanData = $kelurahanData->merge($datangData);
+                    } catch (\Exception $e) {
+                        // Table doesn't exist, skip
+                    }
+                }
+                
+                // Cek tabel pindah (jika tidak filter atau filter = pindah)
+                if (empty($jenis) || $jenis === 'pindah') {
+                    try {
+                        $pindahTable = "pindah{$year}";
+                        $pindahData = DB::table($pindahTable)
+                            ->select(
+                                'no_kel_asal as kelurahan', 
+                                'nama_kec_asal as kecamatan', 
+                                DB::raw('COUNT(*) as jumlah'),
+                                DB::raw("'pindah' as jenis_data"),
+                                DB::raw("{$year} as tahun")
+                            )
+                            ->whereNotNull('no_kel_asal')
+                            ->where('no_kel_asal', '!=', '')
+                            ->when($search, function($query) use ($search) {
+                                return $query->where('no_kel_asal', 'like', "%{$search}%")
+                                            ->orWhere('nama_kec_asal', 'like', "%{$search}%");
+                            })
+                            ->when($kecamatan, function($query) use ($kecamatan) {
+                                return $query->where('nama_kec_asal', 'like', "%{$kecamatan}%");
+                            })
+                            ->groupBy('no_kel_asal', 'nama_kec_asal')
+                            ->get();
+                        
+                        $kelurahanData = $kelurahanData->merge($pindahData);
+                    } catch (\Exception $e) {
+                        // Table doesn't exist, skip
+                    }
+                }
+            }
+            
+            // Gabungkan dan hitung total per kelurahan
+            $kelurahan = $kelurahanData->groupBy('kelurahan')->map(function($items) {
+                return [
+                    'kelurahan' => $items->first()->kelurahan,
+                    'kecamatan' => $items->first()->kecamatan,
+                    'jumlah' => $items->sum('jumlah'),
+                    'datang' => $items->where('jenis_data', 'datang')->sum('jumlah'),
+                    'pindah' => $items->where('jenis_data', 'pindah')->sum('jumlah')
+                ];
+            })->values()->sortByDesc('jumlah');
+            
+            return view('kelurahan', compact('kelurahan', 'search', 'jenis', 'kecamatan'));
+            
+        } catch (\Exception $e) {
+            \Log::error('Kelurahan error: ' . $e->getMessage());
+            return view('kelurahan', ['kelurahan' => collect(), 'search' => $search, 'jenis' => $jenis, 'kecamatan' => $kecamatan]);
+        }
+    }
 }

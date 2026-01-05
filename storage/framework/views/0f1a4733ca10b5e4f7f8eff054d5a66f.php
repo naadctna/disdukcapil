@@ -65,19 +65,19 @@
                     </div>
                 </div>
                 <div class="flex space-x-2">
-                    <a href="{{ url('/') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13z"/>
                         </svg>
                         <span>Beranda</span>
                     </a>
-                    <a href="{{ url('/rekapitulasi') }}" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/rekapitulasi')); ?>" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
                         </svg>
                         <span>Rekapitulasi</span>
                     </a>
-                    <a href="{{ url('/penduduk') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/penduduk')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
@@ -97,16 +97,16 @@
                             </svg>
                         </button>
                         <div class="dropdown-menu hidden absolute right-0 mt-2 w-48 glass rounded-xl shadow-xl overflow-hidden">
-                            <a href="{{ url('/kecamatan') }}" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
+                            <a href="<?php echo e(url('/kecamatan')); ?>" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
                                 Data Kecamatan
                             </a>
-                            <a href="{{ url('/kelurahan') }}" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
+                            <a href="<?php echo e(url('/kelurahan')); ?>" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
                                 Data Kelurahan
                             </a>
                         </div>
                     </div>
                     
-                    <a href="{{ url('/upload-excel') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                    <a href="<?php echo e(url('/upload-excel')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
                         </svg>
@@ -190,7 +190,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-primary-600 text-sm font-semibold uppercase tracking-wider">Total Datang</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ number_format($rekapitulasi->total_datang ?? 0) }}</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2"><?php echo e(number_format($rekapitulasi->total_datang ?? 0)); ?></p>
                         <p class="text-primary-500 text-sm mt-1">2024 - 2025</p>
                     </div>
                     <div class="bg-gradient-to-br from-green-400 to-green-600 p-3 rounded-xl shadow-lg">
@@ -207,7 +207,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-primary-600 text-sm font-semibold uppercase tracking-wider">Total Pindah</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ number_format($rekapitulasi->total_pindah ?? 0) }}</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2"><?php echo e(number_format($rekapitulasi->total_pindah ?? 0)); ?></p>
                         <p class="text-primary-500 text-sm mt-1">2024 - 2025</p>
                     </div>
                     <div class="bg-gradient-to-br from-red-400 to-red-600 p-3 rounded-xl shadow-lg">
@@ -224,18 +224,19 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-primary-600 text-sm font-semibold uppercase tracking-wider">Selisih</p>
-                        <p class="text-3xl font-bold {{ ($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'text-green-600' : 'text-red-600' }} mt-2">
-                            {{ ($rekapitulasi->hasil_akhir ?? 0) >= 0 ? '+' : '' }}{{ number_format($rekapitulasi->hasil_akhir ?? 0) }}
+                        <p class="text-3xl font-bold <?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'); ?> mt-2">
+                            <?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? '+' : ''); ?><?php echo e(number_format($rekapitulasi->hasil_akhir ?? 0)); ?>
+
                         </p>
-                        <p class="text-primary-500 text-sm mt-1">{{ ($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'Surplus' : 'Defisit' }}</p>
+                        <p class="text-primary-500 text-sm mt-1"><?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'Surplus' : 'Defisit'); ?></p>
                     </div>
-                    <div class="bg-gradient-to-br from-{{ ($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'green' : 'red' }}-400 to-{{ ($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'green' : 'red' }}-600 p-3 rounded-xl shadow-lg">
+                    <div class="bg-gradient-to-br from-<?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'green' : 'red'); ?>-400 to-<?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'green' : 'red'); ?>-600 p-3 rounded-xl shadow-lg">
                         <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            @if(($rekapitulasi->hasil_akhir ?? 0) >= 0)
+                            <?php if(($rekapitulasi->hasil_akhir ?? 0) >= 0): ?>
                             <path d="M7 14l5-5 5 5z"/>
-                            @else
+                            <?php else: ?>
                             <path d="M7 10l5 5 5-5z"/>
-                            @endif
+                            <?php endif; ?>
                         </svg>
                     </div>
                 </div>
@@ -247,7 +248,7 @@
                     <div>
                         <p class="text-primary-600 text-sm font-semibold uppercase tracking-wider">Rasio Pertumbuhan</p>
                         <p class="text-3xl font-bold text-indigo-600 mt-2">
-                            {{ ($rekapitulasi->total_pindah ?? 0) > 0 ? number_format((($rekapitulasi->total_datang ?? 0) / ($rekapitulasi->total_pindah ?? 0)) * 100, 1) : '0' }}%
+                            <?php echo e(($rekapitulasi->total_pindah ?? 0) > 0 ? number_format((($rekapitulasi->total_datang ?? 0) / ($rekapitulasi->total_pindah ?? 0)) * 100, 1) : '0'); ?>%
                         </p>
                         <p class="text-primary-500 text-sm mt-1">Perbandingan Datang dan Pindah</p>
                     </div>
@@ -329,13 +330,14 @@
                     <tbody class="bg-white/50 backdrop-filter backdrop-blur divide-y divide-primary-100">
                         <tr class="hover:bg-primary-50/50 transition-all duration-200">
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">Oktober 2025</td>
-                            <td class="px-6 py-4 text-sm font-bold text-green-600">{{ number_format($rekapitulasi->total_datang ?? 0) }}</td>
-                            <td class="px-6 py-4 text-sm font-bold text-red-600">{{ number_format($rekapitulasi->total_pindah ?? 0) }}</td>
-                            <td class="px-6 py-4 text-sm font-bold {{ ($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'text-green-600' : 'text-red-600' }}">
-                                {{ ($rekapitulasi->hasil_akhir ?? 0) >= 0 ? '+' : '' }}{{ number_format($rekapitulasi->hasil_akhir ?? 0) }}
+                            <td class="px-6 py-4 text-sm font-bold text-green-600"><?php echo e(number_format($rekapitulasi->total_datang ?? 0)); ?></td>
+                            <td class="px-6 py-4 text-sm font-bold text-red-600"><?php echo e(number_format($rekapitulasi->total_pindah ?? 0)); ?></td>
+                            <td class="px-6 py-4 text-sm font-bold <?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'); ?>">
+                                <?php echo e(($rekapitulasi->hasil_akhir ?? 0) >= 0 ? '+' : ''); ?><?php echo e(number_format($rekapitulasi->hasil_akhir ?? 0)); ?>
+
                             </td>
                             <td class="px-6 py-4 text-sm font-medium text-indigo-600">
-                                {{ ($rekapitulasi->total_pindah ?? 0) > 0 ? number_format((($rekapitulasi->total_datang ?? 0) / ($rekapitulasi->total_pindah ?? 0)) * 100, 1) : '0' }}%
+                                <?php echo e(($rekapitulasi->total_pindah ?? 0) > 0 ? number_format((($rekapitulasi->total_datang ?? 0) / ($rekapitulasi->total_pindah ?? 0)) * 100, 1) : '0'); ?>%
                             </td>
                         </tr>
                     </tbody>
@@ -353,13 +355,13 @@
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [{
                     label: 'Penduduk Datang',
-                    data: [12, 19, 3, 5, 2, 3, 8, 12, 15, {{ $rekapitulasi->total_datang ?? 0 }}, 0, 0],
+                    data: [12, 19, 3, 5, 2, 3, 8, 12, 15, <?php echo e($rekapitulasi->total_datang ?? 0); ?>, 0, 0],
                     backgroundColor: 'rgba(34, 197, 94, 0.8)',
                     borderColor: 'rgba(34, 197, 94, 1)',
                     borderWidth: 1
                 }, {
                     label: 'Penduduk Pindah',
-                    data: [8, 11, 7, 2, 4, 1, 5, 8, 10, {{ $rekapitulasi->total_pindah ?? 0 }}, 0, 0],
+                    data: [8, 11, 7, 2, 4, 1, 5, 8, 10, <?php echo e($rekapitulasi->total_pindah ?? 0); ?>, 0, 0],
                     backgroundColor: 'rgba(239, 68, 68, 0.8)',
                     borderColor: 'rgba(239, 68, 68, 1)',
                     borderWidth: 1
@@ -382,7 +384,7 @@
             data: {
                 labels: ['Penduduk Datang', 'Penduduk Pindah'],
                 datasets: [{
-                    data: [{{ $rekapitulasi->total_datang ?? 0 }}, {{ $rekapitulasi->total_pindah ?? 0 }}],
+                    data: [<?php echo e($rekapitulasi->total_datang ?? 0); ?>, <?php echo e($rekapitulasi->total_pindah ?? 0); ?>],
                     backgroundColor: [
                         'rgba(34, 197, 94, 0.8)',
                         'rgba(239, 68, 68, 0.8)'
@@ -406,3 +408,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\Users\muham\disdukcapil\resources\views/rekapitulasi.blade.php ENDPATH**/ ?>
