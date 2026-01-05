@@ -39,6 +39,10 @@
             background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
             backdrop-filter: blur(10px);
         }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-primary-50 via-purple-50 to-indigo-100 min-h-screen">
@@ -76,6 +80,29 @@
                         </svg>
                         <span class="text-sm font-medium">Data Penduduk</span>
                     </a>
+                    
+                    <!-- Dropdown Wilayah -->
+                    <div class="relative dropdown">
+                        <button class="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-600 hover:text-primary-600 hover:bg-white/30 transition-all duration-200">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
+                                <circle cx="12" cy="9" r="2.5"/>
+                            </svg>
+                            <span class="text-sm font-medium">Wilayah</span>
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu hidden absolute right-0 mt-2 w-48 glass rounded-xl shadow-xl overflow-hidden">
+                            <a href="<?php echo e(url('/kecamatan')); ?>" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
+                                Data Kecamatan
+                            </a>
+                            <a href="<?php echo e(url('/kelurahan')); ?>" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
+                                Data Kelurahan
+                            </a>
+                        </div>
+                    </div>
+                    
                     <a href="<?php echo e(url('/upload-excel')); ?>" class="flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
@@ -241,6 +268,98 @@
                     </button>
                 </div>
             </form>
+        </div>
+
+        <!-- Template Downloads -->
+        <div class="glass rounded-2xl shadow-2xl p-8 mb-8">
+            <div class="flex items-center space-x-4 mb-6">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800">Download Template Excel</h3>
+                    <p class="text-gray-600">Download template sesuai format standar yang berlaku</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Template Datang -->
+                <div class="gradient-card rounded-xl p-6 border border-purple-200">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800 mb-2">Template DATANG</h4>
+                            <p class="text-sm text-gray-600 mb-3">Format standar 29 kolom untuk data penduduk datang (berlaku untuk semua tahun)</p>
+                            <div class="flex flex-col space-y-2">
+                                <a href="<?php echo e(asset('template_datang_standard.csv')); ?>" download class="inline-flex items-center justify-center px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    Download Template CSV
+                                </a>
+                            </div>
+                            <div class="mt-3 text-xs text-gray-500 space-y-1">
+                                <p>✓ NIK, NO_KK, NAMA_LENGKAP</p>
+                                <p>✓ Data Asal & Tujuan Lengkap</p>
+                                <p>✓ 29 kolom standar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template Pindah -->
+                <div class="gradient-card rounded-xl p-6 border border-indigo-200">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800 mb-2">Template PINDAH</h4>
+                            <p class="text-sm text-gray-600 mb-3">Format standar 32 kolom untuk data penduduk pindah (berlaku untuk semua tahun)</p>
+                            <div class="flex flex-col space-y-2">
+                                <a href="<?php echo e(asset('template_pindah_standard.csv')); ?>" download class="inline-flex items-center justify-center px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    Download Template CSV
+                                </a>
+                            </div>
+                            <div class="mt-3 text-xs text-gray-500 space-y-1">
+                                <p>✓ NIK, NO_KK, NAMA_LENGKAP</p>
+                                <p>✓ Jenis & Alasan Pindah</p>
+                                <p>✓ 32 kolom standar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Format Guide -->
+            <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start space-x-3">
+                    <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div class="text-sm">
+                        <p class="font-semibold text-blue-800 mb-2">Panduan Upload:</p>
+                        <ul class="space-y-1 text-blue-700">
+                            <li>• Format yang sama untuk semua tahun (2024, 2025, dst)</li>
+                            <li>• Urutan kolom harus sesuai template</li>
+                            <li>• Format tanggal: YYYY-MM-DD atau DD/MM/YYYY</li>
+                            <li>• File bisa dalam format .CSV, .XLSX, atau .XLS</li>
+                            <li>• Lihat <a href="<?php echo e(asset('FORMAT_EXCEL_GUIDE.md')); ?>" class="underline font-medium" target="_blank">FORMAT_EXCEL_GUIDE.md</a> untuk detail lengkap</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
 
 

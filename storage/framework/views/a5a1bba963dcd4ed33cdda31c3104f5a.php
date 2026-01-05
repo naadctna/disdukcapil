@@ -39,6 +39,10 @@
             background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
             backdrop-filter: blur(10px);
         }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-primary-50 via-purple-50 to-indigo-100 min-h-screen">
@@ -79,6 +83,29 @@
                         </svg>
                         <span>Data Penduduk</span>
                     </a>
+                    
+                    <!-- Dropdown Wilayah -->
+                    <div class="relative dropdown">
+                        <button class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
+                                <circle cx="12" cy="9" r="2.5"/>
+                            </svg>
+                            <span>Wilayah</span>
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu hidden absolute right-0 mt-2 w-48 glass rounded-xl shadow-xl overflow-hidden">
+                            <a href="<?php echo e(url('/kecamatan')); ?>" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
+                                Data Kecamatan
+                            </a>
+                            <a href="<?php echo e(url('/kelurahan')); ?>" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
+                                Data Kelurahan
+                            </a>
+                        </div>
+                    </div>
+                    
                     <a href="<?php echo e(url('/upload-excel')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>

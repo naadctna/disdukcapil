@@ -118,7 +118,6 @@ class DashboardController extends Controller
                     if ($search) {
                         $query->where(function($q) use ($search) {
                             $q->where('nama_lengkap', 'LIKE', "%{$search}%")
-                              ->orWhere('nama', 'LIKE', "%{$search}%")
                               ->orWhere('nik', 'LIKE', "%{$search}%");
                         });
                     }

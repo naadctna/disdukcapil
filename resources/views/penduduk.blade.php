@@ -86,27 +86,13 @@
                         <span>Data Penduduk</span>
                     </a>
                     
-                    <!-- Dropdown Wilayah -->
-                    <div class="relative dropdown">
-                        <button class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
-                                <circle cx="12" cy="9" r="2.5"/>
-                            </svg>
-                            <span>Wilayah</span>
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                            </svg>
-                        </button>
-                        <div class="dropdown-menu hidden absolute right-0 mt-2 w-48 glass rounded-xl shadow-xl overflow-hidden">
-                            <a href="{{ url('/kecamatan') }}" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
-                                Data Kecamatan
-                            </a>
-                            <a href="{{ url('/kelurahan') }}" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
-                                Data Kelurahan
-                            </a>
-                        </div>
-                    </div>
+                    <a href="{{ url('/kecamatan') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
+                            <circle cx="12" cy="9" r="2.5"/>
+                        </svg>
+                        <span>Kecamatan</span>
+                    </a>
                     
                     <a href="{{ url('/upload-excel') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -351,16 +337,24 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="flex space-x-1">
-                                    <button onclick="viewDetail('{{ $p->table_source ?? (str_contains($p->jenis_data, 'Datang') ? (str_contains($p->jenis_data, '2024') ? 'datang2024' : 'datang2025') : (str_contains($p->jenis_data, '2024') ? 'pindah2024' : 'pindah2025')) }}', {{ $p->id }})" class="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-all duration-200" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
+                                <div class="relative inline-block text-left action-dropdown">
+                                    <button onclick="toggleDropdown(event, {{ $index }})" class="text-gray-600 hover:text-primary-600 p-2 rounded-lg hover:bg-primary-50 transition-all duration-200">
+                                        <i class="fas fa-ellipsis-v"></i>
                                     </button>
-                                    <button onclick="editData('{{ $p->table_source ?? (str_contains($p->jenis_data, 'Datang') ? (str_contains($p->jenis_data, '2024') ? 'datang2024' : 'datang2025') : (str_contains($p->jenis_data, '2024') ? 'pindah2024' : 'pindah2025')) }}', {{ $p->id }})" class="text-primary-600 hover:text-primary-900 p-2 rounded-lg hover:bg-primary-50 transition-all duration-200" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onclick="confirmDelete('{{ $p->table_source ?? (str_contains($p->jenis_data, 'Datang') ? (str_contains($p->jenis_data, '2024') ? 'datang2024' : 'datang2025') : (str_contains($p->jenis_data, '2024') ? 'pindah2024' : 'pindah2025')) }}', {{ $p->id }}, '{{ $p->nama }}')" class="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition-all duration-200" title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                    <div id="dropdown-{{ $index }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl z-10 border border-gray-100 overflow-hidden">
+                                        <button onclick="viewDetail('{{ $p->table_source ?? (str_contains($p->jenis_data, 'Datang') ? (str_contains($p->jenis_data, '2024') ? 'datang2024' : 'datang2025') : (str_contains($p->jenis_data, '2024') ? 'pindah2024' : 'pindah2025')) }}', {{ $p->id }})" class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 flex items-center space-x-2">
+                                            <i class="fas fa-eye w-4"></i>
+                                            <span>Lihat Detail</span>
+                                        </button>
+                                        <button onclick="editData('{{ $p->table_source ?? (str_contains($p->jenis_data, 'Datang') ? (str_contains($p->jenis_data, '2024') ? 'datang2024' : 'datang2025') : (str_contains($p->jenis_data, '2024') ? 'pindah2024' : 'pindah2025')) }}', {{ $p->id }})" class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 flex items-center space-x-2">
+                                            <i class="fas fa-edit w-4"></i>
+                                            <span>Edit</span>
+                                        </button>
+                                        <button onclick="confirmDelete('{{ $p->table_source ?? (str_contains($p->jenis_data, 'Datang') ? (str_contains($p->jenis_data, '2024') ? 'datang2024' : 'datang2025') : (str_contains($p->jenis_data, '2024') ? 'pindah2024' : 'pindah2025')) }}', {{ $p->id }}, '{{ $p->nama }}')" class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 flex items-center space-x-2 border-t border-gray-100">
+                                            <i class="fas fa-trash w-4"></i>
+                                            <span>Hapus</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -813,6 +807,33 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Toggle Dropdown Function
+        function toggleDropdown(event, index) {
+            event.stopPropagation();
+            const dropdown = document.getElementById(`dropdown-${index}`);
+            
+            // Close all other dropdowns
+            document.querySelectorAll('.action-dropdown > div').forEach(dd => {
+                if (dd !== dropdown) {
+                    dd.classList.add('hidden');
+                }
+            });
+            
+            // Toggle current dropdown
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.action-dropdown')) {
+                document.querySelectorAll('.action-dropdown > div').forEach(dd => {
+                    dd.classList.add('hidden');
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
