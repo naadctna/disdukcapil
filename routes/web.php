@@ -9,6 +9,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::get('/rekapitulasi', [DashboardController::class, 'rekapitulasi'])->name('rekapitulasi');
 Route::get('/penduduk', [DashboardController::class, 'penduduk'])->name('penduduk');
 
+// Routes untuk Wilayah
+Route::get('/kecamatan', [DashboardController::class, 'kecamatan'])->name('kecamatan');
+Route::get('/kelurahan', [DashboardController::class, 'kelurahan'])->name('kelurahan');
+
 // Routes untuk Excel Upload
 Route::get('/upload-excel', [ExcelUploadController::class, 'uploadForm'])->name('upload.form');
 Route::post('/upload-excel/process', [ExcelUploadController::class, 'processUpload'])->name('upload.process');
