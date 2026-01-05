@@ -44,37 +44,40 @@ class ColumnMappingService
                 28 => ['kode', 'Kode Referensi', 'KODE']
             ];
         } elseif ($dataType === 'pindah') {
-            // Simplified PINDAH format (29 kolom) - SAMA untuk 2024 dan 2025, include required fields
+            // PINDAH format (32 kolom) - SAMA untuk 2024 dan 2025, include required fields
             return [
                 0 => ['nik', 'NIK', 'NIK'],
                 1 => ['no_kk', 'No. KK', 'NO_KK'],
                 2 => ['nama_lengkap', 'Nama Lengkap', 'NAMA_LENGKAP'],
                 3 => ['no_pindah', 'No. Pindah', 'NO_PINDAH'],
                 4 => ['tgl_pindah', 'Tanggal Pindah', 'TGL_PINDAH'],
-                5 => ['klasifikasi_pindah', 'Klasifikasi Pindah', 'KLASIFIKASI_PINDAH'],
-                6 => ['no_prop_asal', 'Kode Provinsi Asal', 'NO_PROP_ASAL'],
-                7 => ['nama_prop_asal', 'Nama Provinsi Asal', 'NAMA_PROP_ASAL'],
-                8 => ['no_kab_asal', 'Kode Kabupaten Asal', 'NO_KAB_ASAL'],
-                9 => ['nama_kab_asal', 'Nama Kabupaten Asal', 'NAMA_KAB_ASAL'],
-                10 => ['no_kec_asal', 'Kode Kecamatan Asal', 'NO_KEC_ASAL'],
-                11 => ['nama_kec_asal', 'Nama Kecamatan Asal', 'NAMA_KEC_ASAL'],
-                12 => ['no_kel_asal', 'Kode Kelurahan Asal', 'NO_KEL_ASAL'],
-                13 => ['nama_kel_asal', 'Nama Kelurahan Asal', 'NAMA_KEL_ASAL'],
-                14 => ['alamat_asal', 'Alamat Lengkap Asal', 'ALAMAT_ASAL'],
-                15 => ['no_rt_asal', 'No. RT Asal', 'NO_RT_ASAL'],
-                16 => ['no_rw_asal', 'No. RW Asal', 'NO_RW_ASAL'],
-                17 => ['no_prop_tujuan', 'Kode Provinsi Tujuan', 'NO_PROP_TUJUAN'],
-                18 => ['nama_prop_tujuan', 'Nama Provinsi Tujuan', 'NAMA_PROP_TUJUAN'],
-                19 => ['no_kab_tujuan', 'Kode Kabupaten Tujuan', 'NO_KAB_TUJUAN'],
-                20 => ['nama_kab_tujuan', 'Nama Kabupaten Tujuan', 'NAMA_KAB_TUJUAN'],
-                21 => ['no_kec_tujuan', 'Kode Kecamatan Tujuan', 'NO_KEC_TUJUAN'],
-                22 => ['nama_kec_tujuan', 'Nama Kecamatan Tujuan', 'NAMA_KEC_TUJUAN'],
-                23 => ['no_kel_tujuan', 'Kode Kelurahan Tujuan', 'NO_KEL_TUJUAN'],
-                24 => ['nama_kel_tujuan', 'Nama Kelurahan Tujuan', 'NAMA_KEL_TUJUAN'],
-                25 => ['alamat_tujuan', 'Alamat Lengkap Tujuan', 'ALAMAT_TUJUAN'],
-                26 => ['no_rt_tujuan', 'No. RT Tujuan', 'NO_RT_TUJUAN'],
-                27 => ['no_rw_tujuan', 'No. RW Tujuan', 'NO_RW_TUJUAN'],
-                28 => ['kode', 'Kode Referensi', 'KODE']
+                5 => ['jenis_pindah', 'Jenis Pindah', 'JENIS_PINDAH'],
+                6 => ['klasifikasi_pindah', 'Klasifikasi Pindah', 'KLASIFIKASI_PINDAH'],
+                7 => ['klasifikasi_pindah_ket', 'Keterangan Klasifikasi', 'KLASIFIKASI_PINDAH_KET'],
+                8 => ['alasan_pindah', 'Alasan Pindah', 'ALASAN_PINDAH'],
+                9 => ['no_prop_asal', 'Kode Provinsi Asal', 'NO_PROP_ASAL'],
+                10 => ['nama_prop_asal', 'Nama Provinsi Asal', 'NAMA_PROP_ASAL'],
+                11 => ['no_kab_asal', 'Kode Kabupaten Asal', 'NO_KAB_ASAL'],
+                12 => ['nama_kab_asal', 'Nama Kabupaten Asal', 'NAMA_KAB_ASAL'],
+                13 => ['no_kec_asal', 'Kode Kecamatan Asal', 'NO_KEC_ASAL'],
+                14 => ['nama_kec_asal', 'Nama Kecamatan Asal', 'NAMA_KEC_ASAL'],
+                15 => ['no_kel_asal', 'Kode Kelurahan Asal', 'NO_KEL_ASAL'],
+                16 => ['nama_kel_asal', 'Nama Kelurahan Asal', 'NAMA_KEL_ASAL'],
+                17 => ['alamat_asal', 'Alamat Lengkap Asal', 'ALAMAT_ASAL'],
+                18 => ['no_rt_asal', 'No. RT Asal', 'NO_RT_ASAL'],
+                19 => ['no_rw_asal', 'No. RW Asal', 'NO_RW_ASAL'],
+                20 => ['no_prop_tujuan', 'Kode Provinsi Tujuan', 'NO_PROP_TUJUAN'],
+                21 => ['nama_prop_tujuan', 'Nama Provinsi Tujuan', 'NAMA_PROP_TUJUAN'],
+                22 => ['no_kab_tujuan', 'Kode Kabupaten Tujuan', 'NO_KAB_TUJUAN'],
+                23 => ['nama_kab_tujuan', 'Nama Kabupaten Tujuan', 'NAMA_KAB_TUJUAN'],
+                24 => ['no_kec_tujuan', 'Kode Kecamatan Tujuan', 'NO_KEC_TUJUAN'],
+                25 => ['nama_kec_tujuan', 'Nama Kecamatan Tujuan', 'NAMA_KEC_TUJUAN'],
+                26 => ['no_kel_tujuan', 'Kode Kelurahan Tujuan', 'NO_KEL_TUJUAN'],
+                27 => ['nama_kel_tujuan', 'Nama Kelurahan Tujuan', 'NAMA_KEL_TUJUAN'],
+                28 => ['alamat_tujuan', 'Alamat Lengkap Tujuan', 'ALAMAT_TUJUAN'],
+                29 => ['no_rt_tujuan', 'No. RT Tujuan', 'NO_RT_TUJUAN'],
+                30 => ['no_rw_tujuan', 'No. RW Tujuan', 'NO_RW_TUJUAN'],
+                31 => ['kode', 'Kode Referensi', 'KODE']
             ];
         }
         
@@ -168,14 +171,16 @@ class ColumnMappingService
             ];
         } elseif ($dataType === 'pindah') {
             return [
-                'Data Utama' => ['id', 'nik', 'no_kk', 'nama_lengkap', 'no_pindah', 'tgl_pindah', 'klasifikasi_pindah'],
+                'Data Utama' => ['id', 'nik', 'no_kk', 'nama_lengkap', 'no_pindah', 'tgl_pindah', 'jenis_pindah', 'klasifikasi_pindah', 'klasifikasi_pindah_ket', 'alasan_pindah'],
                 'Alamat Asal' => [
                     'no_prop_asal', 'nama_prop_asal', 'no_kab_asal', 'nama_kab_asal',
-                    'no_kec_asal', 'nama_kec_asal', 'no_kel_asal', 'nama_kel_asal', 'alamat_asal'
+                    'no_kec_asal', 'nama_kec_asal', 'no_kel_asal', 'nama_kel_asal', 
+                    'alamat_asal', 'no_rt_asal', 'no_rw_asal'
                 ],
                 'Alamat Tujuan' => [
                     'no_prop_tujuan', 'nama_prop_tujuan', 'no_kab_tujuan', 'nama_kab_tujuan',
-                    'no_kec_tujuan', 'nama_kec_tujuan', 'no_kel_tujuan', 'nama_kel_tujuan', 'alamat_tujuan'
+                    'no_kec_tujuan', 'nama_kec_tujuan', 'no_kel_tujuan', 'nama_kel_tujuan', 
+                    'alamat_tujuan', 'no_rt_tujuan', 'no_rw_tujuan'
                 ],
                 'Informasi Sistem' => ['kode', 'created_at', 'updated_at']
             ];
