@@ -44,10 +44,52 @@
         .dropdown:hover .dropdown-menu {
             display: block;
         }
+
+        /* Toast Notification Styles */
+        @keyframes slideInDown {
+            from {
+                transform: translate(-50%, -100%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutUp {
+            from {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+            to {
+                transform: translate(-50%, -100%);
+                opacity: 0;
+            }
+        }
+
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            animation: slideInDown 0.5s ease-out;
+            min-width: 320px;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+
+        .toast-notification.hiding {
+            animation: slideOutUp 0.5s ease-out;
+        }
     </style>
 </head>
 
 <body class="bg-gradient-to-br from-primary-50 via-purple-50 to-indigo-100 min-h-screen">
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+    
     <!-- Navbar -->
     <nav class="glass shadow-xl sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -73,12 +115,6 @@
                         </svg>
                         <span>Beranda</span>
                     </a>
-                    <a href="{{ url('/rekapitulasi') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
-                        </svg>
-                        <span>Rekapitulasi</span>
-                    </a>
                     <a href="{{ url('/penduduk') }}" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -91,12 +127,12 @@
                             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
                             <circle cx="12" cy="9" r="2.5"/>
                         </svg>
-                        <span>Kecamatan</span>
+                        <span>Wilayah</span>
                     </a>
                     
                     <a href="{{ url('/upload-excel') }}" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
+                            <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
                         </svg>
                         <span>Upload Excel</span>
                     </a>
@@ -122,87 +158,77 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 relative">
 
         <!-- Summary Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="gradient-card rounded-2xl p-6 border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-gradient-to-r from-emerald-500 to-green-600 p-3 rounded-xl shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L12 2L3 7V9C3 10.1 3.9 11 5 11V17C5 18.1 5.9 19 7 19H9C10.1 19 11 18.1 11 17V15H13V17C13 18.1 13.9 19 15 19H17C18.1 19 19 18.1 19 17V11C20.1 11 21 10.1 21 9Z"/>
-                        </svg>
+        <div class="bg-white rounded-3xl p-8 shadow-lg mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Total Datang Card -->
+                <div class="bg-purple-50 rounded-2xl p-6 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <p class="text-purple-600 text-xs font-bold uppercase tracking-wider mb-3">TOTAL DATANG</p>
+                            <p class="text-4xl font-bold text-gray-900 mb-1">{{ number_format($rekapitulasi->total_datang ?? 0) }}</p>
+                            <p class="text-purple-500 text-sm">2024 - 2025</p>
+                        </div>
+                        <div class="bg-green-500 p-3 rounded-xl shadow-md flex-shrink-0 ml-4">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 7l1.41 1.41L5.83 11H16v2H5.83l2.58 2.59L7 17l-5-5z"/>
+                                <path d="M20 5h-8V3h8c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2h-8v-2h8V5z"/>
+                            </svg>
+                        </div>
                     </div>
-                    <span class="text-emerald-600 text-sm font-semibold">+12%</span>
                 </div>
-                <h3 class="text-gray-600 text-sm font-medium mb-1">Total Datang</h3>
-                <p class="text-3xl font-bold text-gray-900 mb-2">{{ $rekapitulasi->total_datang ?? 0 }}</p>
-                <div class="h-1 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full"></div>
-            </div>
 
-            <div class="gradient-card rounded-2xl p-6 border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-gradient-to-r from-red-500 to-rose-600 p-3 rounded-xl shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM17 20L19 18V10H18V7H17C17 5.9 16.1 5 15 5H9C7.9 5 7 5.9 7 7H6V10H5V18L7 20H17Z"/>
-                        </svg>
+                <!-- Total Pindah Card -->
+                <div class="bg-purple-50 rounded-2xl p-6 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <p class="text-purple-600 text-xs font-bold uppercase tracking-wider mb-3">TOTAL PINDAH</p>
+                            <p class="text-4xl font-bold text-gray-900 mb-1">{{ number_format($rekapitulasi->total_pindah ?? 0) }}</p>
+                            <p class="text-purple-500 text-sm">2024 - 2025</p>
+                        </div>
+                        <div class="bg-red-500 p-3 rounded-xl shadow-md flex-shrink-0 ml-4">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5z"/>
+                                <path d="M4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                            </svg>
+                        </div>
                     </div>
-                    <span class="text-red-600 text-sm font-semibold">-8%</span>
                 </div>
-                <h3 class="text-gray-600 text-sm font-medium mb-1">Total Pindah</h3>
-                <p class="text-3xl font-bold text-gray-900 mb-2">{{ $rekapitulasi->total_pindah ?? 0 }}</p>
-                <div class="h-1 bg-gradient-to-r from-red-500 to-rose-600 rounded-full"></div>
-            </div>
 
-            <div class="gradient-card rounded-2xl p-6 border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-gradient-to-r from-primary-500 to-primary-600 p-3 rounded-xl shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
+                <!-- Selisih Card -->
+                <div class="bg-purple-50 rounded-2xl p-6 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <p class="text-purple-600 text-xs font-bold uppercase tracking-wider mb-3">SELISIH</p>
+                            <p class="text-4xl font-bold {{ (($rekapitulasi->total_datang ?? 0) - ($rekapitulasi->total_pindah ?? 0)) >= 0 ? 'text-green-600' : 'text-red-600' }} mb-1">
+                                {{ (($rekapitulasi->total_datang ?? 0) - ($rekapitulasi->total_pindah ?? 0)) >= 0 ? '+' : '' }}{{ number_format(($rekapitulasi->total_datang ?? 0) - ($rekapitulasi->total_pindah ?? 0)) }}
+                            </p>
+                            <p class="text-purple-500 text-sm">{{ (($rekapitulasi->total_datang ?? 0) - ($rekapitulasi->total_pindah ?? 0)) >= 0 ? 'Surplus' : 'Defisit' }}</p>
+                        </div>
+                        <div class="bg-green-500 p-3 rounded-xl shadow-md flex-shrink-0 ml-4">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 14l5-5 5 5z"/>
+                            </svg>
+                        </div>
                     </div>
-                    <span class="text-primary-600 text-sm font-semibold">+4%</span>
                 </div>
-                <h3 class="text-gray-600 text-sm font-medium mb-1">Selisih</h3>
-                <p class="text-3xl font-bold text-gray-900 mb-2">{{ ($rekapitulasi->total_datang ?? 0) - ($rekapitulasi->total_pindah ?? 0) }}</p>
-                <div class="h-1 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full"></div>
-            </div>
 
-            <div class="gradient-card rounded-2xl p-6 border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-gradient-to-r from-amber-500 to-orange-600 p-3 rounded-xl shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-                        </svg>
+                <!-- Tahun Aktif Card -->
+                <div class="bg-purple-50 rounded-2xl p-6 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <p class="text-purple-600 text-xs font-bold uppercase tracking-wider mb-3">TAHUN AKTIF</p>
+                            <p class="text-4xl font-bold text-gray-900 mb-1">{{ date('Y') }}</p>
+                            <p class="text-purple-500 text-sm">Data Terkini</p>
+                        </div>
+                        <div class="bg-amber-500 p-3 rounded-xl shadow-md flex-shrink-0 ml-4">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                            </svg>
+                        </div>
                     </div>
-                    <span class="text-amber-600 text-sm font-semibold">Live</span>
-                </div>
-                <h3 class="text-gray-600 text-sm font-medium mb-1">Tahun Aktif</h3>
-                <p class="text-3xl font-bold text-gray-900 mb-2">{{ date('Y') }}</p>
-                <div class="h-1 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full"></div>
-            </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="gradient-card rounded-2xl p-6 border border-white/20 shadow-xl mb-8">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Aksi Cepat</h3>
-                    <p class="text-gray-600 text-sm">Kelola data penduduk dengan mudah</p>
-                </div>
-                <div class="flex space-x-3">
-                    <button class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                        </svg>
-                        <span>Tambah Data</span>
-                    </button>
-                    <a href="/upload-excel" class="bg-gradient-to-r from-emerald-500 to-green-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
-                        </svg>
-                        <span>Import Excel</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -293,20 +319,6 @@
                         </h3>
                         <p class="text-gray-600 text-sm mt-1">Kelola dan lihat data penduduk</p>
                     </div>
-                    <div class="flex space-x-2">
-                        <button class="bg-gradient-to-r from-emerald-500 to-green-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                            </svg>
-                            <span>Export Excel</span>
-                        </button>
-                        <button class="bg-gradient-to-r from-red-500 to-rose-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                            </svg>
-                            <span>Export PDF</span>
-                        </button>
-                    </div>
                 </div>
             </div>
 
@@ -324,12 +336,16 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($penduduk ?? [] as $index => $p)
-                        <tr class="hover:bg-primary-50/50 transition-colors duration-200">
+                        <tr class="hover:bg-primary-50/50 transition-colors duration-200" id="row-{{ $p->table_source }}-{{ $p->id }}">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $index + 1 }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{{ $p->nama ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{{ $p->alamat ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{ $p->tanggal && $p->tanggal !== '-' ? \Carbon\Carbon::parse($p->tanggal)->format('d/m/Y') : '-' }}
+                                @if(isset($p->tanggal) && $p->tanggal && $p->tanggal !== '-')
+                                    {{ \Carbon\Carbon::parse($p->tanggal)->format('d/m/Y') }}
+                                @else
+                                    -
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ str_contains($p->jenis_data, 'Datang') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
@@ -341,14 +357,10 @@
                                     <button onclick="toggleDropdown(event, {{ $index }})" class="text-gray-600 hover:text-primary-600 p-2 rounded-lg hover:bg-primary-50 transition-all duration-200">
                                         <i class="fas fa-ellipsis-v"></i>
                                     </button>
-                                    <div id="dropdown-{{ $index }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl z-10 border border-gray-100 overflow-hidden">
+                                    <div id="dropdown-{{ $index }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl z-50 border border-gray-100 overflow-hidden">
                                         <button onclick="viewDetail('{{ $p->table_source ?? (str_contains($p->jenis_data, 'Datang') ? (str_contains($p->jenis_data, '2024') ? 'datang2024' : 'datang2025') : (str_contains($p->jenis_data, '2024') ? 'pindah2024' : 'pindah2025')) }}', {{ $p->id }})" class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 flex items-center space-x-2">
                                             <i class="fas fa-eye w-4"></i>
                                             <span>Lihat Detail</span>
-                                        </button>
-                                        <button onclick="editData('{{ $p->table_source ?? (str_contains($p->jenis_data, 'Datang') ? (str_contains($p->jenis_data, '2024') ? 'datang2024' : 'datang2025') : (str_contains($p->jenis_data, '2024') ? 'pindah2024' : 'pindah2025')) }}', {{ $p->id }})" class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 flex items-center space-x-2">
-                                            <i class="fas fa-edit w-4"></i>
-                                            <span>Edit</span>
                                         </button>
                                         <button onclick="confirmDelete('{{ $p->table_source ?? (str_contains($p->jenis_data, 'Datang') ? (str_contains($p->jenis_data, '2024') ? 'datang2024' : 'datang2025') : (str_contains($p->jenis_data, '2024') ? 'pindah2024' : 'pindah2025')) }}', {{ $p->id }}, '{{ $p->nama }}')" class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 flex items-center space-x-2 border-t border-gray-100">
                                             <i class="fas fa-trash w-4"></i>
@@ -399,25 +411,15 @@
     </div>
 
     <script>
-        // Auto-submit form saat filter berubah
+        // Filter form handlers
         document.addEventListener('DOMContentLoaded', function() {
-            const statusSelect = document.querySelector('select[name="status"]');
-            const tahunSelect = document.querySelector('select[name="tahun"]');
             const searchInput = document.querySelector('input[name="search"]');
             const form = document.getElementById('filterForm');
-            
-            // Auto submit saat dropdown berubah
-            statusSelect?.addEventListener('change', function() {
-                form.submit();
-            });
-            
-            tahunSelect?.addEventListener('change', function() {
-                form.submit();
-            });
             
             // Submit saat enter di search
             searchInput?.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
+                    e.preventDefault();
                     form.submit();
                 }
             });
@@ -555,90 +557,7 @@
             document.getElementById('detailModal').classList.add('hidden');
         }
 
-        // Edit Data Function
-        function editData(table, id) {
-            // Fetch data untuk edit
-            fetch(`/penduduk/view/${table}/${id}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    populateEditModal(data.data, table, id);
-                    document.getElementById('editModal').classList.remove('hidden');
-                } else {
-                    alert('Gagal mengambil data: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat mengambil data.');
-            });
-        }
 
-        // Populate Edit Modal
-        function populateEditModal(data, table, id) {
-            document.getElementById('editTable').value = table;
-            document.getElementById('editId').value = id;
-            document.getElementById('editNama').value = data.nama_lengkap || data.nama || '';
-            document.getElementById('editAlamat').value = data.alamat || '';
-            
-            // Set tanggal berdasarkan jenis tabel
-            if (table.includes('datang')) {
-                document.getElementById('editTanggalLabel').textContent = 'Tanggal Datang';
-                document.getElementById('editTanggal').value = data.tgl_datang || data.tanggal_datang || '';
-            } else {
-                document.getElementById('editTanggalLabel').textContent = 'Tanggal Pindah';
-                document.getElementById('editTanggal').value = data.tanggal_pindah || '';
-            }
-        }
-
-        // Close Edit Modal
-        function closeEditModal() {
-            document.getElementById('editModal').classList.add('hidden');
-        }
-
-        // Save Edit Data
-        function saveEditData() {
-            const formData = new FormData();
-            formData.append('nama', document.getElementById('editNama').value);
-            formData.append('alamat', document.getElementById('editAlamat').value);
-            formData.append('tanggal', document.getElementById('editTanggal').value);
-            
-            const table = document.getElementById('editTable').value;
-            const id = document.getElementById('editId').value;
-            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-            // Show loading
-            const saveBtn = document.getElementById('saveEditBtn');
-            const originalText = saveBtn.textContent;
-            saveBtn.textContent = 'Menyimpan...';
-            saveBtn.disabled = true;
-
-            fetch(`/penduduk/update/${table}/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'X-CSRF-TOKEN': token
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Data berhasil diupdate!');
-                    closeEditModal();
-                    window.location.reload();
-                } else {
-                    alert('Gagal update data: ' + (data.message || 'Terjadi kesalahan'));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat menyimpan data.');
-            })
-            .finally(() => {
-                saveBtn.textContent = originalText;
-                saveBtn.disabled = false;
-            });
-        }
 
         // Confirm Delete Function
         function confirmDelete(table, id, nama) {
@@ -661,7 +580,7 @@
         // Delete Data Function
         function deleteData(table, id) {
             // Show loading
-            const loadingHTML = '<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div class="bg-white p-6 rounded-lg"><i class="fas fa-spinner fa-spin text-2xl text-primary-500"></i><p class="mt-2">Menghapus data...</p></div></div>';
+            const loadingHTML = '<div id="deleteLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div class="bg-white p-6 rounded-lg"><i class="fas fa-spinner fa-spin text-2xl text-primary-500"></i><p class="mt-2">Menghapus data...</p></div></div>';
             document.body.insertAdjacentHTML('beforeend', loadingHTML);
 
             // CSRF Token
@@ -677,23 +596,46 @@
             .then(response => response.json())
             .then(data => {
                 // Remove loading
-                document.querySelector('.fixed.inset-0.bg-black').remove();
+                const loadingEl = document.getElementById('deleteLoading');
+                if (loadingEl) loadingEl.remove();
                 
                 if (data.success) {
-                    alert('Data berhasil dihapus!');
-                    // Reload halaman untuk update data
-                    window.location.reload();
+                    showToast('success', 'Data berhasil dihapus!');
+                    
+                    // Hapus row dari tabel tanpa refresh
+                    const row = document.getElementById(`row-${table}-${id}`);
+                    if (row) {
+                        row.style.transition = 'all 0.3s ease-out';
+                        row.style.opacity = '0';
+                        row.style.transform = 'translateX(20px)';
+                        setTimeout(() => {
+                            row.remove();
+                            // Update nomor urut
+                            updateRowNumbers();
+                        }, 300);
+                    }
                 } else {
-                    alert('Gagal menghapus data: ' + (data.message || 'Terjadi kesalahan'));
+                    showToast('error', 'Gagal menghapus data: ' + (data.message || 'Terjadi kesalahan'));
                 }
             })
             .catch(error => {
                 // Remove loading
-                const loadingEl = document.querySelector('.fixed.inset-0.bg-black');
+                const loadingEl = document.getElementById('deleteLoading');
                 if (loadingEl) loadingEl.remove();
                 
                 console.error('Error:', error);
-                alert('Terjadi kesalahan saat menghapus data. Silakan coba lagi.');
+                showToast('error', 'Terjadi kesalahan saat menghapus data. Silakan coba lagi.');
+            });
+        }
+
+        // Update row numbers after delete
+        function updateRowNumbers() {
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach((row, index) => {
+                const firstCell = row.querySelector('td:first-child');
+                if (firstCell) {
+                    firstCell.textContent = index + 1;
+                }
             });
         }
     </script>
@@ -743,72 +685,58 @@
         </div>
     </div>
 
-    <!-- Edit Modal -->
-    <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 transform transition-all duration-300">
-            <div class="p-6">
-                <!-- Header -->
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-gray-900">Edit Data</h3>
-                            <p class="text-gray-600">Ubah informasi penduduk</p>
-                        </div>
+
+
+    <script>
+        // Toast notification function
+        function showToast(type, message) {
+            const toastId = 'toast-' + Date.now();
+            const bgColor = type === 'success' ? '#10b981' : '#ef4444';
+            const icon = type === 'success' 
+                ? '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>'
+                : '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>';
+            const title = type === 'success' ? 'Berhasil!' : 'Gagal!';
+            
+            const toast = document.createElement('div');
+            toast.id = toastId;
+            toast.className = 'toast-notification';
+            toast.style.backgroundColor = bgColor;
+            toast.innerHTML = `
+                <div class="p-4 flex items-center space-x-3 text-white">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        ${icon}
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium">${title}</p>
+                        <p class="text-sm opacity-90">${message}</p>
                     </div>
-                    <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    <button onclick="closeToast('${toastId}')" class="text-white hover:text-gray-200 transition-colors">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
                         </svg>
                     </button>
                 </div>
+            `;
+            
+            const container = document.getElementById('toastContainer');
+            container.appendChild(toast);
+            
+            // Auto dismiss after 3 seconds
+            setTimeout(() => {
+                closeToast(toastId);
+            }, 3000);
+        }
+        
+        function closeToast(toastId) {
+            const toast = document.getElementById(toastId);
+            if (toast) {
+                toast.classList.add('hiding');
+                setTimeout(() => {
+                    toast.remove();
+                }, 500);
+            }
+        }
 
-                <!-- Form -->
-                <form onsubmit="event.preventDefault(); saveEditData();">
-                    <input type="hidden" id="editTable">
-                    <input type="hidden" id="editId">
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
-                            <input type="text" id="editNama" required 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Alamat</label>
-                            <textarea id="editAlamat" required rows="3"
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"></textarea>
-                        </div>
-                        
-                        <div>
-                            <label id="editTanggalLabel" class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
-                            <input type="date" id="editTanggal" required 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                        </div>
-                    </div>
-
-                    <!-- Buttons -->
-                    <div class="flex space-x-3 mt-6">
-                        <button type="button" onclick="closeEditModal()" 
-                                class="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-xl font-medium hover:bg-gray-300 transition-colors">
-                            <i class="fas fa-times mr-2"></i>Batal
-                        </button>
-                        <button type="submit" id="saveEditBtn"
-                                class="flex-1 px-4 py-3 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition-colors">
-                            <i class="fas fa-save mr-2"></i>Simpan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
         // Toggle Dropdown Function
         function toggleDropdown(event, index) {
             event.stopPropagation();

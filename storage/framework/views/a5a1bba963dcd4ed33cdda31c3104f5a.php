@@ -71,12 +71,6 @@
                         </svg>
                         <span>Beranda</span>
                     </a>
-                    <a href="<?php echo e(url('/rekapitulasi')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
-                        </svg>
-                        <span>Rekapitulasi</span>
-                    </a>
                     <a href="<?php echo e(url('/penduduk')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -84,27 +78,13 @@
                         <span>Data Penduduk</span>
                     </a>
                     
-                    <!-- Dropdown Wilayah -->
-                    <div class="relative dropdown">
-                        <button class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
-                                <circle cx="12" cy="9" r="2.5"/>
-                            </svg>
-                            <span>Wilayah</span>
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                            </svg>
-                        </button>
-                        <div class="dropdown-menu hidden absolute right-0 mt-2 w-48 glass rounded-xl shadow-xl overflow-hidden">
-                            <a href="<?php echo e(url('/kecamatan')); ?>" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
-                                Data Kecamatan
-                            </a>
-                            <a href="<?php echo e(url('/kelurahan')); ?>" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
-                                Data Kelurahan
-                            </a>
-                        </div>
-                    </div>
+                    <a href="<?php echo e(url('/kecamatan')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
+                            <circle cx="12" cy="9" r="2.5"/>
+                        </svg>
+                        <span>Wilayah</span>
+                    </a>
                     
                     <a href="<?php echo e(url('/upload-excel')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -124,7 +104,7 @@
             <div class="text-center">
                 <h1 class="text-4xl font-bold text-gray-900 mb-4">
                     <span class="bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">
-                        Pusat Komando Digital  
+                        Pusat Komando Digital
                     </span>
                 </h1>
                 <p class="text-lg text-gray-600">Monitoring dinamika perpindahan penduduk terkini</p>
@@ -133,80 +113,78 @@
     </div>
 
     <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pb-12">
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-            <!-- Total Datang Card -->
-            <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-primary-600 text-sm font-semibold uppercase tracking-wider">Total Datang</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2"><?php echo e(number_format($rekapitulasi->total_datang)); ?></p>
-                        <p class="text-primary-500 text-sm mt-1">2024 - 2025</p>
-                    </div>
-                    <div class="bg-gradient-to-br from-green-400 to-green-600 p-3 rounded-xl shadow-lg">
-                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M7 7l1.41 1.41L5.83 11H16v2H5.83l2.58 2.59L7 17l-5-5z"/>
-                            <path d="M20 5h-8V3h8c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2h-8v-2h8V5z"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Total Pindah Card -->
-            <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-primary-600 text-sm font-semibold uppercase tracking-wider">Total Pindah</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2"><?php echo e(number_format($rekapitulasi->total_pindah)); ?></p>
-                        <p class="text-primary-500 text-sm mt-1">2024 - 2025</p>
-                    </div>
-                    <div class="bg-gradient-to-br from-red-400 to-red-600 p-3 rounded-xl shadow-lg">
-                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5z"/>
-                            <path d="M4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-                        </svg>
+        <div class="bg-white rounded-3xl p-8 shadow-lg mb-16">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Total Datang Card -->
+                <div class="bg-purple-50 rounded-2xl p-6 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <p class="text-purple-600 text-xs font-bold uppercase tracking-wider mb-3">TOTAL DATANG</p>
+                            <p class="text-4xl font-bold text-gray-900 mb-1"><?php echo e(number_format($rekapitulasi->total_datang)); ?></p>
+                            <p class="text-purple-500 text-sm">2024 - 2025</p>
+                        </div>
+                        <div class="bg-green-500 p-3 rounded-xl shadow-md flex-shrink-0 ml-4">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 7l1.41 1.41L5.83 11H16v2H5.83l2.58 2.59L7 17l-5-5z"/>
+                                <path d="M20 5h-8V3h8c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2h-8v-2h8V5z"/>
+                            </svg>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Selisih Card -->
-            <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-primary-600 text-sm font-semibold uppercase tracking-wider">Selisih</p>
-                        <p class="text-3xl font-bold <?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'text-green-600' : 'text-red-600'); ?> mt-2">
-                            <?php echo e($rekapitulasi->hasil_akhir >= 0 ? '+' : ''); ?><?php echo e(number_format($rekapitulasi->hasil_akhir)); ?>
-
-                        </p>
-                        <p class="text-primary-500 text-sm mt-1"><?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'Surplus' : 'Defisit'); ?></p>
-                    </div>
-                    <div class="bg-gradient-to-br from-<?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'green' : 'red'); ?>-400 to-<?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'green' : 'red'); ?>-600 p-3 rounded-xl shadow-lg">
-                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <?php if($rekapitulasi->hasil_akhir >= 0): ?>
-                            <path d="M7 14l5-5 5 5z"/>
-                            <?php else: ?>
-                            <path d="M7 10l5 5 5-5z"/>
-                            <?php endif; ?>
-                        </svg>
+                <!-- Total Pindah Card -->
+                <div class="bg-purple-50 rounded-2xl p-6 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <p class="text-purple-600 text-xs font-bold uppercase tracking-wider mb-3">TOTAL PINDAH</p>
+                            <p class="text-4xl font-bold text-gray-900 mb-1"><?php echo e(number_format($rekapitulasi->total_pindah)); ?></p>
+                            <p class="text-purple-500 text-sm">2024 - 2025</p>
+                        </div>
+                        <div class="bg-red-500 p-3 rounded-xl shadow-md flex-shrink-0 ml-4">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5z"/>
+                                <path d="M4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                            </svg>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Growth Rate Card -->
-            <div class="gradient-card rounded-2xl p-6 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-primary-600 text-sm font-semibold uppercase tracking-wider">Rasio Pertumbuhan</p>
-                        <p class="text-3xl font-bold text-indigo-600 mt-2">
-                            <?php echo e($rekapitulasi->total_pindah > 0 ? number_format(($rekapitulasi->total_datang / $rekapitulasi->total_pindah) * 100, 1) : '0'); ?>%
-                        </p>
-                        <p class="text-primary-500 text-sm mt-1">Perbandingan Datang dan Pindah</p>
+                <!-- Selisih Card -->
+                <div class="bg-purple-50 rounded-2xl p-6 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <p class="text-purple-600 text-xs font-bold uppercase tracking-wider mb-3">SELISIH</p>
+                            <p class="text-4xl font-bold <?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'text-green-600' : 'text-red-600'); ?> mb-1">
+                                <?php echo e($rekapitulasi->hasil_akhir >= 0 ? '+' : ''); ?><?php echo e(number_format($rekapitulasi->hasil_akhir)); ?>
+
+                            </p>
+                            <p class="text-purple-500 text-sm"><?php echo e($rekapitulasi->hasil_akhir >= 0 ? 'Surplus' : 'Defisit'); ?></p>
+                        </div>
+                        <div class="bg-green-500 p-3 rounded-xl shadow-md flex-shrink-0 ml-4">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 14l5-5 5 5z"/>
+                            </svg>
+                        </div>
                     </div>
-                    <div class="bg-gradient-to-br from-indigo-400 to-indigo-600 p-3 rounded-xl shadow-lg">
-                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
-                        </svg>
+                </div>
+
+                <!-- Rasio Pertumbuhan Card -->
+                <div class="bg-purple-50 rounded-2xl p-6 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <p class="text-purple-600 text-xs font-bold uppercase tracking-wider mb-3">RASIO PERTUMBUHAN</p>
+                            <p class="text-4xl font-bold text-indigo-600 mb-1">
+                                <?php echo e($rekapitulasi->total_pindah > 0 ? number_format(($rekapitulasi->total_datang / $rekapitulasi->total_pindah) * 100, 1) : '0'); ?>%
+                            </p>
+                            <p class="text-purple-500 text-sm">Perbandingan Datang dan Pindah</p>
+                        </div>
+                        <div class="bg-indigo-500 p-3 rounded-xl shadow-md flex-shrink-0 ml-4">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -247,45 +225,7 @@
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="glass rounded-2xl p-8 shadow-xl">
-            <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                <svg class="w-6 h-6 text-primary-600 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M13 3l3.293 3.293-7 7 1.414 1.414 7-7L21 11V3z"/>
-                    <path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/>
-                </svg>
-                Quick Actions
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <a href="<?php echo e(url('/penduduk')); ?>" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white p-4 rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-3">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                    </svg>
-                    <div>
-                        <div class="font-semibold">Kelola Data Penduduk</div>
-                        <div class="text-sm opacity-90">Input & view data</div>
-                    </div>
-                </a>
-                <a href="<?php echo e(url('/rekapitulasi')); ?>" class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-4 rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-3">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
-                    </svg>
-                    <div>
-                        <div class="font-semibold">Lihat Rekapitulasi</div>
-                        <div class="text-sm opacity-90">Analisis mendalam</div>
-                    </div>
-                </a>
-                <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-xl flex items-center space-x-3">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <div>
-                        <div class="font-semibold">Status System</div>
-                        <div class="text-sm opacity-90">Online & Ready</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 
     <script>

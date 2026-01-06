@@ -70,12 +70,6 @@
                         </svg>
                         <span>Beranda</span>
                     </a>
-                    <a href="<?php echo e(url('/rekapitulasi')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
-                        </svg>
-                        <span>Rekapitulasi</span>
-                    </a>
                     <a href="<?php echo e(url('/penduduk')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -83,27 +77,13 @@
                         <span>Data Penduduk</span>
                     </a>
                     
-                    <!-- Dropdown Wilayah -->
-                    <div class="relative dropdown">
-                        <button class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
-                                <circle cx="12" cy="9" r="2.5"/>
-                            </svg>
-                            <span>Wilayah</span>
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                            </svg>
-                        </button>
-                        <div class="dropdown-menu hidden absolute right-0 mt-2 w-48 glass rounded-xl shadow-xl overflow-hidden">
-                            <a href="<?php echo e(url('/kecamatan')); ?>" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
-                                Data Kecamatan
-                            </a>
-                            <a href="<?php echo e(url('/kelurahan')); ?>" class="block px-4 py-3 text-sm text-primary-700 hover:bg-primary-100/50 font-semibold transition-all duration-200">
-                                Data Kelurahan
-                            </a>
-                        </div>
-                    </div>
+                    <a href="<?php echo e(url('/kecamatan')); ?>" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
+                            <circle cx="12" cy="9" r="2.5"/>
+                        </svg>
+                        <span>Wilayah</span>
+                    </a>
                     
                     <a href="<?php echo e(url('/upload-excel')); ?>" class="text-primary-700 hover:bg-primary-100/50 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -215,7 +195,7 @@
                     <thead class="bg-gradient-to-r from-primary-500 to-primary-600 text-white">
                         <tr>
                             <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">No</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Nama Kecamatan</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Kecamatan</th>
                             <th class="px-6 py-4 text-center text-sm font-semibold uppercase tracking-wider">Datang</th>
                             <th class="px-6 py-4 text-center text-sm font-semibold uppercase tracking-wider">Pindah</th>
                             <th class="px-6 py-4 text-center text-sm font-semibold uppercase tracking-wider">Total</th>
@@ -224,7 +204,7 @@
                     <tbody class="bg-white/50 divide-y divide-primary-100">
                         <?php $__empty_1 = true; $__currentLoopData = $kecamatan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr class="hover:bg-primary-50/50 transition-colors duration-200 cursor-pointer group" 
-                            onclick="window.location.href='<?php echo e(url('/kelurahan?kecamatan=' . urlencode($item['kecamatan']))); ?>'">
+                            onclick="showKecamatanDetail('<?php echo e($item['kecamatan']); ?>')">
                             <td class="px-6 py-4 text-sm text-gray-900"><?php echo e($index + 1); ?></td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900 group-hover:text-primary-600 flex items-center space-x-2">
                                 <svg class="w-5 h-5 text-primary-500" viewBox="0 0 24 24" fill="currentColor">
@@ -276,11 +256,121 @@
                     <svg class="w-4 h-4 mr-2 text-primary-500" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                     </svg>
-                    <span class="font-semibold">💡 Tips:</span> Klik pada baris kecamatan untuk melihat detail kelurahan
+                    <span class="font-semibold">💡 Tips:</span> Klik pada baris kecamatan untuk melihat detail data penduduk yang pindah
                 </p>
             </div>
             <?php endif; ?>
         </div>
+
+        <!-- Modal Detail Kecamatan -->
+        <div id="detailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+                <div class="bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-white flex items-center">
+                            <svg class="w-6 h-6 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.92 16.21 7 11.85 7 9z"/>
+                                <circle cx="12" cy="9" r="2.5"/>
+                            </svg>
+                            Data Penduduk Kecamatan <span id="modalKecamatanName" class="ml-2"></span>
+                        </h3>
+                        <button onclick="closeDetailModal()" class="text-white hover:text-gray-200 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+                    <div id="modalContent" class="space-y-4">
+                        <!-- Content akan diisi via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function showKecamatanDetail(kecamatan) {
+                const modal = document.getElementById('detailModal');
+                const content = document.getElementById('modalContent');
+                const nameEl = document.getElementById('modalKecamatanName');
+                
+                nameEl.textContent = kecamatan;
+                
+                // Show loading
+                content.innerHTML = '<div class="text-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-primary-500"></i><p class="mt-2 text-gray-600">Memuat data...</p></div>';
+                modal.classList.remove('hidden');
+                
+                // Fetch data dari API
+                fetch(`/api/kecamatan-detail/${encodeURIComponent(kecamatan)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.data.length > 0) {
+                            displayKecamatanData(data.data);
+                        } else {
+                            content.innerHTML = '<div class="text-center py-8 text-gray-500"><svg class="w-16 h-16 mx-auto mb-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9z"/></svg><p class="text-lg font-semibold">Tidak ada data</p><p class="text-sm">Belum ada data penduduk untuk kecamatan ini</p></div>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        content.innerHTML = '<div class="text-center py-8 text-red-600"><svg class="w-16 h-16 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg><p class="text-lg font-semibold">Terjadi Kesalahan</p><p class="text-sm">Gagal memuat data</p></div>';
+                    });
+            }
+
+            function displayKecamatanData(data) {
+                const content = document.getElementById('modalContent');
+                let html = `
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gradient-to-r from-primary-50 to-purple-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-bold text-primary-700 uppercase">No</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold text-primary-700 uppercase">Nama</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold text-primary-700 uppercase">Alamat Asal</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold text-primary-700 uppercase">Alamat Tujuan</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold text-primary-700 uppercase">Tanggal</th>
+                                    <th class="px-4 py-3 text-center text-xs font-bold text-primary-700 uppercase">Jenis</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                `;
+                
+                data.forEach((item, index) => {
+                    const badgeClass = item.jenis_data.includes('Datang') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                    html += `
+                        <tr class="hover:bg-primary-50 transition-colors">
+                            <td class="px-4 py-3 text-sm text-gray-900">${index + 1}</td>
+                            <td class="px-4 py-3 text-sm font-medium text-gray-900">${item.nama || '-'}</td>
+                            <td class="px-4 py-3 text-sm text-gray-600">${item.alamat_asal || '-'}</td>
+                            <td class="px-4 py-3 text-sm text-gray-600">${item.alamat_tujuan || '-'}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900">${item.tanggal || '-'}</td>
+                            <td class="px-4 py-3 text-center">
+                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${badgeClass}">
+                                    ${item.jenis_data}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-4 p-4 bg-primary-50 rounded-lg">
+                        <p class="text-sm text-gray-700">
+                            <span class="font-semibold">Total:</span> ${data.length} data penduduk
+                        </p>
+                    </div>
+                `;
+                
+                content.innerHTML = html;
+            }
+
+            function closeDetailModal() {
+                document.getElementById('detailModal').classList.add('hidden');
+            }
+        </script>
 
         <!-- Summary with Analytics -->
         <?php if($kecamatan->count() > 0): ?>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Penduduk;
 use App\Services\DynamicTableService;
 use App\Services\ColumnMappingService;
@@ -82,12 +83,6 @@ class DashboardController extends Controller
         }
     }
 
-    public function rekapitulasi()
-    {
-        $rekapitulasi = Penduduk::getRekapitulasi();
-        return view('rekapitulasi', compact('rekapitulasi'));
-    }
-
     public function penduduk(Request $request)
     {
         $search = $request->get('search', '');
@@ -135,7 +130,7 @@ class DashboardController extends Controller
                     }
                     
                     // Tambah limit dan order untuk performa
-                    $data = $query->orderBy('created_at', 'desc')
+                    $data = $query->orderBy('id', 'desc')
                                  ->limit(500)
                                  ->get();
                     
@@ -307,7 +302,7 @@ class DashboardController extends Controller
         // Add pindah records with type indicator (updated untuk kolom baru)
         foreach($pindah2024 as $record) {
             $record->jenis_data = 'Pindah 2024';
-            $record->tanggal = $record->tgl_datang ?? $record->tanggal_pindah ?? '-';
+            $record->tanggal = $record->tgl_pindah ?? $record->tanggal_pindah ?? $record->tanggal ?? '-';
             $record->table_source = 'pindah2024';
             // Mapping kolom baru ke tampilan
             $record->nama = $record->nama_lengkap ?? $record->nama ?? 'Nama tidak tersedia';
@@ -337,7 +332,7 @@ class DashboardController extends Controller
         
         foreach($pindah2025 as $record) {
             $record->jenis_data = 'Pindah 2025';
-            $record->tanggal = $record->tgl_datang ?? $record->tanggal_pindah ?? '-';
+            $record->tanggal = $record->tgl_pindah ?? $record->tanggal_pindah ?? $record->tanggal ?? '-';
             $record->table_source = 'pindah2025';
             // Mapping kolom baru ke tampilan
             $record->nama = $record->nama_lengkap ?? $record->nama ?? 'Nama tidak tersedia';
@@ -365,8 +360,8 @@ class DashboardController extends Controller
             $penduduk->push($record);
         }
         
-        // Sort by date (most recent first)
-        $penduduk = $penduduk->sortByDesc('tanggal');
+        // Sort by ID (most recent first)
+        $penduduk = $penduduk->sortByDesc('id');
         
         return view('penduduk', compact(
             'datang2024', 'datang2025', 'pindah2024', 'pindah2025', 'penduduk',
@@ -396,103 +391,103 @@ class DashboardController extends Controller
             if (str_contains($table, 'datang')) {
                 $request->validate([
                     'nama' => 'required|string|max:255',
-                    'alamat' => 'required|string|max:255',
-                    'tanggal_datang' => 'required|date'
+                    'alamat' => 'required|string',
+                    'tanggal' => 'required|date'
                 ]);
                 
-                // Tentukan tahun dari tanggal_datang
-                $newYear = date('Y', strtotime($request->tanggal_datang));
-                $targetTable = 'datang' . $newYear;
-                
-                // Validasi target table
-                if (!in_array($targetTable, $allowedTables)) {
-                    return response()->json([
-                        'success' => false, 
-                        'message' => 'Tahun ' . $newYear . ' tidak didukung. Gunakan tahun 2024 atau 2025.'
-                    ], 400);
-                }
+                // Cek field yang ada di tabel
+                $hasNamaLengkap = Schema::hasColumn($table, 'nama_lengkap');
+                $hasAlamat = Schema::hasColumn($table, 'alamat');
+                $hasAlamatAsal = Schema::hasColumn($table, 'alamat_asal');
+                $hasTglDatang = Schema::hasColumn($table, 'tgl_datang');
                 
                 $data = [
-                    'nama' => $request->nama,
-                    'alamat' => $request->alamat,
-                    'tanggal_datang' => $request->tanggal_datang,
-                    'created_at' => $oldData->created_at, // Pertahankan created_at asli
                     'updated_at' => now()
                 ];
+                
+                // Update nama
+                if ($hasNamaLengkap) {
+                    $data['nama_lengkap'] = $request->nama;
+                }
+                if (Schema::hasColumn($table, 'nama')) {
+                    $data['nama'] = $request->nama;
+                }
+                
+                // Update alamat
+                if ($hasAlamat) {
+                    $data['alamat'] = $request->alamat;
+                }
+                if ($hasAlamatAsal) {
+                    $data['alamat_asal'] = $request->alamat;
+                }
+                
+                // Update tanggal
+                if ($hasTglDatang) {
+                    $data['tgl_datang'] = $request->tanggal;
+                }
+                if (Schema::hasColumn($table, 'tanggal_datang')) {
+                    $data['tanggal_datang'] = $request->tanggal;
+                }
             } else {
+                // Untuk tabel pindah
                 $request->validate([
                     'nama' => 'required|string|max:255',
-                    'alamat_asal' => 'required|string|max:255',
-                    'alamat_tujuan' => 'required|string|max:255',
-                    'tanggal_pindah' => 'required|date'
+                    'alamat' => 'required|string',
+                    'tanggal' => 'required|date'
                 ]);
                 
-                // Tentukan tahun dari tanggal_pindah
-                $newYear = date('Y', strtotime($request->tanggal_pindah));
-                $targetTable = 'pindah' . $newYear;
-                
-                // Validasi target table
-                if (!in_array($targetTable, $allowedTables)) {
-                    return response()->json([
-                        'success' => false, 
-                        'message' => 'Tahun ' . $newYear . ' tidak didukung. Gunakan tahun 2024 atau 2025.'
-                    ], 400);
-                }
+                // Cek field yang ada di tabel
+                $hasNamaLengkap = Schema::hasColumn($table, 'nama_lengkap');
+                $hasAlamat = Schema::hasColumn($table, 'alamat');
+                $hasAlamatAsal = Schema::hasColumn($table, 'alamat_asal');
+                $hasAlamatTujuan = Schema::hasColumn($table, 'alamat_tujuan');
+                $hasTanggalPindah = Schema::hasColumn($table, 'tanggal_pindah');
                 
                 $data = [
-                    'nama' => $request->nama,
-                    'alamat_asal' => $request->alamat_asal,
-                    'alamat_tujuan' => $request->alamat_tujuan,
-                    'tanggal_pindah' => $request->tanggal_pindah,
-                    'created_at' => $oldData->created_at, // Pertahankan created_at asli
                     'updated_at' => now()
                 ];
+                
+                // Update nama
+                if ($hasNamaLengkap) {
+                    $data['nama_lengkap'] = $request->nama;
+                }
+                if (Schema::hasColumn($table, 'nama')) {
+                    $data['nama'] = $request->nama;
+                }
+                
+                // Update alamat
+                if ($hasAlamat) {
+                    $data['alamat'] = $request->alamat;
+                }
+                if ($hasAlamatAsal) {
+                    $data['alamat_asal'] = $request->alamat;
+                }
+                if ($hasAlamatTujuan) {
+                    $data['alamat_tujuan'] = $request->alamat;
+                }
+                
+                // Update tanggal
+                if ($hasTanggalPindah) {
+                    $data['tanggal_pindah'] = $request->tanggal;
+                }
+                if (Schema::hasColumn($table, 'tanggal')) {
+                    $data['tanggal'] = $request->tanggal;
+                }
             }
 
-            // Jika target table sama dengan source table, lakukan update biasa
-            if ($targetTable === $table) {
-                $updated = DB::table($table)->where('id', $id)->update($data);
-                
-                if ($updated) {
-                    return response()->json([
-                        'success' => true, 
-                        'message' => 'Data berhasil diupdate!'
-                    ]);
-                } else {
-                    return response()->json([
-                        'success' => false, 
-                        'message' => 'Tidak ada perubahan data'
-                    ]);
-                }
+            // Lakukan update
+            $updated = DB::table($table)->where('id', $id)->update($data);
+            
+            if ($updated || count($data) > 1) { // count > 1 karena minimal ada updated_at
+                return response()->json([
+                    'success' => true, 
+                    'message' => 'Data berhasil diupdate!'
+                ]);
             } else {
-                // Jika target table berbeda, lakukan transfer data
-                DB::beginTransaction();
-                
-                try {
-                    // Insert data baru ke target table
-                    $inserted = DB::table($targetTable)->insert($data);
-                    
-                    if ($inserted) {
-                        // Hapus data lama dari source table
-                        DB::table($table)->where('id', $id)->delete();
-                        
-                        DB::commit();
-                        
-                        return response()->json([
-                            'success' => true, 
-                            'message' => "Data berhasil dipindah dari {$table} ke {$targetTable}!"
-                        ]);
-                    } else {
-                        DB::rollback();
-                        return response()->json([
-                            'success' => false, 
-                            'message' => 'Gagal memindahkan data'
-                        ], 500);
-                    }
-                } catch (\Exception $e) {
-                    DB::rollback();
-                    throw $e;
-                }
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Tidak ada perubahan data'
+                ]);
             }
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -581,6 +576,35 @@ class DashboardController extends Controller
     }
 
     /**
+     * Get data for edit modal
+     */
+    public function viewData($table, $id)
+    {
+        try {
+            $allowedTables = ['datang2024', 'datang2025', 'pindah2024', 'pindah2025'];
+            if (!in_array($table, $allowedTables)) {
+                return response()->json(['success' => false, 'message' => 'Tabel tidak valid'], 400);
+            }
+
+            $data = DB::table($table)->where('id', $id)->first();
+            
+            if (!$data) {
+                return response()->json(['success' => false, 'message' => 'Data tidak ditemukan'], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Display kecamatan data page
      */
     public function kecamatan(Request $request)
@@ -592,7 +616,7 @@ class DashboardController extends Controller
             $dynamicTableService = new DynamicTableService();
             $availableYears = $dynamicTableService->getAvailableYears();
             
-            // Ambil data kecamatan dari semua tabel
+            // Ambil data kecamatan dari semua tabel (hanya untuk Kabupaten Ciamis)
             $kecamatanData = collect();
             
             foreach ($availableYears as $year) {
@@ -609,6 +633,10 @@ class DashboardController extends Controller
                             )
                             ->whereNotNull('nama_kec_asal')
                             ->where('nama_kec_asal', '!=', '')
+                            ->where(function($query) {
+                                $query->where('nama_kab_asal', 'LIKE', '%CIAMIS%')
+                                      ->orWhere('nama_kab_asal', 'LIKE', '%Ciamis%');
+                            })
                             ->when($search, function($query) use ($search) {
                                 return $query->where('nama_kec_asal', 'like', "%{$search}%");
                             })
@@ -634,6 +662,10 @@ class DashboardController extends Controller
                             )
                             ->whereNotNull('nama_kec_asal')
                             ->where('nama_kec_asal', '!=', '')
+                            ->where(function($query) {
+                                $query->where('nama_kab_asal', 'LIKE', '%CIAMIS%')
+                                      ->orWhere('nama_kab_asal', 'LIKE', '%Ciamis%');
+                            })
                             ->when($search, function($query) use ($search) {
                                 return $query->where('nama_kec_asal', 'like', "%{$search}%");
                             })
@@ -759,6 +791,73 @@ class DashboardController extends Controller
         } catch (\Exception $e) {
             \Log::error('Kelurahan error: ' . $e->getMessage());
             return view('kelurahan', ['kelurahan' => collect(), 'search' => $search, 'jenis' => $jenis, 'kecamatan' => $kecamatan]);
+        }
+    }
+
+    public function getKecamatanDetail($kecamatan)
+    {
+        try {
+            $allData = collect();
+            $tables = ['pindah2024', 'pindah2025', 'datang2024', 'datang2025'];
+            
+            foreach ($tables as $table) {
+                if (Schema::hasTable($table)) {
+                    try {
+                        $isPindah = str_contains($table, 'pindah');
+                        $year = str_contains($table, '2024') ? '2024' : '2025';
+                        
+                        $query = DB::table($table)
+                            ->select(
+                                'id',
+                                DB::raw('COALESCE(nama_lengkap, nama) as nama'),
+                                DB::raw('COALESCE(alamat_asal, alamat, "-") as alamat_asal'),
+                                DB::raw('COALESCE(alamat_tujuan, "-") as alamat_tujuan'),
+                                DB::raw("CASE 
+                                    WHEN tgl_pindah IS NOT NULL THEN tgl_pindah
+                                    WHEN tanggal_pindah IS NOT NULL THEN tanggal_pindah  
+                                    WHEN tgl_datang IS NOT NULL THEN tgl_datang
+                                    WHEN tanggal_datang IS NOT NULL THEN tanggal_datang
+                                    ELSE '-'
+                                END as tanggal"),
+                                DB::raw("'" . ($isPindah ? "Pindah " : "Datang ") . $year . "' as jenis_data"),
+                                'nama_kec_asal',
+                                'nama_kec_tujuan'
+                            )
+                            ->where(function($q) use ($kecamatan) {
+                                // Case insensitive search untuk nama kecamatan
+                                $q->whereRaw('UPPER(nama_kec_asal) LIKE ?', ['%' . strtoupper($kecamatan) . '%'])
+                                  ->orWhereRaw('UPPER(nama_kec_tujuan) LIKE ?', ['%' . strtoupper($kecamatan) . '%']);
+                            })
+                            ->orderBy('id', 'desc')
+                            ->limit(200)
+                            ->get();
+                        
+                        $allData = $allData->merge($query);
+                    } catch (\Exception $e) {
+                        \Log::error("Error querying {$table}: " . $e->getMessage());
+                    }
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => $allData->map(function($item) {
+                    return [
+                        'nama' => $item->nama ?? '-',
+                        'alamat_asal' => $item->alamat_asal ?? '-',
+                        'alamat_tujuan' => $item->alamat_tujuan ?? '-',
+                        'tanggal' => $item->tanggal !== '-' ? \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') : '-',
+                        'jenis_data' => $item->jenis_data
+                    ];
+                })
+            ]);
+            
+        } catch (\Exception $e) {
+            \Log::error('Kecamatan detail error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengambil data'
+            ], 500);
         }
     }
 }

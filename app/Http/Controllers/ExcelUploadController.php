@@ -71,23 +71,7 @@ class ExcelUploadController extends Controller
             
             $results = $this->processExcelFile($file, $tableName, $dataType, $year);
             
-            $formatType = isset($results['debug_format']) ? $results['debug_format'] : 'MULTI_COLUMN';
-            $formatLabel = $formatType === 'SINGLE_COLUMN' ? 'Format Single Column' : 'Format Multi Kolom';
-            
-            $message = "Data berhasil diupload! ({$formatLabel})<br>";
-            $message .= "✅ {$results['inserted']} records berhasil ditambahkan<br>";
-            
-            // Show processed sheets info for multi-sheet files
-            if (isset($results['processed_sheets']) && count($results['processed_sheets']) > 1) {
-                $message .= "📊 Diproses dari " . count($results['processed_sheets']) . " sheets:<br>";
-                foreach ($results['processed_sheets'] as $sheet) {
-                    $message .= "   • {$sheet['name']}: {$sheet['inserted']} records";
-                    if ($sheet['errors'] > 0) {
-                        $message .= " ({$sheet['errors']} errors)";
-                    }
-                    $message .= "<br>";
-                }
-            }
+            $message = "{$results['inserted']} data berhasil ditambahkan";
             
             if ($results['errors'] > 0) {
                 $message .= "⚠️ {$results['errors']} records error<br>";

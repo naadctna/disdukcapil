@@ -6,7 +6,6 @@ use App\Http\Controllers\ExcelUploadController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('home');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/rekapitulasi', [DashboardController::class, 'rekapitulasi'])->name('rekapitulasi');
 Route::get('/penduduk', [DashboardController::class, 'penduduk'])->name('penduduk');
 
 // Routes untuk Wilayah
@@ -53,6 +52,10 @@ Route::get('/test-upload', function () {
 });
 
 // Routes untuk Edit & Delete Data
+Route::get('/penduduk/view/{table}/{id}', [DashboardController::class, 'viewData'])->name('penduduk.view');
 Route::put('/penduduk/update/{table}/{id}', [DashboardController::class, 'updateData'])->name('penduduk.update');
 Route::delete('/penduduk/delete/{table}/{id}', [DashboardController::class, 'deleteData'])->name('penduduk.delete');
 Route::get('/penduduk/detail/{table}/{id}', [DashboardController::class, 'viewDetail'])->name('penduduk.detail');
+
+// API Route untuk detail kecamatan
+Route::get('/api/kecamatan-detail/{kecamatan}', [DashboardController::class, 'getKecamatanDetail'])->name('api.kecamatan.detail');
